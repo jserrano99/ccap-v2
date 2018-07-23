@@ -1,0 +1,110 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} PROCESO DE SINCRONIZACIÓN <hr/> {% endblock %}
+
+{% block contenido %}
+    <script>
+        function Confirmar(id) {
+            bootbox.confirm("CONFIRMAR SINCRONIZACIÓN",
+                    function (result) {
+                        if (result) {
+                            lanzamiento(id);
+                        }
+                    }
+            );
+        }
+
+        function lanzamiento(id) {
+            var recurso = null;
+            switch (id) {
+                case 'PA':
+                    recurso = Routing.generate("syncroPa", true);
+                    break;
+                case 'UF':
+                    recurso = Routing.generate("syncroUf", true);
+                    break;
+                case 'PLAZAS':
+                    recurso = Routing.generate("syncroPlazas", true);
+                    break;
+                case 'CECOS':
+                    recurso = Routing.generate("syncroCecos", true);
+                    break;
+                case 'CECOCIAS':
+                    recurso = Routing.generate("syncroCecoCias", true);
+                    break;
+                case 'CATEG':
+                    recurso = Routing.generate("syncroCateg", true);
+                    break;
+                case 'CATGEN':
+                    recurso = Routing.generate("syncroCatGen", true);
+                    break;
+                case 'CATFP':
+                    recurso = Routing.generate("syncroCatFp", true);
+                    break;
+                case 'TODO':
+                    recurso = Routing.generate("syncroTodo", true);
+                    break;
+            }
+            $("#procesando").modal('show');
+            $.ajax({
+                type: "POST",
+                url: recurso,
+                success: function (data, status, xhr) {
+                    $('.modal-backdrop').remove();
+                    $('#procesando').hide();
+                    $('#lanzamiento').hide();
+                    $('#resultado').html(data);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $('#procesando').hide();
+                    alert(xhr.status);
+                }
+            });
+        }
+
+
+    </script>
+
+    <div id="lanzamiento" class="container">
+        <input type="button" 
+               class="btn btn-lg btn-warning" value=" PUNTOS ASISTENCIALES" 
+               onClick="Confirmar('PA')">
+        <input type="button" 
+               class="btn btn-lg btn-warning" value=" UNIDADES FUNCIONALES " 
+               onClick="Confirmar('UF')">
+        <input type="button" 
+               class="btn btn-lg btn-warning" value=" CATEG " 
+               onClick="Confirmar('CATEG')">
+        <input type="button" 
+               class="btn btn-lg btn-warning" value=" CATGEN " 
+               onClick="Confirmar('CATGEN')">
+        <input type="button" 
+               class="btn btn-lg btn-warning" value=" CATFP " 
+               onClick="Confirmar('CATFP')">
+        <hr/>
+        <input type="button" 
+               class="btn btn-lg btn-info" value=" PLAZAS " 
+               onClick="Confirmar('PLAZAS')">
+        <input type="button" 
+               class="btn btn-lg btn-info" value=" CECOS " 
+               onClick="Confirmar('CECOS')">
+        <input type="button" 
+               class="btn btn-lg btn-info" value=" CECO-CIAS " 
+               onClick="Confirmar('CECOCIAS')">
+        <br/><br/>
+        
+    </div>
+
+    <div id="procesando" class="modal" role="dialog" margin="auto">
+        <div class="modal-dialog">
+            <div class="modal-content modal-lg">
+                <div class="modal-body" text-align="center">
+                    <img src="{{asset('img/Circulo-Carga-62157.gif')}}"></img>
+                    <h2><span>Realizando sincronización no cierre el navegador....</span></h2>
+                </div>
+            </div>    
+        </div>
+    </div>
+
+    <div id="resultado" class="container">
+    </div>
+{% endblock %}

@@ -1,0 +1,13 @@
+AppBundle\Entity\Categ:
+    properties: 
+     codigo:
+       - Length: 
+            max: 4
+            maxMessage: "El código debe tener {{ limit }} caracteres "
+AppBundle\Entity\Plaza:
+    properties: 
+     cias:
+       - Length: 
+            max: 11
+            maxMessage: "El cias debe tener {{ limit }} caracteres "
+     

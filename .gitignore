@@ -1,0 +1,8 @@
+/.web-server-pid
+/app/config/parameters.yml
+/build/
+/phpunit.xml
+/vendor/
+/web/bundles/
+/web/upload/
+/var/

@@ -1,0 +1,7 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} PUNTOS ASISTENCIALES **{{accion}}**
+    <a href="{{path("queryPa")}}" class="btn btn-success">Volver</a>
+{% endblock %}
+{% block contenido %}
+        {% include 'pa/form.html.twig' %}
+{% endblock %}

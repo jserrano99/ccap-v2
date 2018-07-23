@@ -1,0 +1,40 @@
+<div class="container">
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    <div class="form_row muycorto mismalinea">
+        {{form_row(form.codigo)}}
+    </div>
+    <div class="form_row medio mismalinea">
+        {{form_row(form.descripcion)}}
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="form_row corto mismalinea">
+        {{form_row(form.btcTbolCodigo)}}
+    </div>
+    <div class="form_row corto mismalinea">
+        {{form_row(form.planOrg)}}
+    </div>
+    <div class="clearfix"></div>
+    <div class="form_row corto mismalinea">
+        {{form_row(form.codInsalud)}}
+    </div>
+    <div class="form_row medio mismalinea">
+        {{form_row(form.desInsalud)}}
+    </div>
+    <div class="clearfix"></div>
+    <div class="form_row medio">
+        {{form_row(form.especialidad)}}
+    </div>
+    <div class="form_row medio">
+        {{form_row(form.codSms)}}
+    </div>
+    <div class="form_row medio">
+        {{form_row(form.enuso)}}
+    </div>
+
+    <div class="form_row " >
+        {{ form_row(form.Guardar) }}
+    </div>
+</div>
+</div>

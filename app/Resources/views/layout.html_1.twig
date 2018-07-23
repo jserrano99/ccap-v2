@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html lang="es">
+    <head>
+        <meta charset="utf-8"/>
+        <title>
+            {% block title %} {{titulo_app_corto}} {% endblock %}
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.js"></script>
+        <script type="text/javascript" src="{{asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+        <link rel="icon" type="image/png" href="{{asset('img/logoSalud.png')}}" />
+    </head>
+    <style>
+        .cabecera {
+            display: table-header-group;
+            vertical-align: middle;
+            align-items:  center;
+            font-size: 18px;
+            border-color: inherit;
+            background-color: background;
+            font-style: oblique;
+            font-family: serif;
+        }
+        .btn-t {
+            margin-top: 15px;
+        }
+        .btn-group {
+            margin-bottom: 15px;
+        }
+        .centro-nav {
+            margin-right:  15px;
+            margin-top: 15px;
+        }
+        .formIdent {
+            margin-top: 15px;
+            margin-left: 15px;
+            padding: 15px;
+        }
+        .muycorto {
+            width: 150px;
+        }
+        .corto {
+            width: 250px;
+        }
+        .medio {
+            width: 500px;
+        }
+        .centrado {
+            align-content: center;
+        }
+        .mismalinea {
+            display: inline-block;
+        }
+    </style>
+
+    <script>
+        $(function () {
+            $('.tabla').DataTable({
+                "language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"},
+                "autoWidth": true,
+                "jQueryUI": true,
+                "stateSave": true,
+                "order": [[1, "asc"]]
+            });
+            $('[data-toggle="tooltip"]').tooltip();
+            $('.fecha').datapicker;
+        });
+
+        function lanzar(ruta) {
+            $('#procesando').modal('show');
+            var recurso = Routing.generate(ruta, true);
+            window.location = recurso;
+        }
+
+        function cerrarSesion() {
+            bootbox.confirm("CONFIRMAR SALIR DE LA SESIÓN ",
+                    function (result) {
+                        if (result) {
+                            var recurso = Routing.generate("logout", true);
+                            window.location = recurso;
+                        }
+                    });
+
+        }
+    </script>
+
+    <body>
+        <header>
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <span class="navbar-brand">
+                            {% block modo %}
+                                Entorno: {{entorno}} / {{modo}}
+                            {% endblock %}
+                        </span>
+                    </div>
+                    <ul class="nav navbar-nav navbar-right centro-nav">
+                        {% if app.session.get('usuario_nombre') != null %}
+                            Bienvenido, {{app.session.get('usuario_nombre')}}({{app.session.get('usuario_perfil')}})
+                        {% endif%}
+                    </ul>
+                    <div class="collapse navbar-collapse">
+                        {% if app.session.get('usuario_nombre') != null  %}
+                            {% block menu %}
+                                {% include "menu.html.twig" %}
+                            {% endblock %}
+                        {% endif %}
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <section id="contenido">
+            <div class="container">
+                <h3>{% block titulo %}{% endblock %}</h3>
+            </div>
+
+            <div id="procesando" class="modal" role="dialog" margin="auto">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-body" text-align="center">
+                            <img src="{{asset('img/Circulo-Carga-62157.gif')}}"></img>
+                            <h3><span>Ejecutando, espere por favor</span></h3>
+                        </div>
+                    </div>    
+                </div>
+            </div>
+            {% block contenido %} Contenido por Defecto de la Plantilla  {% endblock %}
+        </section>
+        <footer>
+            <br/>
+            <span class="label label-info">&copy; AGENCIA PARA LA ADMINISTRACIÓN DIGITAL DE LA COMUNIDAD DE MADRID </span>
+        </footer>
+    </body>
+</html> 

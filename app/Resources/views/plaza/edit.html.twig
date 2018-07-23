@@ -1,0 +1,18 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %}** PLAZAS {{accion}} ** 
+    <a href="{{path("queryPlaza")}}"
+       class="btn btn-success">
+        <span class="glyphicon glyphicon-step-backward"></span> Volver </a>
+{% endblock %}
+{% block contenido %}
+    <div class="container">
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-success">
+                {{message}}
+            </div>
+        {% endfor %}
+
+        {% include 'plaza/form.html.twig' %}
+    </div>
+
+{% endblock %}

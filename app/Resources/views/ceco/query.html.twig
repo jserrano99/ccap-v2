@@ -1,0 +1,21 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} CENTROS DE COSTE **CONSULTA** 
+    <a href="{{path("addCeco")}}" class="btn btn-success">
+        <span class="glyphicon glyphicon-new-window"></span> Nuevo Centro de Coste</a>
+    <a href="{{path("importaCeco")}}" class="btn btn-success"
+       data-toggle="tooltip" 
+       data-placement="bottom" 
+       title="Crear Centos de Coste desde un Fichero en EXCEL">
+        <span class="glyphicon glyphicon-floppy-save"></span> Cargar Fichero</a>
+    <hr/>
+{% endblock %}
+{% block contenido %}
+    <div class="container">
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-success">
+                {{message}}
+            </div>
+        {% endfor %}
+        {{ sg_datatables_render(datatable) }}
+    </div>
+{% endblock %}

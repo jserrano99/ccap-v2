@@ -1,0 +1,42 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %}** CONSULTA DE UNIDADES FUNCIONALES **{% endblock %}
+{% block contenido %}
+    <div class="container">
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-success">
+                {{message}}
+            </div>
+        {% endfor %}
+        <hr/>
+        <table class="tabla table" border="1">
+            <thead>
+                <tr class="success">
+                    <th class="text-center text-bold">ID</th>
+                    <th class="text-center text-bold">CÓDIGO</th>
+                    <th class="text-center text-bold">EDIFICIO</th>
+                    <th class="text-center text-bold">DESCRIPCIÓN</th>
+                    <th class="text-center text-bold">OFICIAL</th>
+                    <th class="text-center text-bold">D.A.</th>
+                    <th class="text-center text-bold">CECO-CIAS</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">{{uf.id}}</td>
+                    <td class="text-center">{{uf.uf}}</td>
+                    <td>{{uf.edificio}}</td>
+                    <td>{{uf.descripcion}}</td>
+                    <td>{{uf.oficial}}</td>
+                    <td>{{uf.da}}</td>
+                    <td class="text-center">
+                        <a  href="{{path("verCecoCiasUf",{"uf_id":uf.id})}}" target="_blank">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </a>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

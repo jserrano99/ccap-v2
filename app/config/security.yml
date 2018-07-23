@@ -1,0 +1,31 @@
+security:
+    encoders:
+        AppBundle\Entity\Usuario:
+            algorithm: bcrypt
+            cost: 4
+            
+    # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    providers:
+    #    our_db_provider:
+    #        entity:
+    #            class: AppBundle:Usuario
+    #            property: codigo
+        in_memory:
+            memory: ~
+
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            anonymous: ~
+#            provider: our_db_provider
+#            form_login:
+#                login_path: /login
+#                check_path: /login_check
+#            logout:
+#                path: /logout
+#                target: /login
+    

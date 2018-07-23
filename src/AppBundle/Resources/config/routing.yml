@@ -1,0 +1,360 @@
+app_homepage:
+    path:     /
+    defaults: { _controller: AppBundle:App:index}
+
+verParametros:
+    path:   /parametros/ver
+    defaults: { _controller:AppBundle:App:verParam}
+
+editAsignacionDirecta:
+    path:   /asignacionDirecta/edit/{id}
+    defaults: { _controller: AppBundle:AsignacionDirecta:edit}
+addAsignacionDirecta:
+    path:   /asignacionDirecta/add
+    defaults: { _controller: AppBundle:AsignacionDirecta:add}
+queryAsignacionDirecta:
+    path:   /asignacionDirecta/query
+    defaults: { _controller: AppBundle:AsignacionDirecta:query}
+
+queryExcepcion:
+    path:   /excepcion/query
+    defaults: { _controller: AppBundle:Excepcion:query}
+editExcepcion:
+    path:   /excepcion/edit/{id}
+    defaults: { _controller: AppBundle:Excepcion:edit}
+addExcepcion:
+    path:   /excepcion/add/
+    defaults: { _controller: AppBundle:Excepcion:add}
+importaExcepcion:
+    path:   /excepcion/importar
+    defaults: { _controller: AppBundle:Excepcion:importa}
+
+#
+# login / Usuario
+#
+login:
+    path: /login
+    defaults: { _controller: AppBundle:Login:login}
+login_check:
+    path: /login_check
+    defaults: { _controller: AppBundle:Login:check }    
+logout:
+    path:     /login/logout
+    defaults: { _controller: AppBundle:Login:logout }    
+    options:
+        expose: true
+cambioPassword:
+    path:   /usuario/cambioPassword/{id}
+    defaults: { _controller: AppBundle:Usuario:CambioPassword}
+queryUsuario:
+    path:   /usuario/query
+    defaults: { _controller: AppBundle:Usuario:Query}
+addUsuario:
+    path:   /usuario/add
+    defaults: { _controller: AppBundle:Usuario:Add}
+editUsuario:
+    path:   /usuario/edit/{id}
+    defaults: { _controller: AppBundle:Usuario:Edit}
+deleteUsuario:
+    path:   /usuario/delete/{id} 
+    defaults: { _controller: AppBundle:Usuario:Delete}
+#
+# PLAZAS
+#
+addPlaza:
+    path:   /plaza/add
+    defaults: { _controller: AppBundle:Plaza:add}
+editPlaza:
+    path:   /plaza/edit/{id}
+    defaults: { _controller: AppBundle:Plaza:edit}
+queryPlaza:
+    path:   /plaza/query
+    defaults: { _controller: AppBundle:Plaza:query}
+verPlaza:
+    path:   /plaza/verPlaza/{plaza_id}
+    defaults: { _controller: AppBundle:Plaza:verPlaza}
+verPlazaSinCeco:
+    path:   /plaza/verPlazaSinCeco
+    defaults: { _controller: AppBundle:Plaza:verPlazaSinCeco}
+    options:
+        expose: true
+replicaPlaza:
+    path:   /plaza/replica/{id}/{actuacion}
+    defaults: { _controller: AppBundle:Plaza:replica}
+    options:
+        expose: true
+calcularCIAS:
+    path:   /plaza/calcularCias/{uf_id}/{pa_id}/{catgen_id}
+    defaults: { _controller: AppBundle:Plaza:calcularCias}
+    options:
+        expose: true
+ajaxCalcularCeco:
+    path:   /plaza/calcularCeco/{cias}/{uf_id}/{pa_id}
+    defaults: { _controller: AppBundle:Plaza:ajaxCalcularCeco}
+    options:
+        expose: true
+verPlazasByCeco:
+    path:   /plaza/verplazasbyceco/{ceco_id}
+    defaults: { _controller: AppBundle:Plaza:verPlazasByCeco}
+    options:
+        expose: true
+importaCecoCias:
+    path:   /plaza/importaCeco
+    defaults: { _controller: AppBundle:Plaza:importarCeco}
+    options:
+        expose: true
+verPlazasSinCeco:
+    path:   /plaza/verplazassinceco
+    defaults: { _controller: AppBundle:Plaza:verPlazasSinCeco}
+    options:
+        expose: true
+#
+# Ceco
+#
+queryCeco:
+    path:   /ceco/query
+    defaults: { _controller: AppBundle:Ceco:query}
+editCeco:
+    path:   /ceco/edit/{id}
+    defaults: { _controller: AppBundle:Ceco:edit}
+    options:
+        expose: true
+verCeco:
+    path:   /ceco/verCeco/{ceco_id}
+    defaults: { _controller: AppBundle:Ceco:verCeco}
+deleteCeco:
+    path:   /ceco/delete/{ceco_id}
+    defaults: { _controller: AppBundle:Ceco:delete}
+    options:
+        expose: true
+ajaxVerCeco:
+    path:   /ceco/ajaxverceco/{id}
+    defaults: { _controller: AppBundle:Ceco:ajaxVerCeco}
+    options:
+        expose: true
+replicaCeco:
+    path:   /ceco/replicaCeco/{ceco_id}
+    defaults: { _controller: AppBundle:Ceco:replicaCeco}
+addCeco:
+    path:   /ceco/add
+    defaults: { _controller: AppBundle:Ceco:add}
+importaCeco:
+    path:   /ceco/importa
+    defaults: { _controller: AppBundle:Ceco:importa}
+verCias:
+    path:   /ceco/verCias/{ceco_id}
+    defaults: { _controller: AppBundle:Ceco:verCias}
+#
+# CecoCias
+#
+queryCecoCias:
+    path:   /cecocias/query
+    defaults: { _controller: AppBundle:CecoCias:query}
+    options:
+        expose: true
+addCecoCias:
+    path:   /cecocias/add
+    defaults: { _controller: AppBundle:CecoCias:add}
+deleteCecoCias: 
+    path:   /cecocias/delete/{cecocias_id}
+    defaults: { _controller: AppBundle:CecoCias:delete}
+    options:
+        expose: true
+asignarCeco:
+    path:   /cecocias/asignarCeco/{plaza_id}
+    defaults: { _controller: AppBundle:CecoCias:asignarCeco}
+replicaCecoCias:
+    path:   /cecocias/replica/{cecocias_id}
+    defaults: { _controller: AppBundle:CecoCias:replica}
+    options:
+        expose: true
+#
+# BASES DE DATOS 
+#
+queryBaseDatos:
+    path:   /basedatos/query
+    defaults: { _controller: AppBundle:BaseDatos:query}
+editBaseDatos:
+    path:   /basedatos/edit/{id}
+    defaults: { _controller: AppBundle:BaseDatos:edit}
+addBaseDatos:
+    path:   /basedatos/add
+    defaults: { _controller: AppBundle:BaseDatos:add}
+#
+# SYNCRONIZACIÓN 
+#
+lanzaSyncro:
+    path:   /syncro/lanza
+    defaults: { _controller: AppBundle:Syncro:lanza}
+    options:
+        expose: true
+syncroPa:
+    path:   /syncro/pa
+    defaults: { _controller: AppBundle:Syncro:pa}
+    options:
+        expose: true
+syncroCecos:
+    path:   /syncro/cecos
+    defaults: { _controller: AppBundle:Syncro:cecos}
+    options:
+        expose: true
+syncroCatGen:
+    path:   /syncro/catGen
+    defaults: { _controller: AppBundle:Syncro:catGen}
+    options:
+        expose: true
+syncroCateg:
+    path:   /syncro/categ
+    defaults: { _controller: AppBundle:Syncro:categ}
+    options:
+        expose: true
+syncroCatFp:
+    path:   /syncro/catFp
+    defaults: { _controller: AppBundle:Syncro:catFp}
+    options:
+        expose: true
+syncroUf:
+    path:   /syncro/uf
+    defaults: { _controller: AppBundle:Syncro:uf}
+    options:
+        expose: true
+syncroPlazas:
+    path:   /syncro/plazas
+    defaults: { _controller: AppBundle:Syncro:plazas}
+    options:
+        expose: true
+syncroCecoCias:
+    path:   /syncro/cecocias
+    defaults: { _controller: AppBundle:Syncro:cecocias}
+    options:
+        expose: true
+syncroTodo:
+    path:   /syncro/todo
+    defaults: { _controller: AppBundle:Syncro:todo}
+    options:
+        expose: true
+syncroOK:
+    path:   /syncro/ok
+    defaults: { _controller: AppBundle:Syncro:ok}
+    options:
+        expose: true
+#
+# UNIDADES FUNCIONALES 
+#
+editUf:
+    path:   /uf/edit/{id}
+    defaults: { _controller: AppBundle:Uf:edit}
+verCecoCiasUf:
+    path:   /uf/verCecoCias/{id}
+    defaults: { _controller: AppBundle:Uf:verCecoCias}
+queryUf:
+    path:   /uf/query
+    defaults: { _controller: AppBundle:Uf:query}
+verUf:
+    path:   /uf/verUf/{id}
+    defaults: { _controller: AppBundle:Uf:verUf}
+addUf:
+    path:   /uf/add/
+    defaults: { _controller: AppBundle:Uf:add}
+deleteUf:
+    path:   /uf/delete/{id}
+    defaults: { _controller: AppBundle:Uf:delete}
+    options:
+        expose: true
+replicaUf:
+    path:   /uf/replica/{id}/{actuacion}
+    defaults: { _controller: AppBundle:Uf:replica}
+verGerencia:
+    path:   /uf/verGerencia/{id}
+    defaults: { _controller: AppBundle:Uf:verGerencia}
+    options:
+        expose: true
+        
+ajaxCalculaCodigoUf:
+    path:   /uf/ajaxCalculaCodigo/{codigo}
+    defaults: { _controller: AppBundle:Uf:ajaxCalculaCodigo}
+    options:
+        expose: true
+    
+#
+# PUNTOS ASISTENCIALES 
+#
+editPa:
+    path:   /pa/edit/{id}
+    defaults: { _controller: AppBundle:Pa:edit}
+verCecoCiasPa:
+    path:   /pa/verCecoCias/{id}
+    defaults: { _controller: AppBundle:Pa:verCecoCias}
+queryPa:
+    path:   /pa/query
+    defaults: { _controller: AppBundle:Pa:query}
+verPa:
+    path:   /uf/verPa/{id}
+    defaults: { _controller: AppBundle:Pa:verPa}
+addPa:
+    path:   /pa/add/
+    defaults: { _controller: AppBundle:Pa:add}
+deletePa:
+    path:   /pa/delete/{id}
+    defaults: { _controller: AppBundle:PA:delete}
+    options:
+        expose: true
+replicaPa:
+    path:   /pa/replica/{id}/{actuacion}
+    defaults: { _controller: AppBundle:Pa:replica}
+verZonaBasica:
+    path:   /pa/verZonaBasica/{id}
+    defaults: { _controller: AppBundle:Pa:verZonaBasica}
+    options:
+        expose: true
+#
+# CATEGORIAS PROFESIONALES
+#
+editCateg:
+    path:   /categ/edit/{id}
+    defaults: { _controller: AppBundle:Categ:edit}
+queryCateg:
+    path:   /categ/query
+    defaults: { _controller: AppBundle:Categ:query}
+addCateg:
+    path:   /categ/add/
+    defaults: { _controller: AppBundle:Categ:add}
+deleteCateg:
+    path:   /categ/delete/{id}
+    defaults: { _controller: AppBundle:Categ:delete}
+    options:
+        expose: true
+replicaCateg:
+    path:   /categ/replica/{id}/{actuacion}
+    defaults: { _controller: AppBundle:Categ:replica}
+ajaxCalculaCodigo:
+    path:   /categ/calculacodigo/{catgen_id}
+    defaults: { _controller: AppBundle:Categ:ajaxCalculaCodigo}
+    options:
+        expose: true
+#
+# CATEGORIAS GENERALES  
+#
+editCatGen:
+    path:   /catgen/edit/{id}
+    defaults: { _controller: AppBundle:CatGen:edit}
+    options:
+        expose: true
+
+queryCatGen:
+    path:   /catgen/query
+    defaults: { _controller: AppBundle:CatGen:query}
+    options:
+        expose: true
+addCatGen:
+    path:   /catgen/add/
+    defaults: { _controller: AppBundle:CatGen:add}
+deleteCatGen:
+    path:   /catgen/delete/{id}
+    defaults: { _controller: AppBundle:CatGen:delete}
+    options:
+        expose: true
+replicaCatGen:
+    path:   /catgen/replica/{id}/{actuacion}
+    defaults: { _controller: AppBundle:CatGen:replica}
+

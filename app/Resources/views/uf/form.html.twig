@@ -1,0 +1,32 @@
+
+<script>
+
+    $(document).ready(function () {
+        $("#appbundle_uf_oficial").change(function () {
+            var valor = $("#appbundle_uf_oficial").val();
+            var recurso = Routing.generate("ajaxCalculaCodigoUf", {"codigo": valor}, true);
+            $.ajax({
+                type: "POST",
+                url: recurso,
+                dataType: 'json',
+                success: function (data, status, xhr) {
+                    $("#appbundle_uf_uf").val(data.codigo);
+                    $("#appbundle_uf_edificio").val(data.edificio);
+                    
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr);
+                }
+            });
+
+        });
+
+    });
+</script> 
+
+<div class="container">
+        {{form_start (form,{'action':'','method':'POST'})}}
+        {{form_end (form)}}
+    </div>
+    <div class="clearfix"> </div>
+</div>

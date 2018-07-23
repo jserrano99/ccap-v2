@@ -1,0 +1,21 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} PROCESO TERMINADO 
+{% endblock %}
+
+{% block contenido %}
+    <div class="container">
+        {% for linea in resultado %}
+            {% if (linea.ceco != null) %}
+                Ceco:{{linea.ceco.codigo}}-{{linea.ceco.descripcion}}-Actuación={{linea.accion}} 
+            {% endif %}
+            Resultado:{{linea.estado}}-{{linea.error}}
+            <br/>
+            {% for lineaLog in linea.replicaLog %}
+                {{lineaLog}} <br/>
+            {% endfor %}
+            <hr/>
+        {% endfor %}
+        <hr/>
+        <a href="{{path("queryCeco")}}" class="btn btn-success">Volver</a>
+    </div>
+{% endblock %}

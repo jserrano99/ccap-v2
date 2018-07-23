@@ -1,0 +1,75 @@
+<script>
+    
+    $( document ).ready(function() {
+        $("#appbundle_categ_catGen").change(function() {
+            var valor = $("#appbundle_categ_catGen").val();
+            var recurso = Routing.generate("ajaxCalculaCodigo",{"catgen_id": valor},true);
+            $.ajax({
+                type: "POST",
+                url: recurso,
+                dataType: 'json',
+                success: function (data, status, xhr) {
+                    $("#appbundle_categ_codigo").val(data.codigo);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert (xhr);
+                }
+            });
+            
+    });
+        
+});
+</script> 
+
+<div class="container">
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    <div class="form_row mismalinea">
+        {{form_row(form.catGen)}}
+    </div>
+    <div class="form-row muycorto mismalinea">
+        {{form_row(form.codigo)}}
+    </div>
+    <div class="form_row medio">
+        {{form_row(form.descripcion)}}
+    </div>
+    <div class="form_row corto mismalinea">
+        {{form_row(form.fsn)}}
+    </div>
+    <div class="form_row muycorto mismalinea">
+        {{form_row(form.mir)}}
+    </div>
+    <div class="form_row muycorto mismalinea">
+        {{form_row(form.directivo)}}
+    </div>
+    <div class="clearfix"></div>
+    <hr/>
+    <div class="form_row mismalinea " >
+        {{form_row(form.catAnexo)}}
+    </div>
+    <div class="form_row mismalinea" >
+        {{form_row(form.grupoCot)}}
+    </div>
+    <div class="form_row mismalinea" >
+        {{form_row(form.epiAcc)}}
+    </div>
+    <div class="form_row mismalinea" >
+        {{form_row(form.grupoProf)}}
+    </div>
+    <div class="form_row mismalinea" >
+        {{form_row(form.grupoCobro)}}
+    </div>
+    <div class="form_row mismalinea" >
+        {{form_row(form.ocupacion)}}
+    </div>
+    <div class="form_row mismalinea" >
+        {{form_row(form.enuso)}}
+    </div>
+    <div class="form_row mismalinea" >
+        {{form_row(form.condicionado)}}
+    </div>
+    <div class="form_row " >
+        {{ form_end(form) }}
+    </div>
+</div>
+</div>

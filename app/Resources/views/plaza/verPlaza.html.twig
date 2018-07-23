@@ -1,0 +1,67 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %}** CONSULTA DE PLAZAS (CIAS) **{% endblock %}
+{% block contenido %}
+    <div class="container">
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-success">
+                {{message}}
+            </div>
+        {% endfor %}
+        <hr/>
+        <table class="tabla table" border="1">
+            <thead>
+                <tr class="success">
+                    <th class="text-center text-bold">ID</th>
+                    <th class="text-center text-bold">CIAS</th>
+                    <th class="text-center text-bold">UNIDAD FUNCIONAL</th>
+                    <th class="text-center text-bold">PUNTO ASISTENCIAL</th>
+                    <th class="text-center text-bold">CAT. GEN</th>
+                    <th class="text-center text-bold">CAT. FP</th>
+                    <th class="text-center text-bold">PLANTILLA</th>
+                    <th class="text-center text-bold">F. AMORTIZACIÓN</th>
+                    <th class="text-center text-bold">MODALIDAD</th>
+                    <th class="text-center text-bold">ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">{{plaza.id}}</td>
+                    <td class="text-center">
+                        <a href="{{path("editPlaza",{"id":plaza.id})}}"
+                           target="_blank">
+                            {{plaza.cias}}</a>
+                    </td>
+                    <td><a href="{{path("verUf",{"id":plaza.uf.id})}}"
+                           target="_blank">
+                            {{plaza.uf.uf}}</a>
+                    </td>
+                    {% if ( plaza.pa != null ) %}
+                        <td><a href="{{path("verPa",{"id":plaza.pa.id})}}"
+                               target="_blank">
+                                {{plaza.pa.pa}}</a>
+                        </td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                    <td>{{plaza.catgen}}</td>
+                    <td>{{plaza.catfp}}</td>
+                    <td>{{plaza.plantilla}}</td>
+                    {% if (plaza.fAmortiza is null) %}
+                        <td></td>
+                    {% else %}
+                        <td>{{plaza.fAmortiza|date('d-m-Y')}}</td>
+                    {% endif %}
+                    <td>{{plaza.modalidad.descripcion}}</td>
+                    <td>
+                        <a  href="{{path("asignarCeco",{"plaza_id":plaza.id})}}" target="_blank"
+                            data-toggle="tooltip" 
+                            data-placement="bottom" 
+                            title="Asignar CECO">
+                            <span class="glyphicon glyphicon-check"></span>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

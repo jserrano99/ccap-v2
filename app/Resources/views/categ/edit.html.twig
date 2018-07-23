@@ -1,0 +1,8 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} CATEGORÍAS PROFESIONALES **MODIFICACIÓN**
+    <a href="{{path("queryCateg")}}" class="btn btn-success">Volver</a>
+{% endblock %}
+{% block contenido %}
+    {% include 'categ/form.html.twig' %}
+{% endblock %}
+ 

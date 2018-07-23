@@ -1,0 +1,7 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} CATEGORÍAS GENERALES **{{accion}}**
+    <a href="{{path("queryCatGen")}}" class="btn btn-success">Volver</a>
+{% endblock %}
+{% block contenido %}
+    {% include 'catgen/form.html.twig' %}
+{% endblock %} 

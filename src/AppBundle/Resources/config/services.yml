@@ -1,0 +1,8 @@
+services:
+    app.escribelog:
+        class: AppBundle\Servicios\EscribeLog
+        arguments: ["logger","mensaje"]
+    app.calculaCeco:
+        class: AppBundle\Servicios\CalculaCeco
+        arguments: ["@doctrine.orm.entity_manager","cias","uf","pa"]
+    

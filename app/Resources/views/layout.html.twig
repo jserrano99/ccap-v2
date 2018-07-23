@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+<html lang="es">
+    <head>
+        <meta charset="utf-8"/>
+        <title>
+            {% block title %} {{titulo_app_corto}} {% endblock %}
+        </title>
+        <link rel="icon" type="image/png" href="{{asset('img/logoSalud.png')}}" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.25/daterangepicker.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css">
+        <link rel="stylesheet" href="https://cdn.rawgit.com/noelboss/featherlight/1.7.1/release/featherlight.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://cdn.datatables.net/v/bs/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/af-2.1.3/b-1.2.4/b-flash-1.2.4/b-html5-1.2.4/b-print-1.2.4/cr-1.3.2/fc-3.2.2/fh-3.1.2/kt-2.2.0/r-2.1.1/rr-1.2.0/sc-1.4.2/se-1.2.0/datatables.min.css">
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.25/daterangepicker.min.js" charset="UTF-8"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+        <script src="https://cdn.rawgit.com/noelboss/featherlight/1.7.1/release/featherlight.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.js"></script>
+        <script type="text/javascript" src="{{asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+
+    </head>
+    <style>
+        .cabecera { 
+            display: table-header-group;
+            vertical-align: middle;
+            align-items:  center;
+            font-size: 18px;
+            border-color: inherit;
+            background-color: background;
+            font-style: oblique;
+            font-family: serif;
+        }
+        .btn-t {
+            margin-top: 15px;
+        }
+        .btn-group {
+            margin-bottom: 15px;
+        }
+        .centro-nav {
+            margin-right:  15px;
+            margin-top: 15px;
+        }
+        .formIdent {
+            margin-top: 15px;
+            margin-left: 15px;
+            padding: 15px;
+        }
+        .muycorto {
+            width: 150px;
+        }
+        .corto {
+            width: 250px;
+        }
+        .ident {
+            width: 50px;
+        }
+        .medio {
+            width: 500px;
+        }
+        .centrado {
+            align-content: center;
+        }
+        .mismalinea {
+            display: inline-block;
+        }
+    </style>
+
+    <script>
+        $(function () {
+            $('.tabla').DataTable({
+                "language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"},
+                "autoWidth": true,
+                "jQueryUI": true,
+                "stateSave": true,
+                "order": [[1, "asc"]]
+            });
+            $('[data-toggle="tooltip"]').tooltip();
+            $('.fecha').datapicker;
+        });
+
+        function lanzar(ruta) {
+            $('#procesando').modal('show');
+            var recurso = Routing.generate(ruta, true);
+            window.location = recurso;
+        }
+
+        function cerrarSesion() {
+            bootbox.confirm("CONFIRMAR SALIR DE LA SESIÓN ",
+                    function (result) {
+                        if (result) {
+                            var recurso = Routing.generate("logout", true);
+                            window.location = recurso;
+                        }
+                    });
+        }
+    </script>
+
+    <body>
+        <header>
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <span class="navbar-brand">
+                            {% block modo %}
+                                Entorno: {{entorno}} | {{modo}}
+                            {% endblock %}
+                        </span>
+                    </div>
+                    <ul class="nav navbar-nav navbar-right centro-nav">
+                        {% if app.session.get('usuario_nombre') != null %}
+                            <span class="glyphicon glyphicon-user"> </span>
+                            {{app.session.get('usuario_nombre')}} | {{app.session.get('usuario_perfil')}}
+                        {% endif%}
+                    </ul>
+                    <div class="collapse navbar-collapse">
+                        {% if app.session.get('usuario_nombre') != null  %}
+                            {% block menu %}
+                                {% include "menu.html.twig" %}
+                            {% endblock %}
+                        {% endif %}
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <section id="contenido">
+
+            <div id="procesando" class="modal" role="dialog" margin="auto">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-body" text-align="center">
+                            <img src="{{asset('img/Circulo-Carga-62157.gif')}}"></img>
+                            <h3><span>Ejecutando, espere por favor</span></h3>
+                        </div>
+                    </div>    
+                </div>
+            </div>
+            {% if app.session.get('usuario_nombre') != null  %}
+                <div class="container">
+                    <h3>{% block titulo %}{% endblock %}</h3>
+                </div>
+                {% block contenido %} Contenido por Defecto de la Plantilla  {% endblock %}
+            {% else %}
+                {% block login %} 
+                    {% include 'login/login.form.html.twig' %}
+                {% endblock %}
+            {% endif %}
+        </section>
+        <footer>
+            <br/>
+            <span class="label label-info">&copy; AGENCIA PARA LA ADMINISTRACIÓN DIGITAL DE LA COMUNIDAD DE MADRID </span>
+        </footer>
+    </body>
+</html> 

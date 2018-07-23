@@ -1,0 +1,33 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %}** CONSULTA DE ASIGNACION DIRECTA DE CECOS a CIAS **{% endblock %}
+{% block contenido %}
+    <div class="container">
+        <a href="{{path("addAsignacionDirecta")}}"
+           class="btn btn-success" >Nueva Asignación</a>
+           <hr/>
+    </div>
+    <div class="container">
+        <table class="tabla table" border="1">
+            <thead>
+                <tr class="success">
+                    <th class="text-center text-bold">ID</th>
+                    <th class="text-center text-bold">Tipo de Puesto</th>
+                    <th class="text-center text-bold">CECO</th>
+                    <th class="text-center text-bold">Descripción</th>
+                </tr>
+            </thead>
+            {% for AsignacionDirecta in AsignacionDirectaAll %}
+                <tbody>
+                    <tr>
+                        <td class="text-center">{{AsignacionDirecta.id}}</td>
+                        <td class="text-center">
+                            <a href="{{path("editAsignacionDirecta",{"id":AsignacionDirecta.id})}}">
+                                {{AsignacionDirecta.codigoUf78}}</a></td>
+                        <td class="text-center">{{AsignacionDirecta.ceco.codigo}}</td>
+                        <td>{{AsignacionDirecta.ceco.descripcion}}</td>
+                    </tr>
+                </tbody>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

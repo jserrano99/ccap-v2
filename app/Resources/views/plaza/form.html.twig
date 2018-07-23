@@ -1,0 +1,213 @@
+<script>
+    $(document).ready(function () {
+
+        $("#appbundle_plaza_ceco").change(function () {
+            $("#procesando").modal('show');
+            var valor = $("#appbundle_plaza_ceco").val();
+            var recurso = Routing.generate("ajaxVerCeco", {"id": valor}, true);
+            $.ajax({
+                type: "POST",
+                url: recurso,
+                dataType: 'json',
+                success: function (data, status, xhr) {
+                    $('.modal-backdrop').remove();
+                    $("#procesando").hide();
+                    $("#appbundle_plaza_cecoInf").val(data.codigo);
+                    $("#appbundle_plaza_cecoDesc").val(data.descripcion);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    return null;
+                }
+            });
+        });
+    });
+
+    function calcularCias() {
+        var uf = $("#appbundle_plaza_uf").val();
+        var pa = $("#appbundle_plaza_pa").val();
+        var catgen = $("#appbundle_plaza_catGen").val();
+        if (uf == '' || pa == '' || catgen == '') {
+            alert("Unidad Funcional, Punto Asistencia y Categoría Obligatorios");
+        } else {
+            $("#procesando").modal('show');
+            var recurso = Routing.generate("calcularCIAS", {"uf_id": uf, "pa_id": pa, "catgen_id": catgen}, true);
+            $.ajax({
+                type: "POST",
+                url: recurso,
+                dataType: 'json',
+                success: function (data, status, xhr) {
+                    $('.modal-backdrop').remove();
+                    $("#procesando").hide();
+                    $("#appbundle_plaza_cias").val(data.cias);
+                    $("#appbundle_plaza_orden").val(data.orden);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    return null;
+                }
+            });
+        }
+    }
+
+    function reCalcularCias() {
+        var cias = $("#appbundle_plaza_cias").val();
+        var patron = cias.substr(0, 8);
+        var orden = $("#appbundle_plaza_orden").val();
+        $("#appbundle_plaza_cias").val(patron + orden);
+
+    }
+
+    function calcularLetra() {
+        var cias = $("#appbundle_plaza_cias").val();
+        if (cias == '') {
+            alert(' ERROR NO EXISTE CIAS');
+        } else {
+            var cadena = 'TRWAGMYFPDXBNJZSQVHLCKE'
+            var resto = cias % 23;
+            var letra = cadena.substr(resto, 1)
+            $("#appbundle_plaza_cias").val(cias + letra);
+        }
+    }
+
+    function calcularCeco() {
+        var uf = $("#appbundle_plaza_uf").val();
+        var pa = $("#appbundle_plaza_pa").val();
+        var cias = $("#appbundle_plaza_cias").val();
+        if (uf == '' || pa == '' || cias == '') {
+            alert("Unidad Funcional, Punto Asistencia y Cias Obligatorios");
+        } else {
+            $("#procesando").modal('show');
+            var recurso = Routing.generate("ajaxCalcularCeco", {"cias": cias, "uf_id": uf, "pa_id": pa}, true);
+            $.ajax({
+                type: "POST",
+                url: recurso,
+                dataType: 'json',
+                success: function (data, status, xhr) {
+                    $('.modal-backdrop').remove();
+                    $("#procesando").hide();
+                    $("#appbundle_plaza_cecoInf").val(data.codigo);
+                    $("#appbundle_plaza_cecoDesc").val(data.descripcion);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    return null;
+                }
+            });
+        }
+    }
+
+</script> 
+
+
+<div class="container">
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    <div class="form_row mismalinea">
+        {{form_row(form.uf)}}
+    </div>
+    <div class="form-row  mismalinea">
+        {{form_row(form.pa)}}
+    </div>
+    <div class="clearfix"></div>
+    <div class="form-row mismalinea">
+        {{form_row(form.catGen)}}
+    </div>
+    <div class="form-row  mismalinea">
+        {{form_row(form.cias)}}
+    </div>
+    <div class="form-row  mismalinea">
+        {{form_row(form.orden)}}
+    </div>
+    {% if accion == 'NUEVA' %}
+        <div class="form-row  mismalinea">
+            <button type="button" 
+                    class="btn btn-default btn-info"
+                    onclick="calcularCias()"
+                    data-toggle="tooltip" 
+                    data-placement="bottom" 
+                    title="Calcular Identificación de Plaza">Calcular CIAS</button>
+        </div>
+        <div class="form-row  mismalinea">
+            <button type="button" 
+                    class="btn btn-default btn-info"
+                    onclick="reCalcularCias()"
+                    data-toggle="tooltip" 
+                    data-placement="bottom" 
+                    title="Recalcular CIAS según nuevo orden">Recalcular CIAS</button>
+        </div>
+        <div class="form-row  mismalinea">
+            <button type="button" 
+                    class="btn btn-default btn-info"
+                    onclick="calcularLetra()"
+                    data-toggle="tooltip" 
+                    data-placement="bottom" 
+                    title="Calcular letra de Control de Plaza">Calcular Letra</button>
+        </div>
+    {% endif %}
+
+    <div class="clearfix"></div>
+    <div class="form-row mismalinea">
+        {{form_row(form.modalidad)}}
+    </div>
+    <div class="form-row mismalinea">
+        {{form_row(form.catFp)}}
+    </div>
+    <div class="form-row mismalinea">
+        {{form_row(form.turno)}}
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="form-row ">
+        {{form_row(form.observaciones)}}
+    </div>
+    <div class="clearfix"></div>
+    <div class="form-row mismalinea">
+        {{form_row(form.fCreacion)}}
+    </div>
+    <div class="form-row mismalinea">
+        {{form_row(form.fAmortiza)}}
+    </div>
+    <div class="clearfix"></div>
+    <div class="form-row mismalinea">
+        {{form_row(form.refuerzo)}}
+    </div>
+    <div class="form-row mismalinea">
+        {{form_row(form.plantilla)}}
+    </div>
+    <div class="form-row mismalinea">
+        {{form_row(form.ficticia)}}
+    </div>
+    <div class="form-row mismalinea">
+        {{form_row(form.colaboradora)}}
+    </div>
+    <div class="form-row mismalinea">
+        {{form_row(form.horNormal)}}
+    </div>
+    <div class="form-row mismalinea">
+        {{form_row(form.cupequi)}}
+    </div>
+    <div class="clearfix"></div>
+    {% if plaza.ceco == null  %}
+        <div class="form-row mismalinea">
+            {{form_row(form.cecoInf)}}
+        </div>
+        <div class="form-row mismalinea">
+            {{form_row(form.cecoDesc)}}
+        </div>
+        <div class="form-row  mismalinea">
+            <button type="button" 
+                    class="btn btn-default btn-info"
+                    onclick="calcularCeco()"
+                    data-toggle="tooltip" 
+                    data-placement="bottom" 
+                    title="Asignación Automática Centro de Coste">Asignar Ceco</button>
+        </div>
+    {% endif%}
+    <div class="form-row mismalinea">
+        {{form_row(form.ceco)}}
+    </div>
+
+    <div class="form_row " >
+        {{ form_end(form) }}
+    </div>
+</div>
+</div>

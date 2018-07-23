@@ -1,0 +1,16 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} PROCESO TERMINADO 
+{% endblock %}
+
+{% block contenido %}
+    <div class="container">
+        {% for linea in resultado %}
+            Cias= {{linea.cias}} Ceco = {{linea.ceco}} Accion={{linea.accion}}  --Estado={{linea.estado}}  --Error={{linea.error}}<br/>
+            {% for linealog in linea.replicaLog %}
+                {{linealog}}<br/>
+            {% endfor %}
+            <hr/>
+        {% endfor %}
+        <hr/>
+    </div>
+{% endblock %}

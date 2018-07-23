@@ -1,0 +1,42 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %}** CONSULTA DE PUNTOS ASISTENCIALES **{% endblock %}
+{% block contenido %}
+    <div class="container">
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-success">
+                {{message}}
+            </div>
+        {% endfor %}
+        <hr/>
+        <table class="tabla table" border="1">
+            <thead>
+                <tr class="success">
+                    <th class="text-center text-bold">ID</th>
+                    <th class="text-center text-bold">CÓDIGO</th>
+                    <th class="text-center text-bold">EDIFICIO</th>
+                    <th class="text-center text-bold">DESCRIPCIÓN</th>
+                    <th class="text-center text-bold">OFICIAL</th>
+                    <th class="text-center text-bold">D.A.</th>
+                    <th class="text-center text-bold">CECO-CIAS</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">{{pa.id}}</td>
+                    <td class="text-center">{{pa.pa}}</td>
+                    <td>{{pa.edificio}}</td>
+                    <td>{{pa.descripcion}}</td>
+                    <td>{{pa.oficial}}</td>
+                    <td>{{pa.da}}</td>
+                    <td>
+                        <a  href="{{path("verCecoCiasPa",{"pa_id":pa.id})}}" target="_blank">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </a>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

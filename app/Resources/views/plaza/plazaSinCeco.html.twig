@@ -1,0 +1,9 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %}** CONSULTA DE PLAZAS SIN CECO ASIGNADO **  
+{% endblock %}
+     
+{% block contenido %}
+    <div class="container">
+    {{ sg_datatables_render(datatable) }}
+    </div>
+{% endblock %}

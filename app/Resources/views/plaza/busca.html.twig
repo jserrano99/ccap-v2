@@ -1,0 +1,20 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} 
+    CONSULTA PLAZA **FILTRO DE BUSQUEDA** 
+{% endblock %}
+{% block contenido %}
+    <div class="container">
+        {{ form_start(form) }}
+        <div class="form_row mismalinea">
+            {{form_row(form.plaza)}}
+        </div>
+        <div class="form-row  mismalinea">
+            {{form_row(form.plazatxt)}}
+        </div>
+        <div class="clearfix"> </div>
+        <div class="form-row">
+            {{form_row(form.Buscar)}}
+        </div>
+    </div>
+    <div class="clearfix"> </div>
+{% endblock %}

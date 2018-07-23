@@ -1,0 +1,13 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %}** CONSULTA DE PLAZAS (CIAS) **  
+    <a href="{{path("addPlaza")}}" 
+       target="_blank"
+       class="btn btn-success">
+       <span class="glyphicon glyphicon-new-window"></span> Nueva Plaza</a>
+{% endblock %}
+     
+{% block contenido %}
+    <div class="container">
+    {{ sg_datatables_render(datatable) }}
+    </div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} RELACION DE CECOS-CIAS PARA PUNTO ASISTENCIAL {{pa.id}}-{{pa.descripcion}}{% endblock %}
+{% block contenido %}
+    <script>
+        function confirmar(id, accion) {
+        bootbox.confirm("CONFIRMAR SINCRONIZACIÓN",
+                function (result) {
+                if (result) {
+                lanzamiento(id, accion);
+                }
+                }
+        );
+        }
+        function lanzamiento(id, accion) {
+        var recurso = "";
+        switch (accion) {
+        case 'REPLICA':
+                recurso = Routing.generate("replicaCecoCias", {"cecocias_id":id}, true);
+        break;
+        case 'BORRADO':
+                recurso = Routing.generate("deleteCecoCias", {"cecocias_id":id}, true);
+        break;
+        }
+        alert (accion);
+        window.location= recurso;
+        }
+    </script>
+    <div id="procesando" class="modal" role="dialog" margin="auto">
+        <div class="modal-dialog">
+            <div class="modal-content modal-lg">
+                <div class="modal-body" text-align="center">
+                    <img src="{{asset('img/Circulo-Carga-62157.gif')}}"></img>
+                    <h2><span>Realizando sincronización no cierre el navegador....</span></h2>
+                </div>
+            </div>    
+        </div>
+    </div>
+
+    
+    <div class="container">
+        <br/>
+        <table class="tabla table" border="1">
+            <thead>
+                <tr class="success">
+                    <th class="text-center text-bold">ID</th>
+                    <th class="text-center text-bold">Ceco</th>
+                    <th class="text-center text-bold">Cias</th>
+                    <th class="text-center text-bold">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for CecoCias in CecoCiasAll%}
+                <tr>
+                    <td class="text-center">{{CecoCias.id}}</td>
+                    <td class="text-center">
+                        <a href="{{path("verCeco",{"ceco_id":CecoCias.ceco.id})}}" 
+                           target="_blank">{{CecoCias.ceco.codigo}}
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        <a href="{{path("verPlaza",{"plaza_id":CecoCias.plaza.id})}}" 
+                           target="_blank">{{CecoCias.plaza.cias}}
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        <button class="glyphicon glyphicon-trash"
+                                onclick ="confirmar({{CecoCias.id}}, 'BORRADO')">
+                        </button>
+                        <button class="glyphicon glyphicon-refresh"
+                                onclick ="confirmar({{CecoCias.id}}, 'REPLICA')">
+                        </button>
+                    </td>    
+                 {% endfor %}
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="clearfix"> </div>
+
+{% endblock %}

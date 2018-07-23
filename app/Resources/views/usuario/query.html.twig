@@ -1,0 +1,42 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} GESTIÓN DE USUARIOS-CONSULTA{% endblock %}
+{% block contenido %}
+    <div class="container">
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-success">
+                {{message}}
+            </div>
+        {% endfor %}
+        <a href="{{path("addUsuario")}}" class="btn btn-success">Nuevo Usuario</a>
+        <hr/>
+
+        <table class="tabla table" border="1">
+            <thead>
+                <tr class="success">
+                    <th class="text-center text-bold">ID</th>
+                    <th class="text-center text-bold">Usuario</th>
+                    <th class="text-center text-bold">Nombre</th>
+                    <th class="text-center text-bold">Perfil</th>
+                    <th class="text-center text-bold">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for Usuario in UsuarioAll %}
+                    <tr>
+                        <td class="text-center">
+                            <a href="{{path("editUsuario",{ "id":Usuario.id })}}" >
+                                {{Usuario.id}}</a></td>
+                        <td class="text-center">
+                            <a href="{{path("editUsuario",{ "id":Usuario.id })}}" >
+                                {{Usuario.codigo}}</a></td>
+                        <td>{{Usuario.nombre}}</td>
+                        <td>{{Usuario.perfil}}</td>
+                        <td class="text-center">
+                            <a href="{{path("deleteUsuario",{ "id":Usuario.id })}}" class="btn btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

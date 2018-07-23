@@ -1,0 +1,22 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} ** CONSULTA CATEGORIAS GENERALES **
+    <a href="{{path("addCatGen")}}" 
+       target="_blank"
+       class="btn btn-success">
+        <span class="glyphicon glyphicon-new-window"></span> Nueva Categoría</a>
+    <hr/>
+
+{% endblock %}
+
+{% block contenido %}
+    <div class="container">
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-success">
+                {{message}}
+                <hr/>
+            </div>
+        {% endfor %}
+        {{ sg_datatables_render(datatable) }}
+
+    </div>
+{% endblock %}

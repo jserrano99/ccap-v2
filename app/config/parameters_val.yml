@@ -1,0 +1,16 @@
+# This file is auto-generated during the composer install
+parameters:
+    titulo_app: 'CONTROL DE COSTES DE PERSONAL EN ATENCIÓN PRIMARIA'
+    titulo_app_corto: CCAP
+    entorno_alias: VALIDACION
+    modo: REAL
+    database_host: icmbdlva003.madrid.org
+    database_port: 3306
+    database_name: ccap
+    database_user: ccap_admin
+    database_password: cambiala
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    secret: a00a6e85b25c4c7c08062ef956c766da5bc2e3cf
