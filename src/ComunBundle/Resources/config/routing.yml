@@ -1,0 +1,56 @@
+#
+# login
+#
+login:
+    path: /login
+    defaults: { _controller: ComunBundle:Login:login}
+login_check:
+    path: /login_check
+    defaults: { _controller: ComunBundle:Login:check }    
+logout:
+    path:     /login/logout
+    defaults: { _controller: ComunBundle:Login:logout }    
+    options:
+        expose: true
+ #
+ # GESTION DE USUARIOS
+ #
+cambioPassword:
+    path:   /usuario/cambioPassword/{id}
+    defaults: { _controller: ComunBundle:Usuario:CambioPassword}
+    options:
+        expose: true
+queryUsuario:
+    path:   /usuario/query
+    defaults: { _controller: ComunBundle:Usuario:query}
+    options:
+        expose: true
+addUsuario:
+    path:   /usuario/add
+    defaults: { _controller: ComunBundle:Usuario:add}
+    options:
+        expose: true
+editUsuario:
+    path:   /usuario/edit/{id}
+    defaults: { _controller: ComunBundle:Usuario:edit}
+    options:
+        expose: true
+deleteUsuario:
+    path:   /usuario/delete/{id} 
+    defaults: { _controller: ComunBundle:Usuario:delete}
+    options:
+        expose: true
+#
+# BASES DE DATOS 
+#
+queryBaseDatos:
+    path:   /basedatos/query
+    defaults: { _controller: ComunBundle:BaseDatos:query}
+    options:
+        expose: true
+editBaseDatos:
+    path:   /basedatos/edit/{id}
+    defaults: { _controller: ComunBundle:BaseDatos:edit}
+addBaseDatos:
+    path:   /basedatos/add
+    defaults: { _controller: ComunBundle:BaseDatos:add}

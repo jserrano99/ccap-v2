@@ -3,6 +3,9 @@ imports:
     - { resource: security.yml }
     - { resource: services.yml }
     - { resource: "@AppBundle/Resources/config/services.yml" }
+    - { resource: "@ComunBundle/Resources/config/services.yml" }
+    - { resource: "@CostesBundle/Resources/config/services.yml" }
+    - { resource: "@MaestrosBundle/Resources/config/services.yml" }
 
 
 # Put parameters here that don't need to change on each machine where the app is deployed

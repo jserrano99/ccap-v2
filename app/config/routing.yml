@@ -1,3 +1,15 @@
+maestros:
+    resource: "@MaestrosBundle/Resources/config/routing.yml"
+    prefix:   /
+
+costes:
+    resource: "@CostesBundle/Resources/config/routing.yml"
+    prefix:   /
+
+comun:
+    resource: "@ComunBundle/Resources/config/routing.yml"
+    prefix:   /
+    
 app:
     resource: "@AppBundle/Resources/config/routing.yml"
     prefix:   /

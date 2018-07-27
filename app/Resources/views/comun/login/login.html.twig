@@ -1,0 +1,10 @@
+{% extends "layout.html.twig" %}
+{% block login %}
+    <div class ="container">
+        <img src= "{{asset('img/saludMadrid@0,5x.png')}}"></img>  
+        <h3><span>{{titulo_app}}</span></h3>
+    </div>
+    {% if app.session.get('usuario_nombre') == null %}
+       {% include 'comun/login/login.form.html.twig' %}
+    {% endif %}
+{% endblock %}

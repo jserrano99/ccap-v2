@@ -1,0 +1,7 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %}UNIDADES FUNCIONALES **{{accion}}**
+    <a href="{{path("queryUf")}}" class="btn btn-success">Volver</a>
+{% endblock %}
+{% block contenido %}
+    {% include 'costes/uf/form.html.twig' %}
+{% endblock %}

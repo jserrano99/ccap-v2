@@ -1,0 +1,422 @@
+app_homepage:
+    path:     /
+    defaults: { _controller: AppBundle:Login:index}
+#
+# login / Usuario
+#
+login:
+    path: /login
+    defaults: { _controller: AppBundle:Login:login}
+login_check:
+    path: /login_check
+    defaults: { _controller: AppBundle:Login:check }    
+logout:
+    path: /login/logout
+    defaults: { _controller: AppBundle:Login:logout }    
+    options:
+        expose: true
+cambioPassword:
+    path:   /usuario/cambioPassword/{id}
+    defaults: { _controller: AppBundle:Usuario:CambioPassword}
+queryUsuario:
+    path:   /usuario/query
+    defaults: { _controller: AppBundle:Usuario:Query}
+addUsuario:
+    path:   /usuario/add
+    defaults: { _controller: AppBundle:Usuario:Add}
+editUsuario:
+    path:   /usuario/edit/{id}
+    defaults: { _controller: AppBundle:Usuario:Edit}
+deleteUsuario:
+    path:   /usuario/delete/{id} 
+    defaults: { _controller: AppBundle:Usuario:Delete}
+#
+# BASES DE DATOS 
+#
+queryBaseDatos:
+    path:   /basedatos/query
+    defaults: { _controller: AppBundle:BaseDatos:query}
+editBaseDatos:
+    path:   /basedatos/edit/{id}
+    defaults: { _controller: AppBundle:BaseDatos:edit}
+addBaseDatos:
+    path:   /basedatos/add
+    defaults: { _controller: AppBundle:BaseDatos:add}
+#
+# CARGAS INICIALES / SINCRONIZACIÓN 
+#
+cargaInicial:
+    path: /cargaInicial/index
+    defaults: { _controller: AppBundle:CargaInicial:index}    
+    options:
+        expose: true
+
+lanzaCarga:
+    path: /cargaInicial/{tabla}
+    defaults: { _controller: AppBundle:CargaInicial:lanza}    
+    options:
+        expose: true
+#
+# MODOS OCUPACION 
+#
+queryModOcupa:
+    path: /modocupa/query/
+    defaults: { _controller: AppBundle:ModOcupa:query}    
+    options:
+        expose: true
+addModOcupa:
+    path: /modocupa/add/
+    defaults: { _controller: AppBundle:ModOcupa:add}    
+    options:
+        expose: true
+editModOcupa:
+    path: /modocupa/edit/{id}
+    defaults: { _controller: AppBundle:ModOcupa:edit}    
+    options:
+        expose: true
+deleteModOcupa:
+    path: /modocupa/delete/{id}
+    defaults: { _controller: AppBundle:ModOcupa:delete}    
+    options:
+        expose: true
+equiModOcupa:
+    path: /modocupa/verequi/{id}
+    defaults: { _controller: AppBundle:ModOcupa:verEqui}    
+    options:
+        expose: true
+#
+# equivalencias 
+#
+queryEqModOcupa:
+    path: /eqmodocupa/query/
+    defaults: { _controller: AppBundle:EqModOcupa:query}    
+    options:
+        expose: true
+addEqModOcupa:
+    path: /eqmodocupa/add/
+    defaults: { _controller: AppBundle:EqModOcupa:add}    
+    options:
+        expose: true
+deleteEqModOcupa:
+    path: /eqmodocupa/delete/{id}
+    defaults: { _controller: AppBundle:EqModOcupa:delete}    
+    options:
+        expose: true
+ajaxComprobarEqModOcupa:  
+    path: /eqmodocupa/comprobar/{codigoLoc}/{edificio_id}
+    defaults: { _controller: AppBundle:EqModOcupa:ajaxComprobar}    
+    options:
+        expose: true
+#
+# CUENTAS COTIZACIÓN  
+#
+queryMoviPat:
+    path: /movipat/query/
+    defaults: { _controller: AppBundle:MoviPat:query}    
+    options:
+        expose: true
+addMoviPat:
+    path: /movipat/add/
+    defaults: { _controller: AppBundle:MoviPat:add}    
+    options:
+        expose: true
+editMoviPat:
+    path: /movipat/edit/{id}
+    defaults: { _controller: AppBundle:MoviPat:edit}    
+    options:
+        expose: true
+deleteMoviPat:
+    path: /movipat/delete/{id}
+    defaults: { _controller: AppBundle:MoviPat:delete}    
+    options:
+        expose: true
+equiMoviPat:
+    path: /movipat/verequi/{id}
+    defaults: { _controller: AppBundle:MoviPat:verEqui}    
+    options:
+        expose: true
+#
+# equivalencias 
+#
+queryEqMoviPat:
+    path: /eqmovipat/query/
+    defaults: { _controller: AppBundle:EqMoviPat:query}    
+    options:
+        expose: true
+addEqMoviPat:
+    path: /eqmovipat/add/
+    defaults: { _controller: AppBundle:EqMoviPat:add}    
+    options:
+        expose: true
+deleteEqMoviPat:
+    path: /eqmovipat/delete/{id}
+    defaults: { _controller: AppBundle:EqMoviPat:delete}    
+    options:
+        expose: true
+ajaxComprobarEqMoviPat:  
+    path: /eqmovipat/comprobar/{codigoLoc}/{edificio_id}
+    defaults: { _controller: AppBundle:EqMoviPat:ajaxComprobar}    
+    options:
+        expose: true
+#
+# MODOS DE PAGO 
+#
+queryModoPago:
+    path: /modopago/query/
+    defaults: { _controller: AppBundle:ModoPago:query}    
+    options:
+        expose: true
+addModoPago:
+    path: /modopago/add/
+    defaults: { _controller: AppBundle:ModoPago:add}    
+    options:
+        expose: true
+editModoPago:
+    path: /modopago/edit/{id}
+    defaults: { _controller: AppBundle:ModoPago:edit}    
+    options:
+        expose: true
+deleteModoPago:
+    path: /modopago/delete/{id}
+    defaults: { _controller: AppBundle:ModoPago:delete}    
+    options:
+        expose: true
+equiModoPago:
+    path: /modopago/verequi/{id}
+    defaults: { _controller: AppBundle:ModoPago:verEqui}    
+    options:
+        expose: true
+#
+# equivalencias 
+#
+queryEqModoPago:
+    path: /eqmodopago/query/
+    defaults: { _controller: AppBundle:EqModoPago:query}    
+    options:
+        expose: true
+addEqModoPago:
+    path: /eqmodopago/add/
+    defaults: { _controller: AppBundle:EqModoPago:add}    
+    options:
+        expose: true
+deleteEqModoPago:
+    path: /eqmodopago/delete/{id}
+    defaults: { _controller: AppBundle:EqModoPago:delete}    
+    options:
+        expose: true
+ajaxComprobarEqModoPago:  
+    path: /eqmodopago/comprobar/{codigoLoc}/{edificio_id}
+    defaults: { _controller: AppBundle:EqModoPago:ajaxComprobar}    
+    options:
+        expose: true
+
+#
+# MOTIVOS DE ALTA
+#
+queryAltas:
+    path: /altas/query/
+    defaults: { _controller: AppBundle:Altas:query}    
+    options:
+        expose: true
+addAltas:
+    path: /altas/add/
+    defaults: { _controller: AppBundle:Altas:add}    
+    options:
+        expose: true
+editAltas:
+    path: /altas/edit/{id}
+    defaults: { _controller: AppBundle:Altas:edit}    
+    options:
+        expose: true
+deleteAltas:
+    path: /altas/delete/{id}
+    defaults: { _controller: AppBundle:Altas:delete}    
+    options:
+        expose: true
+equiAltas:
+    path: /altas/verequi/{id}
+    defaults: { _controller: AppBundle:Altas:verEqui}    
+    options:
+        expose: true
+#
+# equivalencias 
+#
+queryEqAltas:
+    path: /eqaltas/query/
+    defaults: { _controller: AppBundle:EqAltas:query}    
+    options:
+        expose: true
+addEqAltas:
+    path: /eqaltas/add/
+    defaults: { _controller: AppBundle:EqAltas:add}    
+    options:
+        expose: true
+deleteEqAltas:
+    path: /eqaltas/delete/{id}
+    defaults: { _controller: AppBundle:EqAltas:delete}    
+    options:
+        expose: true
+ajaxComprobarEqAltas:  
+    path: /eqaltas/comprobar/{codigoLoc}/{edificio_id}
+    defaults: { _controller: AppBundle:EqAltas:ajaxComprobar}    
+    options:
+        expose: true
+#
+# FORMAS DE CONTRATACION
+#
+queryFco:
+    path: /fco/query/
+    defaults: { _controller: AppBundle:Fco:query}    
+    options:
+        expose: true
+addFco:
+    path: /fco/add/
+    defaults: { _controller: AppBundle:Fco:add}    
+    options:
+        expose: true
+editFco:
+    path: /fco/edit/{id}
+    defaults: { _controller: AppBundle:Fco:edit}    
+    options:
+        expose: true
+deleteFco:
+    path: /fco/delete/{id}
+    defaults: { _controller: AppBundle:Fco:delete}    
+    options:
+        expose: true
+equiFco:
+    path: /fco/verequi/{id}
+    defaults: { _controller: AppBundle:Fco:verEqui}    
+    options:
+        expose: true
+#
+# equivalencias 
+#
+queryEqFco:
+    path: /eqfco/query/
+    defaults: { _controller: AppBundle:EqFco:query}    
+    options:
+        expose: true
+addEqFco:
+    path: /eqfco/add/
+    defaults: { _controller: AppBundle:EqFco:add}    
+    options:
+        expose: true
+deleteEqFco:
+    path: /eqfco/delete/{id}
+    defaults: { _controller: AppBundle:EqFco:delete}    
+    options:
+        expose: true
+ajaxComprobarEqFco:  
+    path: /eqfco/comprobar/{codigoLoc}/{edificio_id}
+    defaults: { _controller: AppBundle:EqFco:ajaxComprobar}    
+    options:
+        expose: true
+#
+# TIPOS DE IT 
+#
+queryTipoIlt:
+    path: /tipoilt/query/
+    defaults: { _controller: AppBundle:TipoIlt:query}    
+    options:
+        expose: true
+addTipoIlt:
+    path: /tipoilt/add/
+    defaults: { _controller: AppBundle:TipoIlt:add}    
+    options:
+        expose: true
+editTipoIlt:
+    path: /tipoilt/edit/{id}
+    defaults: { _controller: AppBundle:TipoIlt:edit}    
+    options:
+        expose: true
+deleteTipoIlt:
+    path: /tipoilt/delete/{id}
+    defaults: { _controller: AppBundle:TipoIlt:delete}    
+    options:
+        expose: true
+equiTipoIlt:
+    path: /tipoilt/verequi/{id}
+    defaults: { _controller: AppBundle:TipoIlt:verEqui}    
+    options:
+        expose: true
+#
+# equivalencias 
+#
+queryEqTipoIlt:
+    path: /eqtipoilt/query/
+    defaults: { _controller: AppBundle:EqTipoIlt:query}    
+    options:
+        expose: true
+addEqTipoIlt:
+    path: /eqtipoilt/add/
+    defaults: { _controller: AppBundle:EqTipoIlt:add}    
+    options:
+        expose: true
+deleteEqTipoIlt:
+    path: /eqtipoilt/delete/{id}
+    defaults: { _controller: AppBundle:EqTipoIlt:delete}    
+    options:
+        expose: true
+ajaxComprobarEqTipoIlt:  
+    path: /eqtipoilt/comprobar/{codigoLoc}/{edificio_id}
+    defaults: { _controller: AppBundle:EqTipoIlt:ajaxComprobar}    
+    options:
+        expose: true
+#
+# AUSENCIAS
+#
+queryAusencia:
+    path: /Ausencia/query/
+    defaults: { _controller: AppBundle:Ausencia:query}    
+    options:
+        expose: true
+addAusencia:
+    path: /Ausencia/add/
+    defaults: { _controller: AppBundle:Ausencia:add}    
+    options:
+        expose: true
+editAusencia:
+    path: /Ausencia/edit/{id}
+    defaults: { _controller: AppBundle:Ausencia:edit}    
+    options:
+        expose: true
+deleteAusencia:
+    path: /Ausencia/delete/{id}
+    defaults: { _controller: AppBundle:Ausencia:delete}    
+    options:
+        expose: true
+equiAusencia:
+    path: /Ausencia/verequi/{id}
+    defaults: { _controller: AppBundle:Ausencia:verEqui}    
+    options:
+        expose: true
+exportaAusencia:
+    path: /Ausencia/exporta/
+    defaults: { _controller: AppBundle:Ausencia:exporta}    
+    options:
+        expose: true
+#
+# equivalencias 
+#
+queryEqAusencia:
+    path: /eqAusencia/query/
+    defaults: { _controller: AppBundle:EqAusencia:query}    
+    options:
+        expose: true
+addEqAusencia:
+    path: /eqAusencia/add/
+    defaults: { _controller: AppBundle:EqAusencia:add}    
+    options:
+        expose: true
+deleteEqAusencia:
+    path: /eqAusencia/delete/{id}
+    defaults: { _controller: AppBundle:EqAusencia:delete}    
+    options:
+        expose: true
+ajaxComprobarEqAusencia:  
+    path: /eqAusencia/comprobar/{codigoLoc}/{edificio_id}
+    defaults: { _controller: AppBundle:EqAusencia:ajaxComprobar}    
+    options:
+        expose: true
+

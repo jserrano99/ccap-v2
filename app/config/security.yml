@@ -1,6 +1,6 @@
 security:
     encoders:
-        AppBundle\Entity\Usuario:
+        ComunBundle\Entity\Usuario:
             algorithm: bcrypt
             cost: 4
             
@@ -8,7 +8,7 @@ security:
     providers:
     #    our_db_provider:
     #        entity:
-    #            class: AppBundle:Usuario
+    #            class: ComunBundle:Usuario
     #            property: codigo
         in_memory:
             memory: ~

@@ -1,0 +1,207 @@
+
+verParametros:
+    path:   /parametros/ver
+    defaults: { _controller:CostesBundle:App:verParam}
+
+editAsignacionDirecta:
+    path:   /asignacionDirecta/edit/{id}
+    defaults: { _controller: CostesBundle:AsignacionDirecta:edit}
+addAsignacionDirecta:
+    path:   /asignacionDirecta/add
+    defaults: { _controller: CostesBundle:AsignacionDirecta:add}
+queryAsignacionDirecta:
+    path:   /asignacionDirecta/query
+    defaults: { _controller: CostesBundle:AsignacionDirecta:query}
+
+queryExcepcion:
+    path:   /excepcion/query
+    defaults: { _controller: CostesBundle:Excepcion:query}
+editExcepcion:
+    path:   /excepcion/edit/{id}
+    defaults: { _controller: CostesBundle:Excepcion:edit}
+addExcepcion:
+    path:   /excepcion/add/
+    defaults: { _controller: CostesBundle:Excepcion:add}
+importaExcepcion:
+    path:   /excepcion/importar
+    defaults: { _controller: CostesBundle:Excepcion:importa}
+
+#
+# PLAZAS
+#
+addPlaza:
+    path:   /plaza/add
+    defaults: { _controller: CostesBundle:Plaza:add}
+editPlaza:
+    path:   /plaza/edit/{id}
+    defaults: { _controller: CostesBundle:Plaza:edit}
+queryPlaza:
+    path:   /plaza/query
+    defaults: { _controller: CostesBundle:Plaza:query}
+verPlaza:
+    path:   /plaza/verPlaza/{plaza_id}
+    defaults: { _controller: CostesBundle:Plaza:verPlaza}
+verPlazaSinCeco:
+    path:   /plaza/verPlazaSinCeco
+    defaults: { _controller: CostesBundle:Plaza:verPlazaSinCeco}
+    options:
+        expose: true
+replicaPlaza:
+    path:   /plaza/replica/{id}/{actuacion}
+    defaults: { _controller: CostesBundle:Plaza:replica}
+    options:
+        expose: true
+calcularCIAS:
+    path:   /plaza/calcularCias/{uf_id}/{pa_id}/{catgen_id}
+    defaults: { _controller: CostesBundle:Plaza:calcularCias}
+    options:
+        expose: true
+ajaxCalcularCeco:
+    path:   /plaza/calcularCeco/{cias}/{uf_id}/{pa_id}
+    defaults: { _controller: CostesBundle:Plaza:ajaxCalcularCeco}
+    options:
+        expose: true
+verPlazasByCeco:
+    path:   /plaza/verplazasbyceco/{ceco_id}
+    defaults: { _controller: CostesBundle:Plaza:verPlazasByCeco}
+    options:
+        expose: true
+importaCecoCias:
+    path:   /plaza/importaCeco
+    defaults: { _controller: CostesBundle:Plaza:importarCeco}
+    options:
+        expose: true
+verPlazasSinCeco:
+    path:   /plaza/verplazassinceco
+    defaults: { _controller: CostesBundle:Plaza:verPlazasSinCeco}
+    options:
+        expose: true
+#
+# Ceco
+#
+queryCeco:
+    path:   /ceco/query
+    defaults: { _controller: CostesBundle:Ceco:query}
+editCeco:
+    path:   /ceco/edit/{id}
+    defaults: { _controller: CostesBundle:Ceco:edit}
+    options:
+        expose: true
+verCeco:
+    path:   /ceco/verCeco/{ceco_id}
+    defaults: { _controller: CostesBundle:Ceco:verCeco}
+deleteCeco:
+    path:   /ceco/delete/{ceco_id}
+    defaults: { _controller: CostesBundle:Ceco:delete}
+    options:
+        expose: true
+ajaxVerCeco:
+    path:   /ceco/ajaxverceco/{id}
+    defaults: { _controller: CostesBundle:Ceco:ajaxVerCeco}
+    options:
+        expose: true
+replicaCeco:
+    path:   /ceco/replicaCeco/{ceco_id}
+    defaults: { _controller: CostesBundle:Ceco:replicaCeco}
+addCeco:
+    path:   /ceco/add
+    defaults: { _controller: CostesBundle:Ceco:add}
+importaCeco:
+    path:   /ceco/importa
+    defaults: { _controller: CostesBundle:Ceco:importa}
+verCias:
+    path:   /ceco/verCias/{ceco_id}
+    defaults: { _controller: CostesBundle:Ceco:verCias}
+#
+# CecoCias
+#
+queryCecoCias:
+    path:   /cecocias/query
+    defaults: { _controller: CostesBundle:CecoCias:query}
+    options:
+        expose: true
+addCecoCias:
+    path:   /cecocias/add
+    defaults: { _controller: CostesBundle:CecoCias:add}
+deleteCecoCias: 
+    path:   /cecocias/delete/{cecocias_id}
+    defaults: { _controller: CostesBundle:CecoCias:delete}
+    options:
+        expose: true
+asignarCeco:
+    path:   /cecocias/asignarCeco/{plaza_id}
+    defaults: { _controller: CostesBundle:CecoCias:asignarCeco}
+replicaCecoCias:
+    path:   /cecocias/replica/{cecocias_id}
+    defaults: { _controller: CostesBundle:CecoCias:replica}
+    options:
+        expose: true
+#
+# UNIDADES FUNCIONALES 
+#
+editUf:
+    path:   /uf/edit/{id}
+    defaults: { _controller: CostesBundle:Uf:edit}
+verCecoCiasUf:
+    path:   /uf/verCecoCias/{id}
+    defaults: { _controller: CostesBundle:Uf:verCecoCias}
+queryUf:
+    path:   /uf/query
+    defaults: { _controller: CostesBundle:Uf:query}
+verUf:
+    path:   /uf/verUf/{id}
+    defaults: { _controller: CostesBundle:Uf:verUf}
+addUf:
+    path:   /uf/add/
+    defaults: { _controller: CostesBundle:Uf:add}
+deleteUf:
+    path:   /uf/delete/{id}
+    defaults: { _controller: CostesBundle:Uf:delete}
+    options:
+        expose: true
+replicaUf:
+    path:   /uf/replica/{id}/{actuacion}
+    defaults: { _controller: CostesBundle:Uf:replica}
+verGerencia:
+    path:   /uf/verGerencia/{id}
+    defaults: { _controller: CostesBundle:Uf:verGerencia}
+    options:
+        expose: true
+        
+ajaxCalculaCodigoUf:
+    path:   /uf/ajaxCalculaCodigo/{codigo}
+    defaults: { _controller: CostesBundle:Uf:ajaxCalculaCodigo}
+    options:
+        expose: true
+    
+#
+# PUNTOS ASISTENCIALES 
+#
+editPa:
+    path:   /pa/edit/{id}
+    defaults: { _controller: CostesBundle:Pa:edit}
+verCecoCiasPa:
+    path:   /pa/verCecoCias/{id}
+    defaults: { _controller: CostesBundle:Pa:verCecoCias}
+queryPa:
+    path:   /pa/query
+    defaults: { _controller: CostesBundle:Pa:query}
+verPa:
+    path:   /uf/verPa/{id}
+    defaults: { _controller: CostesBundle:Pa:verPa}
+addPa:
+    path:   /pa/add/
+    defaults: { _controller: CostesBundle:Pa:add}
+deletePa:
+    path:   /pa/delete/{id}
+    defaults: { _controller: CostesBundle:PA:delete}
+    options:
+        expose: true
+replicaPa:
+    path:   /pa/replica/{id}/{actuacion}
+    defaults: { _controller: CostesBundle:Pa:replica}
+verZonaBasica:
+    path:   /pa/verZonaBasica/{id}
+    defaults: { _controller: CostesBundle:Pa:verZonaBasica}
+    options:
+        expose: true

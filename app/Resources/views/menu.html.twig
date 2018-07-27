@@ -1,47 +1,23 @@
 <div class="btn-group btn-group-justified" role="group" aria-label="...">  
-    {% if app.session.get('usuario_perfil') == 'ROLE_ADMIN' %}
-        {% include 'menuAdmin.html.twig' %}
-    {% endif %}
-    <div class="btn-group">
-        <button type="button" class="btn btn-default dropdown-toggle btn-primary" 
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Maestros 
-            <span class="glyphicon glyphicon-cog"></span>
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            <li><a href="{{path("queryCeco")}}">Centros de Coste</a></li>
-            <li><a href="{{path("queryPlaza")}}">Plazas</a></li>
-            <li><a href="{{path("queryUf")}}">Unidades Funcionales</a></li>
-            <li><a href="{{path("queryPa")}}">Puntos Asistenciales</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="{{path("queryCatGen")}}">Categorías Generales</a></li>
-            <li><a href="{{path("queryCateg")}}">Categorías Profesionales</a></li>
-        </ul>
-    </div>
-    <div class="btn-group">
-        <button type="button" class="btn btn-default dropdown-toggle btn-primary" 
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Asignación 
-            <span class="glyphicon glyphicon-cog"></span>
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            <li><a href="{{path("importaCecoCias")}}">Carga de Asignaciones</a></li>
-            <li><a href="{{path("verPlazasSinCeco")}}">Consulta Plazas Sin Ceco</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="{{path("queryAsignacionDirecta")}}">Asignación Directa</a></li>
-            <li><a href="{{path("queryExcepcion")}}">Excepciones</a></li>
 
-        </ul>
-    </div>
-    <div class="btn-group">
-        <button type="button" 
-                class="btn btn-default btn-danger"
-                onclick="cerrarSesion()"
-                data-toggle="tooltip" 
-                data-placement="bottom" 
-                title="Cerrar Sesión">Cerrar
-            <span class="glyphicon glyphicon-off"></span>
-        </button>
-    </div>
+    {% if app.session.get('usuario_perfil') == 'ROLE_ADMIN' %}
+        {% include 'menu.admin.html.twig' %}
+        {% include 'menu.costes.html.twig' %}
+        {% include 'menu.maestros.html.twig' %}
+    {% endif %}
+
+    {% if app.session.get('usuario_perfil') == 'ROLE_COSTES' %}
+        {% include 'menu.costes.html.twig' %}
+    {% endif %}
+
+    {% if app.session.get('usuario_perfil') == 'ROLE_MAESTROS' %}
+        {% include 'menu.maestros.html.twig' %}
+    {% endif %}
+
+    {% if app.session.get('usuario_perfil') == 'ROLE_USER' %}
+        {% include 'pendiente_perfil.html.twig' %}
+    {% else %}
+        {% include 'cerrar.html.twig' %}
+    {% endif %}
 
 </div>

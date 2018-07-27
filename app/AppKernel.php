@@ -18,6 +18,9 @@ class AppKernel extends Kernel {
             new AppBundle\AppBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Sg\DatatablesBundle\SgDatatablesBundle(),
+            new ComunBundle\ComunBundle(),
+            new CostesBundle\CostesBundle(),
+            new MaestrosBundle\MaestrosBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
