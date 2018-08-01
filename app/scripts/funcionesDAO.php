@@ -310,7 +310,7 @@ function selectEdificio($edificio) {
 function selectDa($da) {
     global $JanoControl;
     try {
-        $query = $JanoControl->prepare("select id from ccap_da where codigo = :da");
+        $query = $JanoControl->prepare("select id from comun_da where codigo = :da");
         $params = [":da" => $da];
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
@@ -527,7 +527,7 @@ function selectUf($uf) {
         $sentencia = " select t1.*, t2.codigo as edificio, t3.codigo as da "
                 . " from ccap_uf as t1  "
                 . " inner join comun_edificio as t2 on t2.id = t1.edificio_id "
-                . " inner join ccap_da as t3 on t3.id = t1.da_id "
+                . " inner join comun_da as t3 on t3.id = t1.da_id "
                 . " where t1.uf = :uf ";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":uf" => $uf);
@@ -551,7 +551,7 @@ function selectPa($pa) {
         $sentencia = " select t1.*, t2.codigo as edificio, t3.codigo as da "
                 . " from ccap_pa as t1  "
                 . " inner join comun_edificio as t2 on t2.id = t1.edificio_id "
-                . " inner join ccap_da as t3 on t3.id = t1.da_id "
+                . " inner join comun_da as t3 on t3.id = t1.da_id "
                 . " where t1.pa = :pa ";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":pa" => $pa);
@@ -623,7 +623,7 @@ function selectCategId($codigo) {
 function selectPlaza($plaza_id) {
     global $JanoControl;
     try {
-        $sentencia = " select t1.cias, t2.uf, t4.codigo as modalidad,"
+        $sentencia = " select t1.id, t1.cias, t2.uf, t4.codigo as modalidad,"
                 . " t3.pa, t5.codigo as catgen, t1.ficticia, t1.refuerzo, "
                 . " t6.codigo as catfp, t1.cupequi, t1.plantilla, t1.f_amortiza, t1.colaboradora, t1.f_creacion, t7.codigo as edificio, t1.observaciones,t1.horNormal "
                 . " ,t8.codigo as ceco, t1.turno"

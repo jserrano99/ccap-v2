@@ -228,7 +228,7 @@ class PlazaController extends Controller {
         $Pa = $Pa_repo->find($pa_id);
         $zonaBasica = substr($Uf->getOficial(), 4, 2); // posición 5-6 del Código Oficial
 
-        $CatGen_repo = $entityManager->getRepository("CostesBundle:CatGen");
+        $CatGen_repo = $entityManager->getRepository("MaestrosBundle:CatGen");
         $CatGen = $CatGen_repo->find($catgen_id);
         $tipoPuesto = $CatGen->getCodigo();
 

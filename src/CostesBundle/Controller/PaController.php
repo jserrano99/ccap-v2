@@ -52,7 +52,7 @@ class PaController extends Controller {
             }
         }
 
-        $params = array("pa" => $Pa,
+        $params = array("pa" => $Pa,"accion" =>"MODIFICACIÓN",
             "form" => $form->createView());
         return $this->render("costes/pa/edit.html.twig", $params);
     }
@@ -96,9 +96,9 @@ class PaController extends Controller {
             }
         }
 
-        $params = array("pa" => $Pa,
+        $params = array("pa" => $Pa, "accion" =>"NUEVO",
             "form" => $form->createView());
-        return $this->render("costes/pa/add.html.twig", $params);
+        return $this->render("costes/pa/edit.html.twig", $params);
     }
 
     public function replicaAction($id,$actuacion) {

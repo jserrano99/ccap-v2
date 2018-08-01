@@ -58,7 +58,7 @@ function crearEqCentroInte($UF) {
             . " CODIGO_LOC= " . $UF["codigoLoc"]
             . " CODIGO_UNI= " . $UF["uf"]
             . " OFICIAL= " . $UF["oficial"]
-            . " DA= " . $UF["da"] . "\n";
+            . " DA= " . $UF["da"] . "\n"; 
         }
         return true;
     } catch (PDOException $ex) {

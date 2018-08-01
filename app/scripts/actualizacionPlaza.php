@@ -111,20 +111,27 @@ function equivalenciasPlaza($Plaza) {
     $Equi["catgen"] = selectEqCatGen($Plaza["catgen"], $Plaza["edificio"]);
     $Equi["catfp"] = selectEqCatFp($Plaza["catfp"], $Plaza["edificio"]);
     $Equi["turno"] = selectEqTurno($Plaza["turno"], $Plaza["edificio"]);
-    /*
+    
       echo "**EQUIVALENCIAS**\n";
       echo "**-------------**\n";
       echo " uf = " . $Plaza["uf"] . "/" . $Equi["uf"] . "\n";
       echo " p_asist = " . $Plaza["pa"] . "/" . $Equi["p_asist"] . "\n";
       echo " catgen = " . $Plaza["catgen"] . "/" . $Equi["catgen"] . "\n";
       echo " catfp = " . $Plaza["catfp"] . "/" . $Equi["catfp"] . "\n";
-     */
-    return $Equi;
+    
+      return $Equi;
 }
 
 function insertPlazaUnif($Plaza) {
     global $JanoUnif;
     try {
+        $sentencia = " delete from plazas where cias = :cias";
+        $query = $JanoUnif->prepare($sentencia);
+        
+        $params = array(":cias" => $Plaza["cias"]);
+        $query->execute($params);
+            
+        
         $sentencia = "insert into plazas ( cias, uf, modalidad, p_asist, catgen"
                 . "  ,ficticia, refuerzo, catfp, cupequi, plantilla, f_amortiza, colaboradora, observaciones,turno"
                 . "  ,fcreacion, hor_normal ) values ( "
@@ -151,7 +158,7 @@ function insertPlazaUnif($Plaza) {
 
         $ins = $query->execute($params);
         if ($ins == 0) {
-            echo " ERROR EN INSERCIÓN EN LA BASE DE DATOS UNIFICADA CIAS=" . $Plaza["cias"] . "\n";
+            echo "****ERROR EN INSERCIÓN EN LA BASE DE DATOS UNIFICADA CIAS=" . $Plaza["cias"] . "\n";
             return false;
         } else {
             echo " PLAZA " . $Plaza["cias"] . " CREADA  EN LA BASE DE DATOS UNIFICADA \n";
@@ -160,7 +167,7 @@ function insertPlazaUnif($Plaza) {
             procesoCecoCias($JanoUnif, $Plaza["cias"], $Plaza["ceco"]);
         }
     } catch (PDOException $ex) {
-        echo " PDOERROR EN INSERT BASE DE DATOS UNIFICADA " . $ex->getMessage() . " \n";
+        echo "****PDOERROR EN INSERT BASE DE DATOS UNIFICADA " . $ex->getMessage() . " \n";
         return false;
     }
 
@@ -168,10 +175,10 @@ function insertPlazaUnif($Plaza) {
 }
 
 function insertPlazaArea($Plaza) {
-    global $tipo;
-    $baseDatos = SelectBaseDatosEdificio($tipo, $Plaza["edificio"]);
+    global $tipoBd;
+    $baseDatos = SelectBaseDatosEdificio($tipoBd, $Plaza["edificio"]);
     if ($baseDatos == null) {
-        echo " ERROR EN NO EXISTE DEFINICIÓN PARA LA BASE DE DATOS EDIFICIO=" . $Plaza["edificio"] . " ENTORNO = " . $tipo . " \n";
+        echo "***ERROR EN NO EXISTE DEFINICIÓN PARA LA BASE DE DATOS EDIFICIO=" . $Plaza["edificio"] . " ENTORNO = " . $tipo . " \n";
         return false;
     }
     $datosConexion["maquina"] = $baseDatos["maquina"];
@@ -186,14 +193,20 @@ function insertPlazaArea($Plaza) {
     }
 
     try {
+        $sentencia = " delete from plazas where cias = :cias";
+        $query = $conexionArea->prepare($sentencia);
+        $params = array(":cias" => $Plaza["cias"]);
+        $query->execute($params);
+            
         $sentencia = "insert into plazas ( cias, uf, modalidad, p_asist, catgen"
                 . "  ,ficticia, refuerzo, catfp, cupequi, plantilla, f_amortiza, colaboradora, observaciones, turno"
-                . "  ,fcreacion, hor_normal ) values ( "
+                . "  ,fcreacion, hor_normal, tarj1, tarj2, tarj3, tarj4, tarj5 ) values ( "
                 . "  :cias, :uf, :modalidad, :p_asist, :catgen"
                 . "  ,:ficticia, :refuerzo, :catfp, :cupequi, :plantilla, :f_amortiza, :colaboradora,:observaciones,:turno "
-                . "  ,:f_creacion, :hor_normal )";
+                . "  ,:f_creacion, :hor_normal, :tarj1, :tarj2, :tarj3, :tarj4, :tarj5 )";
 
         $query = $conexionArea->prepare($sentencia);
+//        var_dump($query);
         $Equi = equivalenciasPlaza($Plaza);
         $params = array(":cias" => $Plaza["cias"],
             ":uf" => $Equi["uf"],
@@ -210,18 +223,26 @@ function insertPlazaArea($Plaza) {
             ":f_creacion" => $Plaza["f_creacion"],
             ":observaciones" => $Plaza["observaciones"],
             ":turno" => $Equi["turno"],
-            ":hor_normal" => $Plaza["horNormal"]);
+            ":hor_normal" => $Plaza["horNormal"],
+            ":tarj1" => 0, 
+            ":tarj2" => 0, 
+            ":tarj3" => 0, 
+            ":tarj4" => 0,
+            ":tarj5" => 0);
+//        var_dump($params);
+    
         $ins = $query->execute($params);
-        if ($ins == 0) {
-            echo " ERROR EN LA Inserción CIAS=" . $Plaza["cias"] . "\n";
-            return false;
-        }
+        
+//        if ($ins == 0) {
+//            echo "***ERROR EN INSERCION CIAS=" . $Plaza["cias"] . "\n";
+//            return false;
+//        }
         if ($Plaza["ceco"] != null) {
             procesoCecoCias($conexionArea, $Plaza["cias"], $Plaza["ceco"]);
         }
         return true;
     } catch (PDOException $ex) {
-        echo " PDOERROR EN INSERCION EN BASE DE DATOS AREA  " . $ex->getMessage() . " \n";
+        echo "***PDOERROR EN INSERCION EN BASE DE DATOS AREA  " . $ex->getMessage() . " \n";
         return false;
     }
 }
@@ -266,7 +287,7 @@ function updatePlazaUnif($Plaza) {
             ":hor_normal" => $Plaza["horNormal"]);
         $ins = $query->execute($params);
         if ($ins == 0) {
-            echo " Error en actualización base de datos unificada cias= " . $Plaza["cias"] . "\n";
+            echo "***Error en actualización base de datos unificada cias= " . $Plaza["cias"] . "\n";
             return false;
         }
         echo " PLAZA " . $Plaza["cias"] . " MODIFICADA EN LA BASE DE DATOS UNIFICADA \n";
@@ -275,7 +296,7 @@ function updatePlazaUnif($Plaza) {
         }
         return true;
     } catch (PDOException $ex) {
-        echo " ERRORPDO EN  Actualicación " . $ex->getMessage() . " \n";
+        echo "***ERRORPDO EN  Actualicación " . $ex->getMessage() . " \n";
         return false;
     }
 }
@@ -284,7 +305,7 @@ function updatePlazaArea($Plaza) {
     global $tipo;
     $baseDatos = SelectBaseDatosEdificio($tipo, $Plaza["edificio"]);
     if ($baseDatos == null) {
-        echo " ERROR EN NO EXISTE DEFINICIÓN PARA LA BASE DE DATOS EDIFICIO=" . $Plaza["edificio"] . " ENTORNO =" . $tipo . " \n";
+        echo "***ERROR EN NO EXISTE DEFINICIÓN PARA LA BASE DE DATOS EDIFICIO=" . $Plaza["edificio"] . " ENTORNO =" . $tipo . " \n";
         return false;
     }
 
@@ -349,7 +370,7 @@ function updatePlazaArea($Plaza) {
 
         return true;
     } catch (PDOException $ex) {
-        echo " ERRORPDO EN  Actualicación " . $ex->getMessage() . " \n";
+        echo "***ERRORPDO EN  Actualicación " . $ex->getMessage() . " \n";
         return false;
     }
 }
@@ -376,16 +397,17 @@ $actuacion = $argv[3];
 
 if ($tipo == 'REAL') {
     echo " **** PRODUCCIÓN **** \n";
+    $tipoBd = 2;
     $JanoInte = conexionPDO(selectBaseDatos( 2, 'I'));
     $JanoUnif = conexionPDO(selectBaseDatos( 2, 'U'));
 } else {
     echo " ++++ VALIDACIÓN ++++ \n";
+    $tipoBd=1;
     $JanoInte = conexionPDO(selectBaseDatos( 1, 'I'));
     $JanoUnif = conexionPDO(selectBaseDatos( 1, 'U'));
 }
 
 
-echo " ** ACTUACIÓN = " . $actuacion . " **\n";
 $Plaza = selectPlaza($id);
 
 if ($Plaza == null) {
@@ -411,6 +433,8 @@ echo " ==> PLAZA: ID = " . $Plaza["id"]
  . " edificion=" . $Plaza["edificio"]
  . " turno= " . $Plaza["turno"]
  . " ceco= " . $Plaza["ceco"] . "\n\n";
+
+echo "==> ACTUACIÓN = " . $actuacion . " **\n";
 
 if ($actuacion == 'INSERT') {
     if (!procesoInsert($Plaza)) {
