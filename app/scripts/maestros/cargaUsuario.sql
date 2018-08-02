@@ -1,0 +1,3 @@
+INSERT INTO ccap.comun_usuario( id, estado_usuario_id, codigo, nombre, perfil, email, password, fc_alta ) VALUES ( 1, 1, '50430076T', 'Serrano Barrera, José Luis', 'ROLE_ADMIN', 'jserranob@salud.madrid.org', null, null ); 
+INSERT INTO ccap.comun_usuario( id, estado_usuario_id, codigo, nombre, perfil, email, password, fc_alta ) VALUES ( 2, 1, '02238267E', 'Herrero Ayuso, Félix', 'ROLE_COSTES', 'felix.herrero@salud.madrid.org', null, null ); 
+INSERT INTO ccap.comun_usuario( id, estado_usuario_id, codigo, nombre, perfil, email, password, fc_alta ) VALUES ( 3, 1, '02514236Z', 'Gil Ibañez, Inmaculada', 'ROLE_ADMIN', 'inmaculada.gil@madrid.org', null, null ); 

@@ -1,0 +1,22 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %}  CONSULTA DEPENDENCIAS TABLA **{{cargaInicial.tabla|upper}}:: {{cargaInicial.descripcion|upper}}**
+    <a href="{{path("queryCargaInicial")}}" 
+       class="btn btn-success">
+       <span class="glyphicon glyphicon-new-window"></span> Volver </a>
+    <a href="{{path("addDependencia",{"cargaInicial_id":cargaInicial.id})}}" 
+       class="btn btn-success">
+       <span class="glyphicon glyphicon-plus"></span> Dependencia </a>
+    <hr/>
+{% endblock %} 
+
+{% block contenido %}
+    <div class="container-fluid">
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-success">
+                {{message}}
+            </div>
+            <hr/>
+        {% endfor %}
+        {{ sg_datatables_render(datatable) }}
+    </div>
+{% endblock %}

@@ -1,5 +1,8 @@
 {% extends "layout.html.twig" %} 
 {% block titulo %} PROCESO TERMINADO 
+    <a href="{{path("queryCateg")}}" class="btn btn-success"> 
+        <span class="glyphicon glyphicon-th-list"></span>  Volver</a>
+
 {% endblock %}
 
 {% block contenido %}
@@ -8,6 +11,6 @@
             {{linea}} <br/>
         {% endfor %}
         <hr/>
-        <a href="{{path("queryCateg")}}" class="btn btn-success">Volver</a>
+
     </div>
 {% endblock %}

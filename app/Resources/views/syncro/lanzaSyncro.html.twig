@@ -1,10 +1,10 @@
 {% extends "layout.html.twig" %} 
-{% block titulo %} PROCESO DE SINCRONIZACIÓN <hr/> {% endblock %}
+{% block titulo %} CARGA INICIAL TABLAS DE CENTROS DE COSTE <hr/> {% endblock %}
 
 {% block contenido %}
     <script>
         function Confirmar(id) {
-            bootbox.confirm("CONFIRMAR SINCRONIZACIÓN",
+            bootbox.confirm("CONFIRMAR CARGA INICIAL TABLA",
                     function (result) {
                         if (result) {
                             lanzamiento(id);

@@ -45,6 +45,11 @@ class CecoDatatable extends AbstractDatatable {
                 ->add('division', Column::class, array('title' => 'División','searchable' => false, 'width' => '20px'))
                 ->add('codigo', Column::class, array('title' => 'Código','searchable' => true, 'width' => '150px'))
                 ->add('descripcion', Column::class, array('title' => 'Descripción','searchable' => true, 'width' => '300px'))
+                ->add('sincroLog.estado.descripcion', Column::class, array(
+                    'title' => 'Log',
+                    'width' => '120px',
+                    'default_content' => ''))
+                
                 ->add(null, ActionColumn::class, array('title' => 'Acciones',
                     'actions' => array(
                         array('route' => 'editCeco',
@@ -79,6 +84,18 @@ class CecoDatatable extends AbstractDatatable {
                                 'title' => 'Eliminar registro en las Base de Datos de las Areas',
                                 'class' => 'btn btn-primary btn-xs',
                                 'role' => 'button')),
+                        array('route' => 'descargaLogCeco',
+                            'route_parameters' => array('id' => 'id'),
+                            'label' => 'Logs',
+                            'icon' => 'glyphicon glyphicon-edit',
+                            'render_if' => function ($row) {
+                                if ($row['sincroLog'] != null )
+                                    return true;
+                            },
+                            'attributes' => array('rel' => 'tooltip',
+                                'title' => 'Logs',
+                                'class' => 'btn btn-primary btn-xs',
+                                'role' => 'button'))
                     )
                 ))
         ;

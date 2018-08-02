@@ -102,7 +102,7 @@ class PlazaType extends AbstractType {
                     "label" => 'Refuerzo',
                     'required' => true,
                     'disabled' => false,
-                    'choices' => array('Si' => 'S', 'No' => 'N'),
+                    'choices' => array('No' => 'N','Si' => 'S'),
                     "attr" => array("class" => "form-control muycorto")))
                 ->add('colaboradora', ChoiceType::class, array(
                     "label" => 'Colaboradora',
@@ -124,10 +124,11 @@ class PlazaType extends AbstractType {
                     "attr" => array("class" => "form-control muycorto")))
                 ->add('turno', ChoiceType::class, array(
                     "label" => 'Turno',
-                    'required' => true,
+                    'required' => false,
                     'disabled' => false,
-                    'choices' => array('Mañana' => 'M', 'Tarde' => 'T','SAR' => 'P'),
-                    "attr" => array("class" => "form-control muycorto")))
+                    'placeholder' => 'Seleccione Turno ... ',
+                    'choices' => array('Mañana' => 'M', 'Tarde' => 'T','SAR' => 'P' ),
+                    "attr" => array("class" => "form-control corto")))
                 ->add('ficticia', ChoiceType::class, array(
                     "label" => 'Ficticia',
                     'required' => true,

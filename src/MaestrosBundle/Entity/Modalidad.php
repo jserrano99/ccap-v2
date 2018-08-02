@@ -104,4 +104,5 @@ class Modalidad {
     public function __toString() {
         return $this->descripcion." (".$this->codigo.")";
     }
+    
 }

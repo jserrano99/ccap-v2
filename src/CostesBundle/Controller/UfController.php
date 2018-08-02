@@ -39,7 +39,7 @@ class UfController extends Controller {
                 $EM->persist($Uf);
                 $EM->flush();
                 $params = array("id" => $Uf->getId(), "actuacion" => "UPDATE");
-                return $this->redirectToRoute("replicaUf", $params);
+                return $this->redirectToRoute("sincroUf", $params);
             } catch (UniqueConstraintViolationException $ex) {
                 $status = " YA EXISTE UNA UNIDAD FUNCIONAL CON ESTE CÓDIGO: " . $Uf->getUf();
                 $this->sesion->getFlashBag()->add("status", $status);
@@ -83,7 +83,7 @@ class UfController extends Controller {
                 $EM->persist($Uf);
                 $EM->flush();
                 $params = array("id" => $Uf->getId(), "actuacion" => "INSERT");
-                return $this->redirectToRoute("replicaUf", $params);
+                return $this->redirectToRoute("sincroUf", $params);
             } catch (UniqueConstraintViolationException $ex) {
                 $status = " YA EXISTE UNA UNIDAD FUNCIONAL CON ESTE CÓDIGO: " . $Uf->getUf();
                 $this->sesion->getFlashBag()->add("status", $status);
@@ -99,30 +99,6 @@ class UfController extends Controller {
             "accion" => "CREACIÓN",
             "form" => $form->createView());
         return $this->render("costes/uf/edit.html.twig", $params);
-    }
-
-    public function replicaAction($id, $actuacion) {
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $Uf_repo = $entityManager->getRepository("CostesBundle:Uf");
-        $Uf = $Uf_repo->find($id);
-
-        $resultado = $this->replicaUf($Uf, $actuacion);
-        $params = ["error" => $resultado["error"],
-            "salida" => $resultado["log"]];
-        return $this->render("costes/uf/finProceso.html.twig", $params);
-    }
-
-    public function replicaUf($Uf, $actuacion) {
-        $root = $this->get('kernel')->getRootDir();
-        $modo = $this->getParameter('modo');
-        $php_script = "php " . $root . "/scripts/actualizacionUf.php " . $modo . " " . $Uf->getUf() . " " . $actuacion;
-
-        $mensaje = exec($php_script, $SALIDA, $valor);
-        $resultado["error"] = $valor;
-        $resultado["log"] = $SALIDA;
-
-        return $resultado;
     }
 
     public function queryAction(Request $request) {
@@ -169,14 +145,83 @@ class UfController extends Controller {
                         ->where("u.codigo = :codigo")
                         ->setParameter("codigo", $edificio)
                         ->getQuery()->getResult();
-        $Edificio = $EdificioAll[0];
-
-        $codigoSaint["codigo"] = $codigo12 . substr($codigo, 6, 4);
-        $codigoSaint["edificio"] = $Edificio->getId();
+        IF ($EdificioAll == null) {
+            $codigoSaint["codigo"] = "ERROR-";
+            $codigoSaint["edificio"] = $edificio;
+        } else {
+            $Edificio = $EdificioAll[0];
+            $codigoSaint["codigo"] = $codigo12 . substr($codigo, 6, 4);
+            $codigoSaint["edificio"] = $Edificio->getId();
+        }
         $response = new Response();
         $response->setContent(json_encode($codigoSaint));
         $response->headers->set("Content-type", "application/json");
         return $response;
+    }
+
+    public function sincroAction($id, $actuacion) {
+        $em = $this->getDoctrine()->getManager();
+        $usuario_id = $this->sesion->get('usuario_id');
+        $Usuario = $em->getRepository("ComunBundle:Usuario")->find($usuario_id);
+        $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(1);
+        $Uf = $em->getRepository("CostesBundle:Uf")->find($id);
+
+        $SincroLog = new \ComunBundle\Entity\SincroLog();
+        $fechaProceso = new \DateTime();
+
+        $SincroLog->setUsuario($Usuario);
+        $SincroLog->setTabla("ccap_uf");
+        $SincroLog->setIdElemento($id);
+        $SincroLog->setFechaProceso($fechaProceso);
+        $SincroLog->setEstado($Estado);
+        $em->persist($SincroLog);
+
+        $Uf->setSincroLog($SincroLog);
+        $em->persist($Uf);
+        $em->flush();
+
+        $root = $this->get('kernel')->getRootDir();
+        $modo = $this->getParameter('modo');
+        $php_script = "php " . $root . "/scripts/costes/actualizacionUf.php " . $modo . "  " . $Uf->getId() . " " . $actuacion;
+
+        $mensaje = exec($php_script, $SALIDA, $resultado);
+        if ($resultado == 0) {
+            $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(2);
+        } else {
+            $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(3);
+        }
+
+        $ficheroLog = 'sincroUf-' . $Uf->getUf() . '.log';
+        $ServicioLog = $this->get('app.escribelog');
+        $ServicioLog->setLogger('ccap_uf->codigo:' . $Uf->getUf());
+        foreach ($SALIDA as $linea) {
+            $ServicioLog->setMensaje($linea);
+            $ServicioLog->escribeLog($ficheroLog);
+        }
+        $SincroLog->setScript($php_script);
+        $SincroLog->setFicheroLog($ServicioLog->getFilename());
+        $SincroLog->setEstado($Estado);
+        $em->persist($SincroLog);
+        $em->flush();
+
+        $params = array("SincroLog" => $SincroLog,
+            "resultado" => $resultado);
+        $view = $this->renderView("finSincro.html.twig", $params);
+
+        $response = new Response($view);
+
+        $response->headers->set('Content-Disposition', 'inline');
+        $response->headers->set('Content-Type', 'text/html');
+        $response->headers->set('target', '_blank');
+
+        return $response;
+    }
+
+    public function descargaLogAction($id) {
+        $em = $this->getDoctrine()->getManager();
+        $Uf = $em->getRepository("CostesBundle:Uf")->find($id);
+        $params = array("id" => $Uf->getSincroLog()->getId());
+        return $this->redirectToRoute("descargaSincroLog", $params);
     }
 
 }

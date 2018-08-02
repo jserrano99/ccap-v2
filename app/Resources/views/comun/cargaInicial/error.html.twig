@@ -1,0 +1,18 @@
+{% block contenido %}
+    <div id="fin" class="container" text-align="center" >
+        <span><h2>TABLA: {{CargaInicial.tabla|upper}}</h2></span> <span><h3>FINALIZADA EN ERROR</h3></span> 
+        <hr/>
+        
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-success">
+                {{message |upper}}
+            </div>
+            <hr/>
+        {% endfor %}
+
+        <a href="{{path("queryCargaInicial")}}" 
+           class="btn btn-success btn-lg">
+            <span class="glyphicon glyphicon-th-list"></span> Volver </a>
+    </div>
+
+{% endblock %}

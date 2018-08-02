@@ -75,7 +75,7 @@ class Pa {
     /**
      * @var string
      *
-     * @ORM\Column(name="en_uso", type="string", length=1, nullable=true)
+     * @ORM\Column(name="enuso", type="string", length=1, nullable=true)
      */
     private $enuso;
 
@@ -99,6 +99,18 @@ class Pa {
      * @ORM\Column(name="fecha_baja", type="date", nullable=true)
      */
     private $fcBaja;
+    
+    /**
+     * @var ComunBundle\Entity\SincroLog|null
+     *
+     * @ORM\ManyToOne(targetEntity="ComunBundle\Entity\SincroLog")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sincro_log_id", referencedColumnName="id")
+     * })
+     */
+
+    private $sincroLog;
+
 
     public function __toString() {
         return $this->descripcion.' ('.$this->oficial.') ';
@@ -329,5 +341,29 @@ class Pa {
     public function getDa()
     {
         return $this->da;
+    }
+
+    /**
+     * Set sincroLog.
+     *
+     * @param \ComunBundle\Entity\SincroLog|null $sincroLog
+     *
+     * @return Pa
+     */
+    public function setSincroLog(\ComunBundle\Entity\SincroLog $sincroLog = null)
+    {
+        $this->sincroLog = $sincroLog;
+
+        return $this;
+    }
+
+    /**
+     * Get sincroLog.
+     *
+     * @return \ComunBundle\Entity\SincroLog|null
+     */
+    public function getSincroLog()
+    {
+        return $this->sincroLog;
     }
 }

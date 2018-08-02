@@ -1,0 +1,14 @@
+INSERT INTO ccap.comun_edificio( id, codigo, descripcion, area ) VALUES ( 1, '0', 'Area Única', 'S' ); 
+INSERT INTO ccap.comun_edificio( id, codigo, descripcion, area ) VALUES ( 2, '1', 'Edificio 1', 'S' ); 
+INSERT INTO ccap.comun_edificio( id, codigo, descripcion, area ) VALUES ( 3, '2', 'Edificio 2', 'S' ); 
+INSERT INTO ccap.comun_edificio( id, codigo, descripcion, area ) VALUES ( 4, '3', 'Edificio 3', 'S' ); 
+INSERT INTO ccap.comun_edificio( id, codigo, descripcion, area ) VALUES ( 5, '4', 'Edificio 4', 'S' ); 
+INSERT INTO ccap.comun_edificio( id, codigo, descripcion, area ) VALUES ( 6, '5', 'Edificio  5', 'S' ); 
+INSERT INTO ccap.comun_edificio( id, codigo, descripcion, area ) VALUES ( 7, '6', 'Edificio  6', 'S' ); 
+INSERT INTO ccap.comun_edificio( id, codigo, descripcion, area ) VALUES ( 8, '7', 'Edificio  7', 'S' ); 
+INSERT INTO ccap.comun_edificio( id, codigo, descripcion, area ) VALUES ( 9, '8', 'Edificio  8', 'S' ); 
+INSERT INTO ccap.comun_edificio( id, codigo, descripcion, area ) VALUES ( 10, '9', 'Edificio  9', 'S' ); 
+INSERT INTO ccap.comun_edificio( id, codigo, descripcion, area ) VALUES ( 11, '10', 'Edificio  10', 'S' ); 
+INSERT INTO ccap.comun_edificio( id, codigo, descripcion, area ) VALUES ( 12, '11', 'Edificio  11', 'S' ); 
+INSERT INTO ccap.comun_edificio( id, codigo, descripcion, area ) VALUES ( 13, '99', 'Base de Datos Intermedia', 'N' ); 
+INSERT INTO ccap.comun_edificio( id, codigo, descripcion, area ) VALUES ( 14, '98', 'Base de Datos Unificada', 'N' ); 

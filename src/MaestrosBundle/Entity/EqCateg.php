@@ -36,9 +36,9 @@ class EqCateg {
     private $codigoLoc;
 
     /**
-     * @var Edificio|null
+     * @var ComunBundle\Entity\Edificio|null
      *
-     * @ORM\ManyToOne(targetEntity="Edificio")
+     * @ORM\ManyToOne(targetEntity="ComunBundle\Entity\Edificio")
      * * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="edificio_id", referencedColumnName="id")
      * })
@@ -59,7 +59,7 @@ class EqCateg {
     /**
      * @var enUso
      * 
-     * @ORM\Column(name="en_uso",type="string",length=1,nullable=false)
+     * @ORM\Column(name="enuso",type="string",length=1,nullable=false)
      */
     private $enUso;
 

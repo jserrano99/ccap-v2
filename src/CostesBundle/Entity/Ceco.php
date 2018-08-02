@@ -63,6 +63,20 @@ class Ceco {
      * @ORM\Column(name="enuso", type="string", length=1, nullable=true)
      */
     private $enuso;
+    
+    /**
+     * @var ComunBundle\Entity\SincroLog|null
+     *
+     * @ORM\ManyToOne(targetEntity="ComunBundle\Entity\SincroLog")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sincro_log_id", referencedColumnName="id")
+     * })
+     */
+
+    private $sincroLog;
+    
+    
+    
 
     public function getId() {
         return $this->id;
@@ -136,5 +150,29 @@ class Ceco {
     public function getEnuso()
     {
         return $this->enuso;
+    }
+
+    /**
+     * Set sincroLog.
+     *
+     * @param \ComunBundle\Entity\SincroLog|null $sincroLog
+     *
+     * @return Ceco
+     */
+    public function setSincroLog(\ComunBundle\Entity\SincroLog $sincroLog = null)
+    {
+        $this->sincroLog = $sincroLog;
+
+        return $this;
+    }
+
+    /**
+     * Get sincroLog.
+     *
+     * @return \ComunBundle\Entity\SincroLog|null
+     */
+    public function getSincroLog()
+    {
+        return $this->sincroLog;
     }
 }

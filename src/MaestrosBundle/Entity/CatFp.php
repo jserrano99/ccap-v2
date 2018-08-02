@@ -49,11 +49,22 @@ class CatFp {
      */
     private $enuso;
 
+    /**
+     * @var ComunBundle\Entity\SincroLog|null
+     *
+     * @ORM\ManyToOne(targetEntity="ComunBundle\Entity\SincroLog")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sincro_log_id", referencedColumnName="id")
+     * })
+     */
+
+    private $sincroLog;
+    
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -61,13 +72,13 @@ class CatFp {
     }
 
     /**
-     * Set codigo
+     * Set codigo.
      *
-     * @param string $codigo
+     * @param string|null $codigo
      *
      * @return CatFp
      */
-    public function setCodigo($codigo)
+    public function setCodigo($codigo = null)
     {
         $this->codigo = $codigo;
 
@@ -75,9 +86,9 @@ class CatFp {
     }
 
     /**
-     * Get codigo
+     * Get codigo.
      *
-     * @return string
+     * @return string|null
      */
     public function getCodigo()
     {
@@ -85,13 +96,13 @@ class CatFp {
     }
 
     /**
-     * Set descripcion
+     * Set descripcion.
      *
-     * @param string $descripcion
+     * @param string|null $descripcion
      *
      * @return CatFp
      */
-    public function setDescripcion($descripcion)
+    public function setDescripcion($descripcion = null)
     {
         $this->descripcion = $descripcion;
 
@@ -99,9 +110,9 @@ class CatFp {
     }
 
     /**
-     * Get descripcion
+     * Get descripcion.
      *
-     * @return string
+     * @return string|null
      */
     public function getDescripcion()
     {
@@ -109,13 +120,13 @@ class CatFp {
     }
 
     /**
-     * Set enuso
+     * Set enuso.
      *
-     * @param string $enuso
+     * @param string|null $enuso
      *
      * @return CatFp
      */
-    public function setEnuso($enuso)
+    public function setEnuso($enuso = null)
     {
         $this->enuso = $enuso;
 
@@ -123,16 +134,39 @@ class CatFp {
     }
 
     /**
-     * Get enuso
+     * Get enuso.
      *
-     * @return string
+     * @return string|null
      */
     public function getEnuso()
     {
         return $this->enuso;
     }
-    
+
+    /**
+     * Set sincroLog.
+     *
+     * @param \ComunBundle\Entity\SincroLog|null $sincroLog
+     *
+     * @return CatFp
+     */
+    public function setSincroLog(\ComunBundle\Entity\SincroLog $sincroLog = null)
+    {
+        $this->sincroLog = $sincroLog;
+
+        return $this;
+    }
+
+    /**
+     * Get sincroLog.
+     *
+     * @return \ComunBundle\Entity\SincroLog|null
+     */
+    public function getSincroLog()
+    {
+        return $this->sincroLog;
+    }
     public function __toString() {
-        return $this->descripcion." (".$this->codigo.")";
+        return $this->descripcion;
     }
 }

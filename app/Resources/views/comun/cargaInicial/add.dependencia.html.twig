@@ -1,0 +1,13 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} AÑADIR DEPEDENCIA A LA TABLA : {{cargaInicial.tabla|upper}}--{{cargaInicial.descripcion|upper}}
+   <a href="{{path("queryDependencia",{"cargaInicial_id":cargaInicial.id})}}" class="btn btn-success"> 
+       <span class="glyphicon glyphicon-th-list"></span>  Volver</a>
+{% endblock %}
+    
+{% block contenido %}
+    <div class="container">
+        {{form_start (form,{'action':'','method':'POST'})}}
+        {{form_end (form)}}
+    </div>
+    <div class="clearfix"> </div>
+{% endblock %}

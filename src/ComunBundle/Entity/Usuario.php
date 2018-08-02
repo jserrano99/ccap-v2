@@ -149,28 +149,6 @@ class Usuario implements UserInterface {
     }
 
     /**
-     * Set apellidos
-     *
-     * @param string $apellidos
-     *
-     * @return Usuario
-     */
-    public function setApellidos($apellidos) {
-        $this->apellidos = $apellidos;
-
-        return $this;
-    }
-
-    /**
-     * Get apellidos
-     *
-     * @return string
-     */
-    public function getApellidos() {
-        return $this->apellidos;
-    }
-
-    /**
      * Set perfil
      *
      * @param string $perfil
@@ -256,7 +234,7 @@ class Usuario implements UserInterface {
     }
 
     public function __toString() {
-        return $this->apellidos . ', ' . $this->nombre;
+        return $this->nombre;
     }
 
 

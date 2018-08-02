@@ -87,10 +87,21 @@ class CatGen {
     /**
      * @var string
      *
-     * @ORM\Column(name="cod_sms", type="string", length=5, nullable=true)
+     * @ORM\Column(name="codigo_sms", type="string", length=5, nullable=true)
      */
-    private $codSms;
+    private $codigoSms;
 
+    /**
+     * @var ComunBundle\Entity\SincroLog|null
+     *
+     * @ORM\ManyToOne(targetEntity="ComunBundle\Entity\SincroLog")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sincro_log_id", referencedColumnName="id")
+     * })
+     */
+
+    private $sincroLog;
+    
     
     /**
      * Get id
@@ -278,25 +289,25 @@ class CatGen {
     }
 
     /**
-     * Set codSms
+     * Set codigoSms
      *
-     * @param string $codSms
+     * @param string $codigoSms
      *
      * @return CatGen
      */
-    public function setCodSms($codSms) {
-        $this->codSms = $codSms;
+    public function setCodSms($codigoSms) {
+        $this->codigoSms = $codigoSms;
 
         return $this;
     }
 
     /**
-     * Get codSms
+     * Get codigoSms
      *
      * @return string
      */
     public function getCodSms() {
-        return $this->codSms;
+        return $this->codigoSms;
     }
 
     public function __toString() {
@@ -304,4 +315,52 @@ class CatGen {
     }
 
 
+
+    /**
+     * Set codigoSms.
+     *
+     * @param string|null $codigoSms
+     *
+     * @return CatGen
+     */
+    public function setCodigoSms($codigoSms = null)
+    {
+        $this->codigoSms = $codigoSms;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoSms.
+     *
+     * @return string|null
+     */
+    public function getCodigoSms()
+    {
+        return $this->codigoSms;
+    }
+
+    /**
+     * Set sincroLog.
+     *
+     * @param \ComunBundle\Entity\SincroLog|null $sincroLog
+     *
+     * @return CatGen
+     */
+    public function setSincroLog(\ComunBundle\Entity\SincroLog $sincroLog = null)
+    {
+        $this->sincroLog = $sincroLog;
+
+        return $this;
+    }
+
+    /**
+     * Get sincroLog.
+     *
+     * @return \ComunBundle\Entity\SincroLog|null
+     */
+    public function getSincroLog()
+    {
+        return $this->sincroLog;
+    }
 }

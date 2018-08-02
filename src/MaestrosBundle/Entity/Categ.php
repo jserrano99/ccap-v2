@@ -15,7 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="ccap_categ"
  *  *         ,uniqueConstraints={@ORM\UniqueConstraint(name="uk_codigo", columns={"codigo"})}
- *            ,indexes={@ORM\Index(name="idx001", columns={"codigo"})}
  *           )
  * @ORM\Entity
  */

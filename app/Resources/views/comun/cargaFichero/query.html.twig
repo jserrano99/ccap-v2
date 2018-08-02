@@ -1,0 +1,59 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} 
+    <div id='dtitulo' class="container"> 
+        CARGA DE FICHEROS **CONSULTA**
+    </div>
+{% endblock %} 
+
+{% block contenido %}
+    <script>
+    </script>
+    <div id="divTabla" class="container-fluid" width="1200px">
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-success">
+                {{message}}
+            </div>
+            <hr/>
+        {% endfor %}
+        
+        <table id="tabla" class=" tabla table table-bordered table-striped" >
+            <thead>
+                <tr class="success">
+                    <th class="text-center text-bold">Tabla</th>
+                    <th class="text-center text-bold">Fichero</th>
+                    <th class="text-center text-bold">Descripción</th>
+                    <th class="text-center text-bold">Estado</th>
+                    <th class="text-center text-bold">Fecha</th>
+                    <th class="text-center text-bold">Log</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for CargaFichero in CargaFicheroAll %}
+                    <tr>
+                        <td>{{CargaFichero.tabla}}</td>
+                        <td>{{CargaFichero.fichero}}</td>
+                        <td>{{CargaFichero.descripcion}}</td>
+                        <td>{{CargaFichero.estadoCargaInicial.descripcion}}</td>
+                        {% if CargaFichero.fechaCarga is not null  %}
+                            <td>{{CargaFichero.fechaCarga|date('d/m/Y H:m:s')}}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        {% if CargaFichero.ficheroLog !=""  %}
+                            <td>{{CargaFichero.ficheroLog}} 
+                                <a href="{{path("descargaLogFichero",{"id":CargaFichero.id})}}" class="btn btn-info btn-sm">
+                                    <span class="glyphicon glyphicon-download"></span> Descarga
+                                </a>
+                            </td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+{% endblock %}

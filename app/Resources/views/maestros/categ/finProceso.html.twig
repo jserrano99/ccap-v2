@@ -1,19 +1,13 @@
 {% extends "layout.html.twig" %} 
 {% block titulo %} PROCESO TERMINADO 
-    {% if (error == 0) %}
-        CORRECTAMENTE
-    {% else %}
-        EN ERROR 
-    {% endif%}
-    <br/>
-{% endblock %}
+    <a href="{{path("queryCateg")}}" class="btn btn-success"> 
+        <span class="glyphicon glyphicon-th-list"></span>  Volver</a>
+    {% endblock %}
 
 {% block contenido %}
     <div class="container">
         {% for linea in salida %}
             {{linea}} <br/>
         {% endfor %}
-        <hr/>
-        <a href="{{path("queryCateg")}}" class="btn btn-success">Volver</a>
     </div>
 {% endblock %}

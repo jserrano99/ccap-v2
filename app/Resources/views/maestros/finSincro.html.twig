@@ -1,0 +1,16 @@
+{% extends "layout.html.twig" %} 
+{% block contenido %}
+    <div id="finSincro" class="container" text-align="center" >
+        <span><h2>SINCRONIZACIÓN FINALIZADA : {{SincroLog.estado.descripcion}}
+        <hr/>
+        <img src="{{asset('img/txt.jpg')}}" witdh="200px" height="200px"> </img>
+        <h2><span>Fichero Log Generado pulse para descargar</span></h2>
+        <a href="{{path("descargaSincroLog",{'id':SincroLog.id})}}" 
+           class="btn btn-success btn-lg">
+            <span class="glyphicon glyphicon-download"></span> Descargar </a>
+        <button class="btn btn-success btn-lg" onclick="window.history.go(-2)">
+            <span class="glyphicon glyphicon-th-list"></span> volver
+            </button>
+    </div>
+{% endblock %}
+

@@ -9,18 +9,7 @@
             $("#importar_Guardar").click(function () {
                 $("#procesando").modal('show');
                 var recurso = Routing.generate("importaCeco", true);
-                $.ajax({
-                    type: "POST",
-                    url: recurso,
-                    success: function (data, status, xhr) {
-                        $('.modal-backdrop').remove();
-                        $('#procesando').hide();
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        $('#procesando').hide();
-                        alert(xhr.status);
-                    }
-                });
+                window.location = recurso;
             });
         });
     </script> 

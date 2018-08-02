@@ -30,7 +30,7 @@ class BaseDatosType extends AbstractType
                     "required" => true,
                     "attr" => array("class" => "form-control")))
                 ->add('servidor',TextType::class, array(
-                    "label" => 'Alias ',
+                    "label" => 'Servidor ',
                     "required" => true,
                     "attr" => array("class" => "form-control")))
                 ->add('esquema',TextType::class, array(
@@ -46,7 +46,7 @@ class BaseDatosType extends AbstractType
                     "required" => false,
                     "attr" => array("class" => "form-control")))
                 ->add('tipoBaseDatos',EntityType::class, array(
-                    "label" => 'Alias ',
+                    "label" => 'Entorno ',
                     'class' => 'ComunBundle:TipoBaseDatos',
                     'placeholder' => ' Seleccione Entorno de Base de Datos ...',
                     "required" => false,

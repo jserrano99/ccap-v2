@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Servicios;
+
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
 
@@ -15,14 +16,17 @@ class EscribeLog {
 
     private $logger;
     private $mensaje;
+    private $repo;
+    private $filename;
 
-    public function escribeLog() {
+    public function escribeLog($ficheroLog) {
 
-        $FicheroLog = 'logs/ccap.log';
-        $repo = new RotatingFileHandler($FicheroLog, 30, Logger::INFO);
-
+        $ficheroLog = 'logs/'.$ficheroLog;
+        
+        $this->repo = new RotatingFileHandler($ficheroLog, 30,Logger::INFO);
+        $this->filename = $this->repo->getUrl();
         $log = new Logger($this->logger);
-        $log->pushHandler($repo);
+        $log->pushHandler($this->repo);
         $log->info($this->mensaje);
 
         return true;
@@ -30,6 +34,14 @@ class EscribeLog {
 
     public function getLogger() {
         return $this->logger;
+    }
+
+    public function getRepo() {
+        return $this->repo;
+    }
+
+    public function getFilename() {
+        return $this->filename;
     }
 
     public function getMensaje() {

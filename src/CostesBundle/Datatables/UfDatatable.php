@@ -37,21 +37,7 @@ class UfDatatable extends AbstractDatatable {
 
         $this->extensions->set(array());
 
-        /*
-          $this->callbacks->set(array(
-          'init_complete' => array(
-          'template' => 'uf/init.js.twig',
-          ),
-          ));
-
-          $this->events->set(array(
-          'xhr' => array(
-          'template' => 'uf/event.js.twig',
-          'vars' => array('table_name' => $this->getName()),
-          ),
-          ));
-         */
-
+        
         $this->features->set(array(
         ));
 
@@ -105,6 +91,11 @@ class UfDatatable extends AbstractDatatable {
                         ),
                     ),
                 ))
+                ->add('sincroLog.estado.descripcion', Column::class, array(
+                    'title' => 'Log',
+                    'width' => '120px',
+                    'default_content' => ''))
+                
                 ->add(null, ActionColumn::class, array(
                     'title' => 'Acciones',
                     'actions' => array(
@@ -120,8 +111,19 @@ class UfDatatable extends AbstractDatatable {
                                 'title' => 'Editar Unidad Funcional',
                                 'class' => 'btn btn-primary btn-xs',
                                 'role' => 'button'
-                            ),
-                        )
+                            )),
+                        array('route' => 'descargaLogUf',
+                            'route_parameters' => array('id' => 'id'),
+                            'label' => 'Logs',
+                            'icon' => 'glyphicon glyphicon-edit',
+                            'render_if' => function ($row) {
+                                if ($row['sincroLog'] != null)
+                                    return true;
+                            },
+                            'attributes' => array('rel' => 'tooltip',
+                                'title' => 'Logs',
+                                'class' => 'btn btn-primary btn-xs',
+                                'role' => 'button'))
                     )
                 ))
         ;

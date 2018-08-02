@@ -13,9 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * EpiAcc
  *
- * @ORM\Table(name="ccap_epiacc", 
- *            indexes={@ORM\Index(name="idx001", columns={"codigo"})}
- *           )
+ * @ORM\Table(name="ccap_epiacc"
+ *         ,uniqueConstraints={@ORM\UniqueConstraint(name="uk_codigo", columns={"codigo"})}
+ *         )
  * @ORM\Entity(repositoryClass="MaestrosBundle\Repository\EpiAccRepository")
  */
 class EpiAcc {
@@ -32,7 +32,7 @@ class EpiAcc {
     /**
      * @var string
      *
-     * @ORM\Column(name="codigo", type="string", length=4, nullable=false)
+     * @ORM\Column(name="codigo", type="string", length=3, nullable=false)
      */
     private $codigo;
 

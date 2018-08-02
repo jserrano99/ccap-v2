@@ -32,7 +32,7 @@ class CategController extends Controller {
             return $responseService->getResponse();
         }
 
-        return $this->render('categ/query.html.twig', array(
+        return $this->render('maestros/categ/query.html.twig', array(
                     'datatable' => $datatable,
         ));
     }
@@ -54,12 +54,11 @@ class CategController extends Controller {
             $qb = $datatableQueryBuilder->getQb();
             $qb->andWhere('categ = :categ');
             $qb->setParameter('categ', $Categ);
-
-
+            
             return $responseService->getResponse();
         }
 
-        return $this->render('categ/query.eq.html.twig', array(
+        return $this->render('maestros/categ/query.eq.html.twig', array(
                     'datatable' => $datatable,
         ));
     }
@@ -87,8 +86,9 @@ class CategController extends Controller {
         }
 
         $params = array("categ" => $Categ,
+            "accion" => "MODIFICACIÓN",
             "form" => $form->createView());
-        return $this->render("categ/edit.html.twig", $params);
+        return $this->render("maestros/categ/edit.html.twig", $params);
     }
 
     public function crearEquivalencias($Categ) {
@@ -134,8 +134,9 @@ class CategController extends Controller {
         }
 
         $params = array("categ" => $Categ,
+            "accion" => "CREACIÓN",
             "form" => $form->createView());
-        return $this->render("categ/add.html.twig", $params);
+        return $this->render("maestros/categ/edit.html.twig", $params);
     }
 
     public function replicaAction($id, $actuacion) {
@@ -148,7 +149,7 @@ class CategController extends Controller {
         $params = ["error" => $resultado["error"],
             "salida" => $resultado["log"]];
 
-        return $this->render("categ/finProceso.html.twig", $params);
+        return $this->render("maestros/categ/finProceso.html.twig", $params);
     }
 
     public function replicaCateg($Categ, $actuacion) {

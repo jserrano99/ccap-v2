@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 use CostesBundle\Entity\Pa;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use CostesBundle\Datatables\PaDatatable;
-
 use Symfony\Component\HttpFoundation\Response;
 
 class PaController extends Controller {
@@ -39,8 +38,8 @@ class PaController extends Controller {
             try {
                 $EM->persist($Pa);
                 $EM->flush();
-                $params = array("id" => $Pa->getId(),"actuacion" => "UPDATE");
-                return $this->redirectToRoute("replicaPa", $params);
+                $params = array("id" => $Pa->getId(), "actuacion" => "UPDATE");
+                return $this->redirectToRoute("sincroPa", $params);
             } catch (UniqueConstraintViolationException $ex) {
                 $status = " YA EXISTE UNA PUNTO ASISTENCIAL CON ESTE CÓDIGO: " . $Pa->getPa();
                 $this->sesion->getFlashBag()->add("status", $status);
@@ -52,13 +51,13 @@ class PaController extends Controller {
             }
         }
 
-        $params = array("pa" => $Pa,"accion" =>"MODIFICACIÓN",
+        $params = array("pa" => $Pa, "accion" => "MODIFICACIÓN",
             "form" => $form->createView());
         return $this->render("costes/pa/edit.html.twig", $params);
     }
 
     public function deleteAction($id) {
-        $EM = $this->getDoctrine()->getManager(); 
+        $EM = $this->getDoctrine()->getManager();
         $Pa_repo = $EM->getRepository("CostesBundle:Pa");
         $Pa = $Pa_repo->find($id);
         $Pa->setEnUso('N');
@@ -83,8 +82,8 @@ class PaController extends Controller {
             try {
                 $EM->persist($Pa);
                 $EM->flush();
-                $params = array("id" => $Pa->getId(),"actuacion" => "INSERT");
-                return $this->redirectToRoute("replicaPa", $params);
+                $params = array("id" => $Pa->getId(), "actuacion" => "INSERT");
+                return $this->redirectToRoute("sincroPa", $params);
             } catch (UniqueConstraintViolationException $ex) {
                 $status = " YA EXISTE UNA PUNTO ASISTENCIAL CON ESTE CÓDIGO: " . $Pa->getPa();
                 $this->sesion->getFlashBag()->add("status", $status);
@@ -96,37 +95,9 @@ class PaController extends Controller {
             }
         }
 
-        $params = array("pa" => $Pa, "accion" =>"NUEVO",
+        $params = array("pa" => $Pa, "accion" => "NUEVO",
             "form" => $form->createView());
         return $this->render("costes/pa/edit.html.twig", $params);
-    }
-
-    public function replicaAction($id,$actuacion) {
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $Pa_repo = $entityManager->getRepository("CostesBundle:Pa");
-        $Pa = $Pa_repo->find($id);
-
-        $resultado = $this->replicaPa($Pa,$actuacion);
-        $params = ["error" => $resultado["error"],
-            "salida" => $resultado["log"]];
-
-        return $this->render("costes/pa/finProceso.html.twig", $params);
-    }
-
-    public function replicaPa($Pa, $actuacion) {
-        $root = $this->get('kernel')->getRootDir();
-        $modo = $this->getParameter('modo');
-        if ($modo == 'REAL') {
-            $php_script = "php " . $root . "/scripts/actualizacionPa.php ".$modo . " ".$Pa->getPa() . " " . $actuacion;
-        } else {
-            $php_script = "php " . $root . "/scripts/actualizacionPa.php ".$modo . " ".$Pa->getPa() . " " . $actuacion;
-        }
-        $mensaje = exec($php_script, $SALIDA, $valor);
-        $resultado["error"] = $valor;
-        $resultado["log"] = $SALIDA;
-        
-        return $resultado;
     }
 
     public function queryAction(Request $request) {
@@ -138,7 +109,7 @@ class PaController extends Controller {
         if ($isAjax) {
             $responseService = $this->get('sg_datatables.response');
             $responseService->setDatatable($datatable);
-            
+
             $datatableQueryBuilder = $responseService->getDatatableQueryBuilder();
             $datatableQueryBuilder->buildQuery();
 
@@ -150,38 +121,107 @@ class PaController extends Controller {
         ));
     }
 
-    public function ajaxCalculaCodigoAction($codigo){
-        $edificio = (int)substr($codigo,2,2);
+    public function ajaxCalculaCodigoAction($codigo) {
+        $edificio = (int) substr($codigo, 2, 2);
         $areaZona = substr($codigo, 2, 4);
-        
-        
+
+
         $entityManager = $this->getDoctrine()->getManager();
         $Equivalencia_repo = $entityManager->getRepository("CostesBundle:Equivalencia");
         $EquivalenciaAll = $Equivalencia_repo->createQueryBuilder('u')
-                ->where ('u.areaZona = :areaZona')
-                ->setParameter ('areaZona',$areaZona)
-                ->getQuery()->getResult();
+                        ->where('u.areaZona = :areaZona')
+                        ->setParameter('areaZona', $areaZona)
+                        ->getQuery()->getResult();
         if ($EquivalenciaAll) {
             $Equivalencia = $EquivalenciaAll[0];
             $codigo12 = $Equivalencia->getCodigo();
         } else {
             $codigo12 = 'XX';
         }
-        
-        $Edificio_repo =$entityManager->getRepository("ComunBundle:Edificio");
+
+        $Edificio_repo = $entityManager->getRepository("ComunBundle:Edificio");
         $EdificioAll = $Edificio_repo->createQueryBuilder('u')
-                   ->where ("u.codigo = :codigo")
-                    ->setParameter("codigo", $edificio)
-                    ->getQuery()->getResult();
-        $Edificio = $EdificioAll[0];
-        
-        $codigoSaint["codigo"] = $codigo12.substr($codigo, 6, 4);
-        $codigoSaint["edificio"] = $Edificio->getId();
+                        ->where("u.codigo = :codigo")
+                        ->setParameter("codigo", $edificio)
+                        ->getQuery()->getResult();
+
+        IF ($EdificioAll == null) {
+            $codigoSaint["codigo"] = "ERROR-";
+            $codigoSaint["edificio"] = $edificio;
+        } else {
+            $Edificio = $EdificioAll[0];
+            $codigoSaint["codigo"] = $codigo12 . substr($codigo, 6, 4);
+            $codigoSaint["edificio"] = $Edificio->getId();
+        }
         $response = new Response();
         $response->setContent(json_encode($codigoSaint));
         $response->headers->set("Content-type", "application/json");
         return $response;
-
     }
-    
+
+    public function sincroAction($id, $actuacion) {
+        $em = $this->getDoctrine()->getManager();
+        $usuario_id = $this->sesion->get('usuario_id');
+        $Usuario = $em->getRepository("ComunBundle:Usuario")->find($usuario_id);
+        $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(1);
+        $Pa = $em->getRepository("CostesBundle:Pa")->find($id);
+
+        $SincroLog = new \ComunBundle\Entity\SincroLog();
+        $fechaProceso = new \DateTime();
+
+        $SincroLog->setUsuario($Usuario);
+        $SincroLog->setTabla("ccap_pf");
+        $SincroLog->setIdElemento($id);
+        $SincroLog->setFechaProceso($fechaProceso);
+        $SincroLog->setEstado($Estado);
+        $em->persist($SincroLog);
+
+        $Pa->setSincroLog($SincroLog);
+        $em->persist($Pa);
+        $em->flush();
+
+        $root = $this->get('kernel')->getRootDir();
+        $modo = $this->getParameter('modo');
+        $php_script = "php " . $root . "/scripts/costes/actualizacionPa.php " . $modo . "  " . $Pa->getId() . " " . $actuacion;
+
+        $mensaje = exec($php_script, $SALIDA, $resultado);
+        if ($resultado == 0) {
+            $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(2);
+        } else {
+            $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(3);
+        }
+
+        $ficheroLog = 'sincroPa-' . $Pa->getPa() . '.log';
+        $ServicioLog = $this->get('app.escribelog');
+        $ServicioLog->setLogger('ccap_pa->codigo:' . $Pa->getPa());
+        foreach ($SALIDA as $linea) {
+            $ServicioLog->setMensaje($linea);
+            $ServicioLog->escribeLog($ficheroLog);
+        }
+        $SincroLog->setScript($php_script);
+        $SincroLog->setFicheroLog($ServicioLog->getFilename());
+        $SincroLog->setEstado($Estado);
+        $em->persist($SincroLog);
+        $em->flush();
+
+        $params = array("SincroLog" => $SincroLog,
+            "resultado" => $resultado);
+        $view = $this->renderView("finSincro.html.twig", $params);
+
+        $response = new Response($view);
+
+        $response->headers->set('Content-Disposition', 'inline');
+        $response->headers->set('Content-Type', 'text/html');
+        $response->headers->set('target', '_blank');
+
+        return $response;
+    }
+
+    public function descargaLogAction($id) {
+        $em = $this->getDoctrine()->getManager();
+        $Pa = $em->getRepository("CostesBundle:Pa")->find($id);
+        $params = array("id" => $Pa->getSincroLog()->getId());
+        return $this->redirectToRoute("descargaSincroLog", $params);
+    }
+
 }

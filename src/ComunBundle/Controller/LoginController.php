@@ -50,7 +50,8 @@ class LoginController extends Controller {
         }
         $UltimoAcceso = $this->ultimoAcceso($Usuario);
         $this->creaAcceso($Usuario);
-
+        $_SESSION["usuario_id"] = $Usuario->getId();
+        $this->sesion->set('usuario_id', $Usuario->getId());
         $this->sesion->set('usuario_nombre', $Usuario->getNombre());
         $this->sesion->set('usuario_perfil', $Usuario->getPerfil());
         if ($UltimoAcceso) {

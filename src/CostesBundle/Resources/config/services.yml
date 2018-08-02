@@ -1,5 +1,5 @@
 services:
     app.calculaCeco:
-        class: AppBundle\Servicios\CalculaCeco
+        class: CostesBundle\Servicios\CalculaCeco
         arguments: ["@doctrine.orm.entity_manager","cias","uf","pa"]
     

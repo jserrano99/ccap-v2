@@ -1,0 +1,16 @@
+{% block contenido %}
+    <div id="fin" class="container" text-align="center" >
+        <span><h2>TABLA: {{CargaInicial.tabla|upper}}</h2></span> <span><h3>FINALIZADA ESTADO:{{CargaInicial.estadoCargaInicial.descripcion}}</h3></span> 
+        <hr/>
+        <img src="{{asset('img/txt.jpg')}}" witdh="200px" height="200px"> </img>
+        <h2><span>Fichero Log Generado  pulse para descargar</span></h2>
+        <a href="{{path("descargaLog",{'id':CargaInicial.id})}}" 
+           class="btn btn-success btn-lg">
+            <span class="glyphicon glyphicon-download"></span> Descargar </a>
+        <a href="{{path("queryCargaInicial")}}" 
+           class="btn btn-success btn-lg">
+            <span class="glyphicon glyphicon-th-list"></span> Volver </a>
+    </div>
+
+    
+{% endblock %}

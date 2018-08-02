@@ -54,3 +54,73 @@ editBaseDatos:
 addBaseDatos:
     path:   /basedatos/add
     defaults: { _controller: ComunBundle:BaseDatos:add}
+#
+# CARGAS MASIVAS MEDIANTE FICHEROS 
+#
+descargaLogFichero:
+    path:   /cargafichero/descargaLog/{id}
+    defaults: { _controller: ComunBundle:CargaFichero:descargaLog}
+    options:
+        expose: true
+
+queryCargaFichero:
+    path:   /cargafichero/query
+    defaults: { _controller: ComunBundle:CargaFichero:query}
+    options:
+        expose: true
+#
+# CARGA INICIAL DE TABLAS
+#
+queryCargaInicial:
+    path:   /cargainicial/query
+    defaults: { _controller: ComunBundle:CargaInicial:query}
+    options:
+        expose: true
+addCargaInicial:
+    path:   /cargainicial/add
+    defaults: { _controller: ComunBundle:CargaInicial:add}
+    options:
+        expose: true
+descargaLog:
+    path: /cargainicial/descarga/{id}
+    defaults: { _controller: ComunBundle:CargaInicial:descargaLog}
+    options:
+        expose: true
+limpiarCargaInicial:
+    path:   /cargainicial/limpia/{id}
+    defaults: { _controller: ComunBundle:CargaInicial:limpia}
+    options:
+        expose: true
+
+lanzaCargaInicial:
+    path:   /cargainicial/lanza/{id}
+    defaults: { _controller: ComunBundle:CargaInicial:lanza}
+    options:
+        expose: true
+
+queryDependencia:
+    path: /cargainicial/dependencia/query/{cargaInicial_id}
+    defaults: { _controller: ComunBundle:CargaInicial:queryDependencia}    
+    options:
+        expose: true
+addDependencia:
+    path: /cargainicial/dependencia/add/{cargaInicial_id}
+    defaults: { _controller: ComunBundle:CargaInicial:addDependencia}    
+    options:
+        expose: true
+deleteDependencia:
+    path: /cargainicial/dependencia/delete/{id}
+    defaults: { _controller: ComunBundle:CargaInicial:deleteDependencia}    
+    options:
+        expose: true
+
+querySincroLog:
+    path: /sincrolog/query
+    defaults: { _controller: ComunBundle:SincroLog:query}
+    options:
+        expose: true
+descargaSincroLog:
+    path: /sincrolog/descarga/{id}
+    defaults: { _controller: ComunBundle:SincroLog:descarga}
+    options:
+        expose: true

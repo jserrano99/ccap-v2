@@ -1,0 +1,128 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} 
+    <div id='dtitulo' class="container"> 
+        TABLAS CARGA INICIAL **CONSULTA**
+        <a href="{{path("addCargaInicial")}}" 
+           class="btn btn-success">
+            <span class="glyphicon glyphicon-new-window"></span> Añadir Tabla </a>
+    </div>
+{% endblock %} 
+
+{% block contenido %}
+    <script>
+        function confirmar(id, tabla) {
+        bootbox.confirm("CONFIRMAR CARGA INICIAL DE LA TABLA :" + tabla,
+                function (result) {
+                if (result) {
+                var recurso = Routing.generate("lanzaCargaInicial", {"id": id}, true);
+                $("#procesando").modal('show');
+                $.ajax({
+                type: "POST",
+                        url: recurso,
+                        success: function (data, status, xhr) {
+                        $('.modal-backdrop').remove();
+                        $('#procesando').hide();
+                        $('#divTabla').hide();
+                        $('#dtitulo').hide();
+                        $('#resultado').html(data);
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                        $('#procesando').hide();
+                        alert(xhr.status);
+                        }
+                });
+                }
+                }
+        );
+        }
+
+        function limpiar(id, tabla) {
+        bootbox.confirm("CONFIRMAR LIMPIAR CARGA DE LA TABLA :" + tabla,
+                function (result) {
+                if (result) {
+                var recurso = Routing.generate("limpiarCargaInicial", {"id":id});
+                window.location = recurso;
+                }
+                }
+        );
+        }
+    </script>
+    <div id="divTabla" class="container-fluid" width="1200px">
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-success">
+                {{message}}
+            </div>
+            <hr/>
+        {% endfor %}
+        
+        <table id="tabla" class=" tabla table table-bordered table-striped" >
+            <thead>
+                <tr class="success">
+                    <th class="text-center text-bold">Orden</th>
+                    <th class="text-center text-bold">Tabla</th>
+                    <th class="text-center text-bold">Descripción</th>
+                    <th class="text-center text-bold">Proceso</th>
+                    <th class="text-center text-bold">Dependencias</th>
+                    <th class="text-center text-bold">Módulo</th>
+                    <th class="text-center text-bold">Estado</th>
+                    <th class="text-center text-bold">Fecha</th>
+                    <th class="text-center text-bold">Log</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for CargaInicial in CargaInicialAll %}
+                    <tr>
+                        <td>{{CargaInicial.orden}}</td>
+                        <td>{{CargaInicial.tabla}}</td>
+                        <td>{{CargaInicial.descripcion}}</td>
+                        <td>{{CargaInicial.proceso}}</td>
+                        {% if CargaInicial.numDep > 0 %}
+                            <td>
+                                <a href="{{path("queryDependencia",{"cargaInicial_id":CargaInicial.id})}}" class="btn btn-warning btn-sm">
+                                    <span class="glyphicon glyphicon-th-list"></span> Dependencias
+                                </a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a href="{{path("addDependencia",{"cargaInicial_id":CargaInicial.id})}}" class="btn btn-info btn-sm">
+                                    <span class="glyphicon glyphicon-plus"></span> Dependencia
+                                </a>
+                            </td>
+                        {% endif %}
+                        <td>{{CargaInicial.modulo.descripcion}}</td>
+                        <td>{{CargaInicial.estadoCargaInicial.descripcion}}</td>
+                        {% if CargaInicial.fechaCarga is not null  %}
+                            <td>{{CargaInicial.fechaCarga|date('d/m/Y H:m:s')}}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        {% if CargaInicial.ficheroLog !=""  %}
+                            <td>{{CargaInicial.ficheroLog}} 
+                                <a href="{{path("descargaLog",{"id":CargaInicial.id})}}" class="btn btn-info btn-sm">
+                                    <span class="glyphicon glyphicon-download"></span> Descarga
+                                </a>
+                            </td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        <td>
+                            {% if CargaInicial.estadoCargaInicial.id != 2 %}
+                                <input type="button" 
+                                       class="btn btn-primary" value="Lanzar" 
+                                       onClick="confirmar({{CargaInicial.id}}, '{{CargaInicial.tabla|upper}}')" />
+                            {% endif%}
+                            {% if CargaInicial.estadoCargaInicial.id != 1 %}
+                                <button type="submit" class="btn btn-danger"
+                                        onClick="limpiar({{CargaInicial.id}}, '{{CargaInicial.tabla|upper}}')">
+                                    <span class="glyphicon glyphicon-trash"></span></button>
+                                {% endif%}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+{% endblock %}

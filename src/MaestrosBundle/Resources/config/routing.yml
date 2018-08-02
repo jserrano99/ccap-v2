@@ -1,138 +1,180 @@
-app_homepage:
-    path:     /
-    defaults: { _controller: AppBundle:Login:index}
 #
-# login / Usuario
+# CATEGORIAS (CATFP)
 #
-login:
-    path: /login
-    defaults: { _controller: AppBundle:Login:login}
-login_check:
-    path: /login_check
-    defaults: { _controller: AppBundle:Login:check }    
-logout:
-    path: /login/logout
-    defaults: { _controller: AppBundle:Login:logout }    
+queryCatFp:
+    path: /catfp/query/
+    defaults: { _controller: MaestrosBundle:CatFp:query}    
     options:
         expose: true
-cambioPassword:
-    path:   /usuario/cambioPassword/{id}
-    defaults: { _controller: AppBundle:Usuario:CambioPassword}
-queryUsuario:
-    path:   /usuario/query
-    defaults: { _controller: AppBundle:Usuario:Query}
-addUsuario:
-    path:   /usuario/add
-    defaults: { _controller: AppBundle:Usuario:Add}
-editUsuario:
-    path:   /usuario/edit/{id}
-    defaults: { _controller: AppBundle:Usuario:Edit}
-deleteUsuario:
-    path:   /usuario/delete/{id} 
-    defaults: { _controller: AppBundle:Usuario:Delete}
+editCatFp:
+    path: /catfp/edit/{id}
+    defaults: { _controller: MaestrosBundle:CatFp:edit}    
+    options:
+        expose: true
+addCatFp:
+    path: /catfp/add
+    defaults: { _controller: MaestrosBundle:CatFp:add}    
+    options:
+        expose: true
+descargaLogCatFp:
+    path: /catfp/descargaLog/{id}
+    defaults: { _controller: MaestrosBundle:CatFp:descargaLog}    
+    options:
+        expose: true
+sincroCatFp:
+    path: /catfp/sincro/{id}/{actuacion}/{eqcatfp_id}/{edificio}
+    defaults: { _controller: MaestrosBundle:CatFp:sincro}    
+    options:
+        expose: true
+queryEqCatFp:
+    path: /eqcatfp/query/{catfp_id}
+    defaults: { _controller: MaestrosBundle:CatFp:queryEqCatFp}    
+    options:
+        expose: true
+activaEqCatFp:
+    path: /eqcatfp/activa/{eqcatfp_id}
+    defaults: { _controller: MaestrosBundle:CatFp:activar}    
+    options:
+        expose: true
+desactivaEqCatFp:
+    path: /eqcatfp/desactiva/{eqcatfp_id}
+    defaults: { _controller: MaestrosBundle:CatFp:desActivar}    
+    options:
+        expose: true
+addEqCatFp:
+    path: /eqcatfp/add/{eqcatfp_id}
+    defaults: { _controller: MaestrosBundle:CatFp:crear}    
+    options:
+        expose: true
 #
-# BASES DE DATOS 
+# CATEGORIAS (CATGEN)
 #
-queryBaseDatos:
-    path:   /basedatos/query
-    defaults: { _controller: AppBundle:BaseDatos:query}
-editBaseDatos:
-    path:   /basedatos/edit/{id}
-    defaults: { _controller: AppBundle:BaseDatos:edit}
-addBaseDatos:
-    path:   /basedatos/add
-    defaults: { _controller: AppBundle:BaseDatos:add}
-#
-# CARGAS INICIALES / SINCRONIZACIÓN 
-#
-cargaInicial:
-    path: /cargaInicial/index
-    defaults: { _controller: AppBundle:CargaInicial:index}    
+queryCatGen:
+    path: /catgen/query/
+    defaults: { _controller: MaestrosBundle:CatGen:query}    
+    options:
+        expose: true
+editCatGen:
+    path: /catgen/edit/{id}
+    defaults: { _controller: MaestrosBundle:CatGen:edit}    
+    options:
+        expose: true
+addCatGen:
+    path: /catgen/add
+    defaults: { _controller: MaestrosBundle:CatGen:add}    
+    options:
+        expose: true
+descargaLogCatGen:
+    path: /catgen/descargaLog/{id}
+    defaults: { _controller: MaestrosBundle:CatGen:descargaLog}    
+    options:
+        expose: true
+sincroCatGen:
+    path: /catgen/sincro/{id}/{actuacion}/{eqcatgen_id}/{edificio}
+    defaults: { _controller: MaestrosBundle:CatGen:sincro}    
+    options:
+        expose: true
+queryEqCatGen:
+    path: /eqcatgen/query/{catgen_id}
+    defaults: { _controller: MaestrosBundle:CatGen:queryEqCatGen}    
+    options:
+        expose: true
+activaEqCatGen:
+    path: /eqcatgen/activa/{eqcatgen_id}
+    defaults: { _controller: MaestrosBundle:CatGen:activar}    
+    options:
+        expose: true
+desactivaEqCatGen:
+    path: /eqcatgen/desactiva/{eqcatgen_id}
+    defaults: { _controller: MaestrosBundle:CatGen:desActivar}    
+    options:
+        expose: true
+addEqCatGen:
+    path: /eqcatgen/add/{eqcatgen_id}
+    defaults: { _controller: MaestrosBundle:CatGen:crear}    
     options:
         expose: true
 
-lanzaCarga:
-    path: /cargaInicial/{tabla}
-    defaults: { _controller: AppBundle:CargaInicial:lanza}    
-    options:
-        expose: true
+
+
+
+
+
 #
 # MODOS OCUPACION 
 #
 queryModOcupa:
     path: /modocupa/query/
-    defaults: { _controller: AppBundle:ModOcupa:query}    
+    defaults: { _controller: MaestrosBundle:ModOcupa:query}    
     options:
         expose: true
 addModOcupa:
     path: /modocupa/add/
-    defaults: { _controller: AppBundle:ModOcupa:add}    
+    defaults: { _controller: MaestrosBundle:ModOcupa:add}    
     options:
         expose: true
 editModOcupa:
     path: /modocupa/edit/{id}
-    defaults: { _controller: AppBundle:ModOcupa:edit}    
+    defaults: { _controller: MaestrosBundle:ModOcupa:edit}    
     options:
         expose: true
 deleteModOcupa:
     path: /modocupa/delete/{id}
-    defaults: { _controller: AppBundle:ModOcupa:delete}    
+    defaults: { _controller: MaestrosBundle:ModOcupa:delete}    
     options:
         expose: true
 equiModOcupa:
     path: /modocupa/verequi/{id}
-    defaults: { _controller: AppBundle:ModOcupa:verEqui}    
+    defaults: { _controller: MaestrosBundle:ModOcupa:verEqui}    
     options:
         expose: true
-#
-# equivalencias 
-#
-queryEqModOcupa:
-    path: /eqmodocupa/query/
-    defaults: { _controller: AppBundle:EqModOcupa:query}    
+activaEqModOcupa:
+    path: /eqmodocupa/activa/{id}
+    defaults: { _controller: MaestrosBundle:EqModOcupa:activa}    
     options:
         expose: true
-addEqModOcupa:
-    path: /eqmodocupa/add/
-    defaults: { _controller: AppBundle:EqModOcupa:add}    
+desactivaEqModOcupa:
+    path: /eqmodocupa/desactiva/{id}
+    defaults: { _controller: MaestrosBundle:EqModOcupa:desactiva}    
     options:
         expose: true
-deleteEqModOcupa:
-    path: /eqmodocupa/delete/{id}
-    defaults: { _controller: AppBundle:EqModOcupa:delete}    
+addModOcupa:
+    path: /eqmodocupa/add/{id}
+    defaults: { _controller: MaestrosBundle:EqModOcupa:add}    
     options:
         expose: true
 ajaxComprobarEqModOcupa:  
     path: /eqmodocupa/comprobar/{codigoLoc}/{edificio_id}
-    defaults: { _controller: AppBundle:EqModOcupa:ajaxComprobar}    
+    defaults: { _controller: MaestrosBundle:EqModOcupa:ajaxComprobar}    
     options:
         expose: true
+
 #
 # CUENTAS COTIZACIÓN  
 #
 queryMoviPat:
     path: /movipat/query/
-    defaults: { _controller: AppBundle:MoviPat:query}    
+    defaults: { _controller: MaestrosBundle:MoviPat:query}    
     options:
         expose: true
 addMoviPat:
     path: /movipat/add/
-    defaults: { _controller: AppBundle:MoviPat:add}    
+    defaults: { _controller: MaestrosBundle:MoviPat:add}    
     options:
         expose: true
 editMoviPat:
     path: /movipat/edit/{id}
-    defaults: { _controller: AppBundle:MoviPat:edit}    
+    defaults: { _controller: MaestrosBundle:MoviPat:edit}    
     options:
         expose: true
 deleteMoviPat:
     path: /movipat/delete/{id}
-    defaults: { _controller: AppBundle:MoviPat:delete}    
+    defaults: { _controller: MaestrosBundle:MoviPat:delete}    
     options:
         expose: true
 equiMoviPat:
     path: /movipat/verequi/{id}
-    defaults: { _controller: AppBundle:MoviPat:verEqui}    
+    defaults: { _controller: MaestrosBundle:MoviPat:verEqui}    
     options:
         expose: true
 #
@@ -140,22 +182,22 @@ equiMoviPat:
 #
 queryEqMoviPat:
     path: /eqmovipat/query/
-    defaults: { _controller: AppBundle:EqMoviPat:query}    
+    defaults: { _controller: MaestrosBundle:EqMoviPat:query}    
     options:
         expose: true
 addEqMoviPat:
     path: /eqmovipat/add/
-    defaults: { _controller: AppBundle:EqMoviPat:add}    
+    defaults: { _controller: MaestrosBundle:EqMoviPat:add}    
     options:
         expose: true
 deleteEqMoviPat:
     path: /eqmovipat/delete/{id}
-    defaults: { _controller: AppBundle:EqMoviPat:delete}    
+    defaults: { _controller: MaestrosBundle:EqMoviPat:delete}    
     options:
         expose: true
 ajaxComprobarEqMoviPat:  
     path: /eqmovipat/comprobar/{codigoLoc}/{edificio_id}
-    defaults: { _controller: AppBundle:EqMoviPat:ajaxComprobar}    
+    defaults: { _controller: MaestrosBundle:EqMoviPat:ajaxComprobar}    
     options:
         expose: true
 #
@@ -163,27 +205,27 @@ ajaxComprobarEqMoviPat:
 #
 queryModoPago:
     path: /modopago/query/
-    defaults: { _controller: AppBundle:ModoPago:query}    
+    defaults: { _controller: MaestrosBundle:ModoPago:query}    
     options:
         expose: true
 addModoPago:
     path: /modopago/add/
-    defaults: { _controller: AppBundle:ModoPago:add}    
+    defaults: { _controller: MaestrosBundle:ModoPago:add}    
     options:
         expose: true
 editModoPago:
     path: /modopago/edit/{id}
-    defaults: { _controller: AppBundle:ModoPago:edit}    
+    defaults: { _controller: MaestrosBundle:ModoPago:edit}    
     options:
         expose: true
 deleteModoPago:
     path: /modopago/delete/{id}
-    defaults: { _controller: AppBundle:ModoPago:delete}    
+    defaults: { _controller: MaestrosBundle:ModoPago:delete}    
     options:
         expose: true
 equiModoPago:
     path: /modopago/verequi/{id}
-    defaults: { _controller: AppBundle:ModoPago:verEqui}    
+    defaults: { _controller: MaestrosBundle:ModoPago:verEqui}    
     options:
         expose: true
 #
@@ -191,22 +233,22 @@ equiModoPago:
 #
 queryEqModoPago:
     path: /eqmodopago/query/
-    defaults: { _controller: AppBundle:EqModoPago:query}    
+    defaults: { _controller: MaestrosBundle:EqModoPago:query}    
     options:
         expose: true
 addEqModoPago:
     path: /eqmodopago/add/
-    defaults: { _controller: AppBundle:EqModoPago:add}    
+    defaults: { _controller: MaestrosBundle:EqModoPago:add}    
     options:
         expose: true
 deleteEqModoPago:
     path: /eqmodopago/delete/{id}
-    defaults: { _controller: AppBundle:EqModoPago:delete}    
+    defaults: { _controller: MaestrosBundle:EqModoPago:delete}    
     options:
         expose: true
 ajaxComprobarEqModoPago:  
     path: /eqmodopago/comprobar/{codigoLoc}/{edificio_id}
-    defaults: { _controller: AppBundle:EqModoPago:ajaxComprobar}    
+    defaults: { _controller: MaestrosBundle:EqModoPago:ajaxComprobar}    
     options:
         expose: true
 
@@ -215,27 +257,27 @@ ajaxComprobarEqModoPago:
 #
 queryAltas:
     path: /altas/query/
-    defaults: { _controller: AppBundle:Altas:query}    
+    defaults: { _controller: MaestrosBundle:Altas:query}    
     options:
         expose: true
 addAltas:
     path: /altas/add/
-    defaults: { _controller: AppBundle:Altas:add}    
+    defaults: { _controller: MaestrosBundle:Altas:add}    
     options:
         expose: true
 editAltas:
     path: /altas/edit/{id}
-    defaults: { _controller: AppBundle:Altas:edit}    
+    defaults: { _controller: MaestrosBundle:Altas:edit}    
     options:
         expose: true
 deleteAltas:
     path: /altas/delete/{id}
-    defaults: { _controller: AppBundle:Altas:delete}    
+    defaults: { _controller: MaestrosBundle:Altas:delete}    
     options:
         expose: true
 equiAltas:
     path: /altas/verequi/{id}
-    defaults: { _controller: AppBundle:Altas:verEqui}    
+    defaults: { _controller: MaestrosBundle:Altas:verEqui}    
     options:
         expose: true
 #
@@ -243,50 +285,50 @@ equiAltas:
 #
 queryEqAltas:
     path: /eqaltas/query/
-    defaults: { _controller: AppBundle:EqAltas:query}    
+    defaults: { _controller: MaestrosBundle:EqAltas:query}    
     options:
         expose: true
 addEqAltas:
     path: /eqaltas/add/
-    defaults: { _controller: AppBundle:EqAltas:add}    
+    defaults: { _controller: MaestrosBundle:EqAltas:add}    
     options:
         expose: true
 deleteEqAltas:
     path: /eqaltas/delete/{id}
-    defaults: { _controller: AppBundle:EqAltas:delete}    
+    defaults: { _controller: MaestrosBundle:EqAltas:delete}    
     options:
         expose: true
 ajaxComprobarEqAltas:  
     path: /eqaltas/comprobar/{codigoLoc}/{edificio_id}
-    defaults: { _controller: AppBundle:EqAltas:ajaxComprobar}    
+    defaults: { _controller: MaestrosBundle:EqAltas:ajaxComprobar}    
     options:
         expose: true
 #
-# FORMAS DE CONTRATACION
+# FORMAS DE OCUPACION
 #
 queryFco:
     path: /fco/query/
-    defaults: { _controller: AppBundle:Fco:query}    
+    defaults: { _controller: MaestrosBundle:Fco:query}    
     options:
         expose: true
 addFco:
     path: /fco/add/
-    defaults: { _controller: AppBundle:Fco:add}    
+    defaults: { _controller: MaestrosBundle:Fco:add}    
     options:
         expose: true
 editFco:
     path: /fco/edit/{id}
-    defaults: { _controller: AppBundle:Fco:edit}    
+    defaults: { _controller: MaestrosBundle:Fco:edit}    
     options:
         expose: true
 deleteFco:
     path: /fco/delete/{id}
-    defaults: { _controller: AppBundle:Fco:delete}    
+    defaults: { _controller: MaestrosBundle:Fco:delete}    
     options:
         expose: true
 equiFco:
     path: /fco/verequi/{id}
-    defaults: { _controller: AppBundle:Fco:verEqui}    
+    defaults: { _controller: MaestrosBundle:Fco:verEqui}    
     options:
         expose: true
 #
@@ -294,22 +336,22 @@ equiFco:
 #
 queryEqFco:
     path: /eqfco/query/
-    defaults: { _controller: AppBundle:EqFco:query}    
+    defaults: { _controller: MaestrosBundle:EqFco:query}    
     options:
         expose: true
 addEqFco:
     path: /eqfco/add/
-    defaults: { _controller: AppBundle:EqFco:add}    
+    defaults: { _controller: MaestrosBundle:EqFco:add}    
     options:
         expose: true
 deleteEqFco:
     path: /eqfco/delete/{id}
-    defaults: { _controller: AppBundle:EqFco:delete}    
+    defaults: { _controller: MaestrosBundle:EqFco:delete}    
     options:
         expose: true
 ajaxComprobarEqFco:  
     path: /eqfco/comprobar/{codigoLoc}/{edificio_id}
-    defaults: { _controller: AppBundle:EqFco:ajaxComprobar}    
+    defaults: { _controller: MaestrosBundle:EqFco:ajaxComprobar}    
     options:
         expose: true
 #
@@ -317,27 +359,27 @@ ajaxComprobarEqFco:
 #
 queryTipoIlt:
     path: /tipoilt/query/
-    defaults: { _controller: AppBundle:TipoIlt:query}    
+    defaults: { _controller: MaestrosBundle:TipoIlt:query}    
     options:
         expose: true
 addTipoIlt:
     path: /tipoilt/add/
-    defaults: { _controller: AppBundle:TipoIlt:add}    
+    defaults: { _controller: MaestrosBundle:TipoIlt:add}    
     options:
         expose: true
 editTipoIlt:
     path: /tipoilt/edit/{id}
-    defaults: { _controller: AppBundle:TipoIlt:edit}    
+    defaults: { _controller: MaestrosBundle:TipoIlt:edit}    
     options:
         expose: true
 deleteTipoIlt:
     path: /tipoilt/delete/{id}
-    defaults: { _controller: AppBundle:TipoIlt:delete}    
+    defaults: { _controller: MaestrosBundle:TipoIlt:delete}    
     options:
         expose: true
 equiTipoIlt:
     path: /tipoilt/verequi/{id}
-    defaults: { _controller: AppBundle:TipoIlt:verEqui}    
+    defaults: { _controller: MaestrosBundle:TipoIlt:verEqui}    
     options:
         expose: true
 #
@@ -345,22 +387,22 @@ equiTipoIlt:
 #
 queryEqTipoIlt:
     path: /eqtipoilt/query/
-    defaults: { _controller: AppBundle:EqTipoIlt:query}    
+    defaults: { _controller: MaestrosBundle:EqTipoIlt:query}    
     options:
         expose: true
 addEqTipoIlt:
     path: /eqtipoilt/add/
-    defaults: { _controller: AppBundle:EqTipoIlt:add}    
+    defaults: { _controller: MaestrosBundle:EqTipoIlt:add}    
     options:
         expose: true
 deleteEqTipoIlt:
     path: /eqtipoilt/delete/{id}
-    defaults: { _controller: AppBundle:EqTipoIlt:delete}    
+    defaults: { _controller: MaestrosBundle:EqTipoIlt:delete}    
     options:
         expose: true
 ajaxComprobarEqTipoIlt:  
     path: /eqtipoilt/comprobar/{codigoLoc}/{edificio_id}
-    defaults: { _controller: AppBundle:EqTipoIlt:ajaxComprobar}    
+    defaults: { _controller: MaestrosBundle:EqTipoIlt:ajaxComprobar}    
     options:
         expose: true
 #
@@ -368,32 +410,32 @@ ajaxComprobarEqTipoIlt:
 #
 queryAusencia:
     path: /Ausencia/query/
-    defaults: { _controller: AppBundle:Ausencia:query}    
+    defaults: { _controller: MaestrosBundle:Ausencia:query}    
     options:
         expose: true
 addAusencia:
     path: /Ausencia/add/
-    defaults: { _controller: AppBundle:Ausencia:add}    
+    defaults: { _controller: MaestrosBundle:Ausencia:add}    
     options:
         expose: true
 editAusencia:
     path: /Ausencia/edit/{id}
-    defaults: { _controller: AppBundle:Ausencia:edit}    
+    defaults: { _controller: MaestrosBundle:Ausencia:edit}    
     options:
         expose: true
 deleteAusencia:
     path: /Ausencia/delete/{id}
-    defaults: { _controller: AppBundle:Ausencia:delete}    
+    defaults: { _controller: MaestrosBundle:Ausencia:delete}    
     options:
         expose: true
 equiAusencia:
     path: /Ausencia/verequi/{id}
-    defaults: { _controller: AppBundle:Ausencia:verEqui}    
+    defaults: { _controller: MaestrosBundle:Ausencia:verEqui}    
     options:
         expose: true
 exportaAusencia:
     path: /Ausencia/exporta/
-    defaults: { _controller: AppBundle:Ausencia:exporta}    
+    defaults: { _controller: MaestrosBundle:Ausencia:exporta}    
     options:
         expose: true
 #
@@ -401,22 +443,73 @@ exportaAusencia:
 #
 queryEqAusencia:
     path: /eqAusencia/query/
-    defaults: { _controller: AppBundle:EqAusencia:query}    
+    defaults: { _controller: MaestrosBundle:EqAusencia:query}    
     options:
         expose: true
 addEqAusencia:
     path: /eqAusencia/add/
-    defaults: { _controller: AppBundle:EqAusencia:add}    
+    defaults: { _controller: MaestrosBundle:EqAusencia:add}    
     options:
         expose: true
 deleteEqAusencia:
     path: /eqAusencia/delete/{id}
-    defaults: { _controller: AppBundle:EqAusencia:delete}    
+    defaults: { _controller: MaestrosBundle:EqAusencia:delete}    
     options:
         expose: true
 ajaxComprobarEqAusencia:  
     path: /eqAusencia/comprobar/{codigoLoc}/{edificio_id}
-    defaults: { _controller: AppBundle:EqAusencia:ajaxComprobar}    
+    defaults: { _controller: MaestrosBundle:EqAusencia:ajaxComprobar}    
     options:
         expose: true
 
+#
+# CATEGORIAS PROFESIONALES
+#
+editCateg:
+    path:   /categ/edit/{id}
+    defaults: { _controller: MaestrosBundle:Categ:edit}
+queryCateg:
+    path:   /categ/query
+    defaults: { _controller: MaestrosBundle:Categ:query}
+addCateg:
+    path:   /categ/add/
+    defaults: { _controller: MaestrosBundle:Categ:add}
+deleteCateg:
+    path:   /categ/delete/{id}
+    defaults: { _controller: MaestrosBundle:Categ:delete}
+    options:
+        expose: true
+replicaCateg:
+    path:   /categ/replica/{id}/{actuacion}
+    defaults: { _controller: MaestrosBundle:Categ:replica}
+    options:
+        expose: true
+ajaxCalculaCodigo:
+    path:   /categ/calculacodigo/{catgen_id}
+    defaults: { _controller: MaestrosBundle:Categ:ajaxCalculaCodigo}
+    options:
+        expose: true
+        
+        
+queryEqCateg:
+    path:   /categ/equivalencias/{categ_id}
+    defaults: { _controller: MaestrosBundle:Categ:queryEqCateg}
+    options:
+        expose: true
+activaEqCateg:
+    path:   /categ/equivalencias/activa/{id}
+    defaults: { _controller: MaestrosBundle:EqCateg:activa}
+    options:
+        expose: true
+desactivaEqCateg:
+    path:   /categ/equivalencias/desactiva/{id}
+    defaults: { _controller: MaestrosBundle:EqCateg:desactiva}
+    options:
+        expose: true
+addEqCateg:
+    path:   /categ/equivalencias/add/{id}
+    defaults: { _controller: MaestrosBundle:EqCateg:add}
+    options:
+        expose: true
+
+ 

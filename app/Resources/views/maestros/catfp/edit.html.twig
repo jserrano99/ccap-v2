@@ -1,0 +1,12 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} CATEGORÍAS CATFP **{{accion}}**
+    <a href="{{path("queryCatFp")}}" class="btn btn-success">
+        <span class="glyphicon glyphicon-th-list"></span>  Volver</a>
+    {% endblock %}
+    {% block contenido %}
+    <div class="container">
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

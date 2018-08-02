@@ -6,6 +6,27 @@ require_once '../vendor/autoload.php';
  * CONEXIÓN Y DESCONXESIÓN A BASE DE DATOS *
  * ***************************************** */
 
+function selectCatFpById($id) {
+    global $JanoControl;
+    try {
+        $sentencia = " select * from ccap_catfp where "
+                . " id = :id";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":id" => $id);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        if ($res) {
+            return $res;
+        } else {
+            echo "**ERROR NO EXISTE CATFP ID=" . $id . "\n";
+            return null;
+        }
+    } catch (PDOException $ex) {
+        echo "**PDOERROR EN CATFP  ID=" . $id . " " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
 function selectCatFp($catfp) {
     global $JanoControl;
     try {
@@ -76,10 +97,11 @@ function conexionPDO($datosConexion) {
     return $conexion;
 }
 
-/* * ***********************************************************************************
- * Función jano_ctrol() establece la conexión a la base de datos mysql de control de Jano
- * ********************************************************************************** */
-
+/**
+ * ******************************************************************************
+ * Función jano_ctrol() establece la conexión a la base de datos mysql de control 
+ * ***************************************************************************** 
+ */
 function jano_ctrl() {
     $filename = __DIR__ . '/../config/parameters.yml';
     $parametros = \Symfony\Component\Yaml\Yaml::parseFile($filename);
@@ -170,12 +192,12 @@ function selectBaseDatosEdificio($tipo, $edificio) {
             ":edificio" => $edificio];
         $query->execute($params);
         $resultSet = $query->fetch(PDO::FETCH_ASSOC);
-        if (count($resultSet) == 0) {
+        if ($resultSet) {
+            return $resultSet;
+        } else {
             echo "**ERROR NO EXISTE BASE DE DATOS PARA TIPO= " . $tipo . " EDIFICIO= " . $edificio . "\n";
             return null;
-        } else {
-            return $resultSet;
-        }
+        } 
     } catch (PDOException $ex) {
         echo "**PDOERROR EN comun_base_datos PARA TIPO= " . $tipo . " EDIFICIO= " . $edificio . "\n" . $ex->getMessage() . "\n";
         return null;
@@ -317,6 +339,7 @@ function selectDa($da) {
         if ($res) {
             return ($res["id"]);
         } else {
+            echo "** ERROR NO EXISTE DIRECCIÓN ASISTENCIAL DA: ".$da."\n";
             return null;
         }
     } catch (PDOException $ex) {
@@ -340,10 +363,11 @@ function selectCentro($codigo) {
         if ($res) {
             return ($res);
         } else {
+            echo "**ERROR NO EXISTE CENTROS EN BD UNIFICADA CODIGO: ".$codigo."\n";
             return null;
         }
     } catch (PDOException $ex) {
-        echo " Error en función selectCentros centros codigo=" . $codigo . " " . $ex->getMessage();
+        echo "***PDOERROR en función selectCentros centros codigo=" . $codigo . " " . $ex->getMessage()."\n";
         return null;
     }
 }
@@ -359,6 +383,7 @@ function existeCentro($codigoUni) {
         if ($res) {
             return ($res["id"]);
         } else {
+            echo "**ERROR NO EXISTE CCAP_UF CODIGO= ".$codigoUni."\n";
             return null;
         }
     } catch (PDOException $ex) {
@@ -366,6 +391,7 @@ function existeCentro($codigoUni) {
         return null;
     }
 }
+
 
 function selectCatGen($catgen) {
     global $JanoControl;
@@ -545,6 +571,30 @@ function selectUf($uf) {
     }
 }
 
+function selectUfById($id) {
+    global $JanoControl;
+    try {
+        $sentencia = " select t1.*, t2.codigo as edificio, t3.codigo as da "
+                . " from ccap_uf as t1  "
+                . " inner join comun_edificio as t2 on t2.id = t1.edificio_id "
+                . " inner join comun_da as t3 on t3.id = t1.da_id "
+                . " where t1.id = :id ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":id" => $id);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+
+        if ($res) {
+            return $res;
+        } else {
+            return null;
+        }
+    } catch (PDOException $ex) {
+        echo " ERROR PDO EN UF=" . $uf . " " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
 function selectPa($pa) {
     global $JanoControl;
     try {
@@ -565,6 +615,30 @@ function selectPa($pa) {
         }
     } catch (PDOException $ex) {
         echo " ***PDOERROR EN CCAP_PA PUNTO ASISTENCIAL=" . $pa . " " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
+function selectPaById($id) {
+    global $JanoControl;
+    try {
+        $sentencia = " select t1.*, t2.codigo as edificio, t3.codigo as da "
+                . " from ccap_pa as t1  "
+                . " inner join comun_edificio as t2 on t2.id = t1.edificio_id "
+                . " inner join comun_da as t3 on t3.id = t1.da_id "
+                . " where t1.id = :id ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":id" => $id);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+
+        if ($res) {
+            return $res;
+        } else {
+            return null;
+        }
+    } catch (PDOException $ex) {
+        echo " ***PDOERROR EN CCAP_PA PUNTO ASISTENCIAL ID=" . $id . " " . $ex->getMessage() . "\n";
         return null;
     }
 }
@@ -649,7 +723,38 @@ function selectPlaza($plaza_id) {
         echo " ***PDOERROR EN CCAP_PLAZA ID=" . $plaza_id . " " . $ex->getMessage() . "\n";
         return null;
     }
-} 
+}
+
+function selectPlazaById($id) {
+    global $JanoControl;
+    try {
+        $sentencia = " select t1.id, t1.cias, t2.uf, t4.codigo as modalidad,"
+                . " t3.pa, t5.codigo as catgen, t1.ficticia, t1.refuerzo, "
+                . " t6.codigo as catfp, t1.cupequi, t1.plantilla, t1.f_amortiza, t1.colaboradora, t1.f_creacion, t7.codigo as edificio, t1.observaciones,t1.horNormal "
+                . " ,t8.codigo as ceco, t1.turno"
+                . " from ccap_plazas as t1 "
+                . " left join ccap_uf as t2 on t2.id = t1.uf_id "
+                . " left join ccap_pa as t3 on t3.id = t1.pa_id "
+                . " left join ccap_modalidad as t4 on t4.id = t1.modalidad_id"
+                . " left join ccap_catgen as t5 on t5.id = t1.catgen_id"
+                . " left join ccap_catfp as t6 on t6.id = t1.catfp_id"
+                . " left join comun_edificio as t7 on t7.id = t2.edificio_id"
+                . " left join ccap_cecos as t8 on t8.id = t1.ceco_id"
+                . " where t1.id = :id ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":id" => $id);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        if ($res) {
+            return $res;
+        } else {
+            return null;
+        }
+    } catch (PDOException $ex) {
+        echo " ***PDOERROR EN CCAP_PLAZA ID=" . $id . " " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
 
 function conexionEdificio($codigo, $tipo) {
     $BasesDatos = selectBaseDatosEdificio($tipo, $codigo);
@@ -712,7 +817,7 @@ function selectEqCateg($codigo, $edificio) {
         if ($res) {
             return $res['CODIGO_LOC'];
         } else {
-            echo "**ERROR NO EXISTE EQ_CATEG CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . "\n";
+            echo "NO EXISTE EQ_CATEG CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . " NO SE TRATA \n";
             return null;
         }
     } catch (PDOException $ex) {
@@ -813,6 +918,7 @@ function selectEqCatFp($codigo, $edificio) {
         return null;
     }
 }
+
 
 function selectEqTurno($codigo, $edificio) {
     global $JanoInte;
