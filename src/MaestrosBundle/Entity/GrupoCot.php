@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * GrupoCot
  *
- * @ORM\Table(name="ccap_grupocot"
+ * @ORM\Table(name="gums_grupocot"
  *         ,uniqueConstraints={@ORM\UniqueConstraint(name="uk_codigo", columns={"codigo"})}
  *         ,indexes={@ORM\Index(name="idx001", columns={"codigo"})}
  *           )
@@ -40,16 +40,10 @@ class GrupoCot {
     /**
      * @var string
      *
-     * @ORM\Column(name="descripcion", type="string", length=25, nullable=false)
+     * @ORM\Column(name="descripcion", type="string", length=50, nullable=false)
      */
     private $descripcion;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="enuso", type="string", length=1, nullable=false)
-     */
-    private $enuso;
     /**
      * Get id
      *
@@ -109,30 +103,8 @@ class GrupoCot {
     }
     
     public function __toString() {
-        return $this->descripcion;
+        return '('. $this->codigo.') '.$this->descripcion;
     }
-
-    /**
-     * Set enuso
-     *
-     * @param string $enuso
-     *
-     * @return GrupoCot
-     */
-    public function setEnuso($enuso)
-    {
-        $this->enuso = $enuso;
-
-        return $this;
-    }
-
-    /**
-     * Get enuso
-     *
-     * @return string
-     */
-    public function getEnuso()
-    {
-        return $this->enuso;
-    }
+    
+    
 }

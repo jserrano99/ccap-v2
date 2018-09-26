@@ -402,7 +402,7 @@ if ($modo  == 'REAL') {
 }
 
 
-$Plaza = selectPlaza($id);
+$Plaza = selectPlazaById($id);
 
 if ($Plaza == null) {
     echo " No existe plaza id=" . $id . "\n";

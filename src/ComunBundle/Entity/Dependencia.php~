@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * Description of Dependencia
+ *
+ * @author jluis
+ */
+
+namespace ComunBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Class Dependencia 
+ *
+ * @ORM\Table(name="comun_dependencias")
+ * @ORM\Entity
+ */
+class Dependencia {
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var CargaInicial
+     *
+     * @ORM\ManyToOne(targetEntity="CargaInicial")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="carga_inicial_dep_id", referencedColumnName="id")
+     * })
+     */
+    
+    private $cargaInicialDep;
+    
+    /**
+     * @var CargaInicial
+     *
+     * @ORM\ManyToOne(targetEntity="CargaInicial")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="carga_inicial_id", referencedColumnName="id")
+     * })
+     */
+    private $cargaInicial;
+
+}

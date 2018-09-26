@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * GrupoProf
  *
- * @ORM\Table(name="ccap_grupoprof"
+ * @ORM\Table(name="gums_grupoprof"
  *         ,uniqueConstraints={@ORM\UniqueConstraint(name="uk_codigo", columns={"codigo"})}
 *          , indexes={@ORM\Index(name="idx001", columns={"codigo"})}
  *           )
@@ -78,14 +78,7 @@ class GrupoProf {
      * @ORM\Column(name="codigo2", type="string", length=2, nullable=true)
      */
     private $codigo2;
-/**
-     * @var string
-     *
-     * @ORM\Column(name="enuso", type="string", length=1, nullable=true)
-     */
-    private $enuso;
 
-    
 
     /**
      * Get id
@@ -268,28 +261,5 @@ class GrupoProf {
     public function __toString() {
         return $this->descripcion;
     }
-
-    /**
-     * Set enuso
-     *
-     * @param string $enuso
-     *
-     * @return GrupoProf
-     */
-    public function setEnuso($enuso)
-    {
-        $this->enuso = $enuso;
-
-        return $this;
-    }
-
-    /**
-     * Get enuso
-     *
-     * @return string
-     */
-    public function getEnuso()
-    {
-        return $this->enuso;
-    }
+    
 }

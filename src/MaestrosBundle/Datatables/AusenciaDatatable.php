@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Datatables;
+namespace MaestrosBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\AbstractDatatable;
 use Sg\DatatablesBundle\Datatable\Style;
@@ -30,7 +30,7 @@ class AusenciaDatatable extends AbstractDatatable {
             'search_in_non_visible_columns' => true,
         ));
 
-        $edificios = $this->em->getRepository('AppBundle:Edificio')->findAll();
+        $edificios = $this->em->getRepository('ComunBundle:Edificio')->findAll();
 
         $this->features->set(array(
             'auto_width' => false,
@@ -121,14 +121,14 @@ class AusenciaDatatable extends AbstractDatatable {
      * {@inheritdoc}
      */
     public function getEntity() {
-        return 'AppBundle\Entity\Ausencia';
+        return 'MaestrosBundle\Entity\Ausencia';
     }
 
     /**
      * {@inheritdoc}
      */
     public function getName() {
-        return 'altas_datatable';
+        return 'ausencia_datatable';
     }
 
 }

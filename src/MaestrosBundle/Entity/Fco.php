@@ -39,9 +39,9 @@ class Fco {
     /**
      * @var string
      *
-     * @ORM\Column(name="descrip", type="string", length=25, nullable=true)
+     * @ORM\Column(name="descripcion", type="string", length=25, nullable=true)
      */
-    private $descrip;
+    private $descripcion;
 
     /**
      * @var string
@@ -121,27 +121,27 @@ class Fco {
     }
 
     /**
-     * Set descrip.
+     * Set descripcion.
      *
-     * @param string|null $descrip
+     * @param string|null $descripcion
      *
      * @return Fco
      */
-    public function setDescrip($descrip = null)
+    public function setDescripcion($descripcion = null)
     {
-        $this->descrip = $descrip;
+        $this->descripcion = $descripcion;
 
         return $this;
     }
 
     /**
-     * Get descrip.
+     * Get descripcion.
      *
      * @return string|null
      */
-    public function getDescrip()
+    public function getDescripcion()
     {
-        return $this->descrip;
+        return $this->descripcion;
     }
 
     /**
@@ -289,6 +289,6 @@ class Fco {
     }
     
     public function __toString() {
-        return $this->descrip;
+        return $this->descripcion.' ('.$this->codigo.')';
     }
 }

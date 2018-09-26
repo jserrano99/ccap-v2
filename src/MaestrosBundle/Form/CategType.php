@@ -68,7 +68,7 @@ class CategType extends AbstractType {
                     'required' => false,
                     'disabled' => false,
                     "attr" => array("class" => "medio form-control")))
-                ->add('grupoCot', EntityType::class, array(
+                ->add('GrupoCot', EntityType::class, array(
                     "label" => 'Grupo Cotización ',
                     'class' => 'MaestrosBundle:GrupoCot',
                     'placeholder' => 'Seleccione Grupo Cotización....',

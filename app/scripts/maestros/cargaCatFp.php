@@ -5,7 +5,7 @@ include_once __DIR__ . '/../funcionesDAO.php';
 function insertEqCatFp($EqCatFp) {
     global $JanoControl, $gblError;
     try {
-        $sentencia = "insert into ccap_eq_catfp (edificio_id, catfp_id, codigo_loc, enuso)  "
+        $sentencia = "insert into gums_eq_catfp (edificio_id, catfp_id, codigo_loc, enuso)  "
                 . " values (:edificio_id, :catfp_id, :codigo_loc, :enuso) ";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":edificio_id" => $EqCatFp["edificio_id"],
@@ -14,17 +14,17 @@ function insertEqCatFp($EqCatFp) {
             ":enuso" => $EqCatFp["enUso"]);
         $res = $query->execute($params);
         if ($res == 0) {
-            echo "**ERROR EN INSERT CCAP_EQ_CATFP EDIFICIO: " . $EqCatFp["edificio"]
+            echo "**ERROR EN INSERT gums_eq_catfp EDIFICIO: " . $EqCatFp["edificio"]
             . " CATFP=" . $EqCatFp["codigo_uni"]
             . " CODIGO_LOC= " . $EqCatFp["codigo_loc"] . "\n";
             $gblError = 1;
         }
-        echo "==>INSERT CCAP_EQ_CATFP EDIFICIO: " . $EqCatFp["edificio"]
+        echo "==>INSERT gums_eq_catfp EDIFICIO: " . $EqCatFp["edificio"]
         . " CATFP=" . $EqCatFp["codigo_uni"]
         . " CODIGO_LOC= " . $EqCatFp["codigo_loc"]
         . " EN USO = " . $EqCatFp["enUso"] . "\n";
     } catch (PDOException $ex) {
-        echo "**PDOERROR EN INSERT CCAP_EQ_CATFP EDIFICIO: " . $row["EDIFICIO"]
+        echo "**PDOERROR EN INSERT gums_eq_catfp EDIFICIO: " . $row["EDIFICIO"]
         . " CATFP=" . $codigo
         . " CODIGO_LOC= " . $row["CODIGO_LOC"] . "\n"
         . $ex->getMessage() . "\n";
@@ -56,7 +56,7 @@ function selectCatFpEnUso($conexion, $codigo) {
 function insertCatFp($row) {
     global $JanoControl, $gblError;
     try {
-        $sentencia = " insert into ccap_catfp "
+        $sentencia = " insert into gums_catfp "
                 . " (codigo, descripcion, enuso )"
                 . " values  "
                 . " (:codigo, :descripcion, :enuso)";
@@ -116,15 +116,15 @@ if ($tipo == 'REAL') {
 /*
  * INICIALIZAMOS LA TABLA Y LA CORRESPONDIENTE TABLA DE EQUIVALENCIAS
  */
-$sentencia = " delete from ccap_eq_catfp";
+$sentencia = " delete from gums_eq_catfp";
 $query = $JanoControl->prepare($sentencia);
 $rows = $query->execute();
-echo " ELIMINADA TABLA EQUIVALENCIAS (CCAP_EQ_CATFP) REGISTROS: " . $rows . "\n";
+echo " ELIMINADA TABLA EQUIVALENCIAS (gums_eq_catfp) REGISTROS: " . $rows . "\n";
 
-$sentencia = " delete from ccap_catfp";
+$sentencia = " delete from gums_catfp";
 $query = $JanoControl->prepare($sentencia);
 $rows = $query->execute();
-echo " ELIMINADA TABLA CATEGORIA CATFP (CCAP_CATFP) REGISTROS: " . $rows . "\n";
+echo " ELIMINADA TABLA CATEGORIA CATFP (gums_catfp) REGISTROS: " . $rows . "\n";
 /*
  * SELECCIONAMOS TODOS LOS EDIFICIOS PARA ESTABLECER LAS EQUIVALENCIAS 
  */

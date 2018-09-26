@@ -5,7 +5,7 @@ include_once __DIR__ . '/../funcionesDAO.php';
 function insertEqCatGen($EqCatGen) {
     global $JanoControl, $gblError;
     try {
-        $sentencia = "insert into ccap_eq_catgen (edificio_id, catgen_id, codigo_loc, enuso)  "
+        $sentencia = "insert into gums_eq_catgen (edificio_id, catgen_id, codigo_loc, enuso)  "
                 . " values (:edificio_id, :catgen_id, :codigo_loc, :enuso) ";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":edificio_id" => $EqCatGen["edificio_id"],
@@ -14,17 +14,17 @@ function insertEqCatGen($EqCatGen) {
             ":enuso" => $EqCatGen["enUso"]);
         $res = $query->execute($params);
         if ($res == 0) {
-            echo "**ERROR EN INSERT CCAP_EQ_CATGEN EDIFICIO: " . $EqCatGen["edificio"]
+            echo "**ERROR EN INSERT gums_eq_catgen EDIFICIO: " . $EqCatGen["edificio"]
             . " CATGEN=" . $EqCatGen["codigo_uni"]
             . " CODIGO_LOC= " . $EqCatGen["codigo_loc"] . "\n";
             $gblError = 1;
         }
-        echo "==>INSERT CCAP_EQ_CATGEN EDIFICIO: " . $EqCatGen["edificio"]
+        echo "==>INSERT gums_eq_catgen EDIFICIO: " . $EqCatGen["edificio"]
         . " CATGEN=" . $EqCatGen["codigo_uni"]
         . " CODIGO_LOC= " . $EqCatGen["codigo_loc"]
         . " EN USO = " . $EqCatGen["enUso"] . "\n";
     } catch (PDOException $ex) {
-        echo "**PDOERROR EN INSERT CCAP_EQ_CATGEN EDIFICIO: " . $row["EDIFICIO"]
+        echo "**PDOERROR EN INSERT gums_eq_catgen EDIFICIO: " . $row["EDIFICIO"]
         . " CATGEN=" . $codigo
         . " CODIGO_LOC= " . $row["CODIGO_LOC"] . "\n"
         . $ex->getMessage() . "\n";
@@ -56,7 +56,7 @@ function selectCatGenEnUso($conexion, $codigo) {
 function insertCatGen($row) {
     global $JanoControl, $gblError;
     try {
-        $sentencia = " insert into ccap_catgen "
+        $sentencia = " insert into gums_catgen "
                 . " (codigo, descripcion, btc_tbol_codigo, enuso,plan_org, cod_insalud, des_insalud, especialidad, codigo_sms)"
                 . " values "
                 . " (:codigo, :descripcion, :btc_tbol_codigo, :enuso, :plan_org, :cod_insalud, :des_insalud, :especialidad, :codigo_sms)";
@@ -121,15 +121,15 @@ if ($tipo == 'REAL') {
 /*
  * INICIALIZAMOS LA TABLA Y LA CORRESPONDIENTE TABLA DE EQUIVALENCIAS
  */
-$sentencia = " delete from ccap_eq_catgen";
+$sentencia = " delete from gums_eq_catgen";
 $query = $JanoControl->prepare($sentencia);
 $rows = $query->execute();
-echo " ELIMINADA TABLA EQUIVALENCIAS (CCAP_EQ_CATGEN) REGISTROS: " . $rows . "\n";
+echo " ELIMINADA TABLA EQUIVALENCIAS (gums_eq_catgen) REGISTROS: " . $rows . "\n";
 
-$sentencia = " delete from ccap_catgen";
+$sentencia = " delete from gums_catgen";
 $query = $JanoControl->prepare($sentencia);
 $rows = $query->execute();
-echo " ELIMINADA TABLA CATEGORIA CATGEN (CCAP_CATGEN) REGISTROS: " . $rows . "\n";
+echo " ELIMINADA TABLA CATEGORIA CATGEN (gums_catgen) REGISTROS: " . $rows . "\n";
 /*
  * SELECCIONAMOS TODOS LOS EDIFICIOS PARA ESTABLECER LAS EQUIVALENCIAS 
  */

@@ -44,19 +44,12 @@ class EqTipoIlt {
      *
      * @ORM\ManyToOne(targetEntity="TipoIlt")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tipoIlt_id", referencedColumnName="id",onDelete="CASCADE")
+     *   @ORM\JoinColumn(name="tipo_ilt_id", referencedColumnName="id",onDelete="CASCADE")
      * })
      */
     private $tipoIlt;
     
-    /**
-     * @var enUso
-     * 
-     * @ORM\Column(name="enuso",type="string",length=1,nullable=false)
-     */
-    private $enUso;
-
-
+    
 
     /**
      * Get id.
@@ -90,30 +83,6 @@ class EqTipoIlt {
     public function getCodigoLoc()
     {
         return $this->codigoLoc;
-    }
-
-    /**
-     * Set enUso.
-     *
-     * @param string $enUso
-     *
-     * @return EqTipoIlt
-     */
-    public function setEnUso($enUso)
-    {
-        $this->enUso = $enUso;
-
-        return $this;
-    }
-
-    /**
-     * Get enUso.
-     *
-     * @return string
-     */
-    public function getEnUso()
-    {
-        return $this->enUso;
     }
 
     /**

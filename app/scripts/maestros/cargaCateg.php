@@ -5,7 +5,7 @@ include_once __DIR__ . '/../funcionesDAO.php';
 function insertEqCateg($EqCateg) {
     global $JanoControl, $gblError;
     try {
-        $sentencia = "insert into ccap_eq_categ (edificio_id, categ_id, codigo_loc, enuso)  "
+        $sentencia = "insert into gums_eq_categ (edificio_id, categ_id, codigo_loc, enuso)  "
                 . " values (:edificio_id, :categ_id, :codigo_loc, :enuso) ";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":edificio_id" => $EqCateg["edificio_id"],
@@ -14,17 +14,17 @@ function insertEqCateg($EqCateg) {
             ":enuso" => $EqCateg["enUso"]);
         $res = $query->execute($params);
         if ($res == 0) {
-            echo "**ERROR EN INSERT CCAP_EQ_CATEG EDIFICIO: " . $EqCateg["edificio"]
+            echo "**ERROR EN INSERT gums_eq_categ EDIFICIO: " . $EqCateg["edificio"]
             . " CATEG=" . $EqCateg["codigo_uni"]
             . " CODIGO_LOC= " . $EqCateg["codigo_loc"] . "\n";
             $gblError = 1;
         }
-        echo "==>INSERT CCAP_EQ_CATEG EDIFICIO: " . $EqCateg["edificio"]
+        echo "==>INSERT gums_eq_categ EDIFICIO: " . $EqCateg["edificio"]
         . " CATEG=" . $EqCateg["codigo_uni"]
         . " CODIGO_LOC= " . $EqCateg["codigo_loc"]
         . " EN USO = " . $EqCateg["enUso"] . "\n";
     } catch (PDOException $ex) {
-        echo "**PDOERROR EN INSERT CCAP_EQ_CATEG EDIFICIO: " . $row["EDIFICIO"]
+        echo "**PDOERROR EN INSERT gums_eq_categ EDIFICIO: " . $row["EDIFICIO"]
         . " CATEG=" . $codigo
         . " CODIGO_LOC= " . $row["CODIGO_LOC"] . "\n"
         . $ex->getMessage() . "\n";
@@ -56,7 +56,7 @@ function selectCategEnUso($conexion, $codigo) {
 function insertCateg($row) {
     global $JanoControl, $gblError;
     try {
-        $sentencia = " insert into ccap_categ ("
+        $sentencia = " insert into gums_categ ("
                 . "  catgen_id "
                 . " ,codigo "
                 . " ,descripcion"
@@ -134,7 +134,6 @@ function insertCateg($row) {
                      ":epiacc_id"=> $epiacc_id,
                      ":enuso"=> $row['ENUSO'],
                      ":categ_orden"=> $row['CATEG_ORDEN'],
-                     ":grupocobro_id"=> $grupocobro_id,
                      ":categoriarptid"=> $row['CATEGORIARPTID'],
                      ":catrpt_codigo"=> $row['CATRPT_CODIGO'],
                      ":catrpt_descripcion"=> $row['CATRPT_DESCRIPCION'],
@@ -158,7 +157,7 @@ function insertCateg($row) {
             $gblError = 1;
             return null;
         }
-        echo "==>CREADA CATEGORIA (CATEG) ID= " . $row["ID"] . " CATEG:" . $row["CODIGO"] . " " . $row["DESCRIP"] . "\n";
+        echo "==>CREADA CATEGORIA PROFESIONAL (CATEG) ID= " . $row["ID"] . " CATEG:" . $row["CODIGO"] . " " . $row["DESCRIP"] . "\n";
         return $row["ID"];
     } catch (PDOException $ex) {
         echo "**PDOERROR EN INSERT CATEG CODIGO= " . $row["codigo"] . "\n ERROR = " . $ex->getMessage() . "\n";
@@ -201,15 +200,15 @@ if ($tipo == 'REAL') {
 /*
  * INICIALIZAMOS LA TABLA Y LA CORRESPONDIENTE TABLA DE EQUIVALENCIAS
  */
-$sentencia = " delete from ccap_eq_categ";
+$sentencia = " delete from gums_eq_categ";
 $query = $JanoControl->prepare($sentencia);
 $rows = $query->execute();
-echo " ELIMINADA TABLA EQUIVALENCIAS (CCAP_EQ_CATEG) REGISTROS: " . $rows . "\n";
+echo " ELIMINADA TABLA EQUIVALENCIAS (gums_eq_categ) REGISTROS: " . $rows . "\n";
 
-$sentencia = " delete from ccap_categ";
+$sentencia = " delete from gums_categ";
 $query = $JanoControl->prepare($sentencia);
 $rows = $query->execute();
-echo " ELIMINADA TABLA CATEGORIA CATEG (CCAP_CATEG) REGISTROS: " . $rows . "\n";
+echo " ELIMINADA TABLA CATEGORIA CATEG (gums_categ) REGISTROS: " . $rows . "\n";
 /*
  * SELECCIONAMOS TODOS LOS EDIFICIOS PARA ESTABLECER LAS EQUIVALENCIAS 
  */

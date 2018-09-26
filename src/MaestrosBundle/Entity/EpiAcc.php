@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * EpiAcc
  *
- * @ORM\Table(name="ccap_epiacc"
+ * @ORM\Table(name="gums_epiacc"
  *         ,uniqueConstraints={@ORM\UniqueConstraint(name="uk_codigo", columns={"codigo"})}
  *         )
  * @ORM\Entity(repositoryClass="MaestrosBundle\Repository\EpiAccRepository")

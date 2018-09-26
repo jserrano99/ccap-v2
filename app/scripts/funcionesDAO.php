@@ -1,6 +1,6 @@
 <?php
 
-require_once '../vendor/autoload.php';
+include_once __DIR__ . '../../../vendor/autoload.php';
 
 /* * ****************************************
  * CONEXIÓN Y DESCONXESIÓN A BASE DE DATOS *
@@ -9,7 +9,7 @@ require_once '../vendor/autoload.php';
 function selectCatFpById($id) {
     global $JanoControl;
     try {
-        $sentencia = " select * from ccap_catfp where "
+        $sentencia = " select * from gums_catfp where "
                 . " id = :id";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":id" => $id);
@@ -29,8 +29,10 @@ function selectCatFpById($id) {
 
 function selectCatFp($catfp) {
     global $JanoControl;
+    if ($catfp == null)
+        return null;
     try {
-        $sentencia = " select * from ccap_catfp where "
+        $sentencia = " select * from gums_catfp where "
                 . " codigo = :codigo";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":codigo" => $catfp);
@@ -51,7 +53,7 @@ function selectCatFp($catfp) {
 function selectModalidad($modalidad) {
     global $JanoControl;
     try {
-        $sentencia = " select id from ccap_modalidad where "
+        $sentencia = " select id from gums_moa where "
                 . " codigo = :codigo";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":codigo" => trim($modalidad));
@@ -103,6 +105,7 @@ function conexionPDO($datosConexion) {
  * ***************************************************************************** 
  */
 function jano_ctrl() {
+
     $filename = __DIR__ . '/../config/parameters.yml';
     $parametros = \Symfony\Component\Yaml\Yaml::parseFile($filename);
     $host_name = $parametros["parameters"]["database_host"];
@@ -197,7 +200,7 @@ function selectBaseDatosEdificio($tipo, $edificio) {
         } else {
             echo "**ERROR NO EXISTE BASE DE DATOS PARA TIPO= " . $tipo . " EDIFICIO= " . $edificio . "\n";
             return null;
-        } 
+        }
     } catch (PDOException $ex) {
         echo "**PDOERROR EN comun_base_datos PARA TIPO= " . $tipo . " EDIFICIO= " . $edificio . "\n" . $ex->getMessage() . "\n";
         return null;
@@ -324,7 +327,7 @@ function selectEdificio($edificio) {
             return null;
         }
     } catch (PDOException $ex) {
-        echo " Error en función selectEdificio, edificio=" . $edificio . " " . $ex->getMessage();
+        echo "***Error en función selectEdificio, edificio=" . $edificio . " " . $ex->getMessage();
         return null;
     }
 }
@@ -339,7 +342,7 @@ function selectDa($da) {
         if ($res) {
             return ($res["id"]);
         } else {
-            echo "** ERROR NO EXISTE DIRECCIÓN ASISTENCIAL DA: ".$da."\n";
+            echo "** ERROR NO EXISTE DIRECCIÓN ASISTENCIAL DA: " . $da . "\n";
             return null;
         }
     } catch (PDOException $ex) {
@@ -363,11 +366,11 @@ function selectCentro($codigo) {
         if ($res) {
             return ($res);
         } else {
-            echo "**ERROR NO EXISTE CENTROS EN BD UNIFICADA CODIGO: ".$codigo."\n";
+            echo "**ERROR NO EXISTE CENTROS EN BD UNIFICADA CODIGO: " . $codigo . "\n";
             return null;
         }
     } catch (PDOException $ex) {
-        echo "***PDOERROR en función selectCentros centros codigo=" . $codigo . " " . $ex->getMessage()."\n";
+        echo "***PDOERROR en función selectCentros centros codigo=" . $codigo . " " . $ex->getMessage() . "\n";
         return null;
     }
 }
@@ -383,7 +386,7 @@ function existeCentro($codigoUni) {
         if ($res) {
             return ($res["id"]);
         } else {
-            echo "**ERROR NO EXISTE CCAP_UF CODIGO= ".$codigoUni."\n";
+            echo "**ERROR NO EXISTE CCAP_UF CODIGO= " . $codigoUni . "\n";
             return null;
         }
     } catch (PDOException $ex) {
@@ -392,12 +395,11 @@ function existeCentro($codigoUni) {
     }
 }
 
-
 function selectCatGen($catgen) {
     global $JanoControl;
 
     try {
-        $sentencia = " select * from ccap_catgen where "
+        $sentencia = " select * from gums_catgen where "
                 . " codigo = :codigo";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":codigo" => $catgen);
@@ -419,7 +421,7 @@ function selectCatAnexo($catanexo) {
     global $JanoControl;
 
     try {
-        $sentencia = " select id from ccap_catanexo where "
+        $sentencia = " select id from gums_catanexo where "
                 . " codigo = :codigo";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":codigo" => $catanexo);
@@ -437,33 +439,85 @@ function selectCatAnexo($catanexo) {
     }
 }
 
-function selectEpiAcc($epiacc) {
+function selectEpiAcc($codigo) {
     global $JanoControl;
+    if ($codigo == null)
+        return null;
 
     try {
-        $sentencia = " select id from ccap_epiacc where "
+        $sentencia = " select id from gums_epiacc where "
                 . " codigo = :codigo";
         $query = $JanoControl->prepare($sentencia);
-        $params = array(":codigo" => $epiacc);
+        $params = array(":codigo" => $codigo);
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
         if ($res) {
             return $res["id"];
         } else {
-            echo " ERROR NO EXISTE EPIACC=" . $epiacc . "\n";
+            echo "***ERROR NO EXISTE EPIACC=" . $codigo . "\n";
             return null;
         }
     } catch (PDOException $ex) {
-        echo " PDOERROR PDO EN EPIACC=" . $epiacc . " " . $ex->getMessage() . "\n";
+        echo "***PDOERROR PDO EN EPIACC=" . $codigo . " " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
+function selectTipoIlt($codigo) {
+    global $JanoControl;
+    if ($codigo == null)
+        return null;
+
+
+    try {
+        $sentencia = " select id from gums_tipo_ilt where "
+                . " codigo = :codigo";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":codigo" => $codigo);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        if ($res) {
+            return $res["id"];
+        } else {
+            echo "***ERROR NO EXISTE GUMS-TIPO_ILT=" . $codigo . "\n";
+            return null;
+        }
+    } catch (PDOException $ex) {
+        echo "***PDOERROR PDO EN GUMS_TIPO_ILT=" . $codigo . " " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
+function selectFco($codigo) {
+    global $JanoControl;
+    if ($codigo==null) return null;
+
+    try {
+        $sentencia = " select id from gums_fco where "
+                . " codigo = :codigo";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":codigo" => $codigo);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        if ($res) {
+            return $res["id"];
+        } else {
+            echo "***ERROR NO EXISTE GUMS_FCO=" . $codigo . "\n";
+            return null;
+        }
+    } catch (PDOException $ex) {
+        echo "***PDOERROR PDO EN GUMS_FCO =" . $codigo . " " . $ex->getMessage() . "\n";
         return null;
     }
 }
 
 function selectOcupacion($ocupacion) {
     global $JanoControl;
+    if ($ocupacion == null)
+        return null;
 
     try {
-        $sentencia = " select id from ccap_ocupacion where "
+        $sentencia = " select id from gums_ocupacion where "
                 . " codigo = :codigo";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":codigo" => $ocupacion);
@@ -472,33 +526,33 @@ function selectOcupacion($ocupacion) {
         if ($res) {
             return $res["id"];
         } else {
-            echo " ERROR NO EXISTE OCUPACION =" . $ocupacion . "\n";
+            echo "**ERROR NO EXISTE OCUPACION =" . $ocupacion . "\n";
             return null;
         }
     } catch (PDOException $ex) {
-        echo " PDOERROR PDO EN OCUPACION =" . $ocupacion . " " . $ex->getMessage() . "\n";
+        echo "**PDOERROR PDO EN OCUPACION =" . $ocupacion . " " . $ex->getMessage() . "\n";
         return null;
     }
 }
 
-function selectGrupoCot($grupoCot) {
+function selectGrupoCot($grupocot) {
     global $JanoControl;
 
     try {
-        $sentencia = " select id from ccap_grupocot where "
+        $sentencia = " select id from gums_grupocot where "
                 . " codigo = :codigo";
         $query = $JanoControl->prepare($sentencia);
-        $params = array(":codigo" => $grupoCot);
+        $params = array(":codigo" => $grupocot);
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
         if ($res) {
             return $res["id"];
         } else {
-            echo " ERROR NO EXISTE GRUPOCOT =" . $grupoCot . "\n";
+            echo "**ERROR NO EXISTE GRUPO COTIZACIÓN (GRUPOCOT) CODIGO= " . $grupocot . "\n";
             return null;
         }
     } catch (PDOException $ex) {
-        echo " PDOERROR PDO EN GRUPOCOT =" . $grupoCot . " " . $ex->getMessage() . "\n";
+        echo "***PDOERROR PDO EN GRUPO COTIZACION (GRUPOCOT) CODIGO=" . $grupocot . " " . $ex->getMessage() . "\n";
         return null;
     }
 }
@@ -507,7 +561,7 @@ function selectGrupoProf($grupoProf) {
     global $JanoControl;
 
     try {
-        $sentencia = " select id from ccap_grupoprof where "
+        $sentencia = " select id from gums_grupoprof where "
                 . " codigo = :codigo";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":codigo" => $grupoProf);
@@ -529,7 +583,7 @@ function selectGrupoCobro($grupoCobro) {
     global $JanoControl;
 
     try {
-        $sentencia = " select id from ccap_grc where "
+        $sentencia = " select id from gums_grc where "
                 . " codigo = :codigo";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":codigo" => $grupoCobro);
@@ -647,28 +701,27 @@ function selectCateg($categ_id) {
     global $JanoControl;
     try {
         $sentencia = " select t1.*, t2.codigo as catgen, t3.codigo as catanexo, t4.codigo as grupocot ,t5.codigo as grupoprof"
-                . ",t6.codigo as grupocobro, t7.codigo as ocupacion, t8.codigo as epiacc from ccap_categ as t1  "
-                . " right join ccap_catgen as t2 on t2.id = t1.catgen_id"
-                . " right join ccap_catanexo as t3 on t3.id = t1.catAnexo_id"
-                . " right join ccap_grupocot as t4 on t4.id = t1.grupocot_id"
-                . " right join ccap_grupoprof as t5 on t5.id = t1.grupoprof_id"
-                . " right join ccap_grc as t6 on t6.id = t1.grupocobro_id"
-                . " right join ccap_ocupacion as t7 on t7.id = t1.ocupacion_id"
-                . " right join ccap_epiacc as t8 on t8.id = t1.epiacc_id"
+                . ",t6.codigo as grupocobro, t7.codigo as ocupacion, t8.codigo as epiacc from gums_categ as t1  "
+                . " right join gums_catgen as t2 on t2.id = t1.catgen_id"
+                . " right join gums_catanexo as t3 on t3.id = t1.catanexo_id"
+                . " right join gums_grupocot as t4 on t4.id = t1.grupocot_id"
+                . " right join gums_grupoprof as t5 on t5.id = t1.grupoprof_id"
+                . " right join gums_grc as t6 on t6.id = t1.grupocobro_id"
+                . " right join gums_ocupacion as t7 on t7.id = t1.ocupacion_id"
+                . " right join gums_epiacc as t8 on t8.id = t1.epiacc_id"
                 . " where t1.id = :categ_id ";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":categ_id" => $categ_id);
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
         if ($res) {
-
             return $res;
         } else {
-            echo "**ERROR NO EXISTE CCAP_CATEG PARA ID= " . $categ_id . "\n";
+            echo "**ERROR NO EXISTE gums_categ PARA ID= " . $categ_id . "\n";
             return null;
         }
     } catch (PDOException $ex) {
-        echo " ***PDOERROR EN CCAP_CATEG ID=" . $categ_id . " " . $ex->getMessage() . "\n";
+        echo " ***PDOERROR EN gums_categ ID=" . $categ_id . " " . $ex->getMessage() . "\n";
         return null;
     }
 }
@@ -676,7 +729,7 @@ function selectCateg($categ_id) {
 function selectCategId($codigo) {
     global $JanoControl;
     try {
-        $sentencia = " select id from ccap_categ as t1  "
+        $sentencia = " select id from gums_categ as t1  "
                 . " where t1.codigo = :codigo ";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":codigo" => $codigo);
@@ -685,42 +738,11 @@ function selectCategId($codigo) {
         if ($res) {
             return $res["id"];
         } else {
-            echo "**ERROR NO EXISTE CCAP_CATEG PARA CODIGO= " . $codigo . "\n";
+            echo "**ERROR NO EXISTE gums_categ PARA CODIGO= " . $codigo . "\n";
             return null;
         }
     } catch (PDOException $ex) {
-        echo " ***PDOERROR EN CCAP_CATEG CODIGO=" . $codigo . " " . $ex->getMessage() . "\n";
-        return null;
-    }
-}
-
-function selectPlaza($plaza_id) {
-    global $JanoControl;
-    try {
-        $sentencia = " select t1.id, t1.cias, t2.uf, t4.codigo as modalidad,"
-                . " t3.pa, t5.codigo as catgen, t1.ficticia, t1.refuerzo, "
-                . " t6.codigo as catfp, t1.cupequi, t1.plantilla, t1.f_amortiza, t1.colaboradora, t1.f_creacion, t7.codigo as edificio, t1.observaciones,t1.horNormal "
-                . " ,t8.codigo as ceco, t1.turno"
-                . " from ccap_plazas as t1 "
-                . " inner join ccap_uf as t2 on t2.id = t1.uf_id "
-                . " inner join ccap_pa as t3 on t3.id = t1.pa_id "
-                . " inner join ccap_modalidad as t4 on t4.id = t1.modalidad_id"
-                . " inner join ccap_catgen as t5 on t5.id = t1.catgen_id"
-                . " inner join ccap_catfp as t6 on t6.id = t1.catfp_id"
-                . " inner join comun_edificio as t7 on t7.id = t2.edificio_id"
-                . " left join ccap_cecos as t8 on t8.id = t1.ceco_id"
-                . " where t1.id = :plaza_id ";
-        $query = $JanoControl->prepare($sentencia);
-        $params = array(":plaza_id" => $plaza_id);
-        $query->execute($params);
-        $res = $query->fetch(PDO::FETCH_ASSOC);
-        if ($res) {
-            return $res;
-        } else {
-            return null;
-        }
-    } catch (PDOException $ex) {
-        echo " ***PDOERROR EN CCAP_PLAZA ID=" . $plaza_id . " " . $ex->getMessage() . "\n";
+        echo " ***PDOERROR EN gums_categ CODIGO=" . $codigo . " " . $ex->getMessage() . "\n";
         return null;
     }
 }
@@ -735,9 +757,9 @@ function selectPlazaById($id) {
                 . " from ccap_plazas as t1 "
                 . " left join ccap_uf as t2 on t2.id = t1.uf_id "
                 . " left join ccap_pa as t3 on t3.id = t1.pa_id "
-                . " left join ccap_modalidad as t4 on t4.id = t1.modalidad_id"
-                . " left join ccap_catgen as t5 on t5.id = t1.catgen_id"
-                . " left join ccap_catfp as t6 on t6.id = t1.catfp_id"
+                . " left join gums_moa as t4 on t4.id = t1.moa_id"
+                . " left join gums_catgen as t5 on t5.id = t1.catgen_id"
+                . " left join gums_catfp as t6 on t6.id = t1.catfp_id"
                 . " left join comun_edificio as t7 on t7.id = t2.edificio_id"
                 . " left join ccap_cecos as t8 on t8.id = t1.ceco_id"
                 . " where t1.id = :id ";
@@ -781,12 +803,12 @@ function selectPlazabyCias($cias) {
                 . " t6.codigo as catfp, t1.cupequi, t1.plantilla, t1.f_amortiza, t1.colaboradora, t1.f_creacion, t7.codigo as edificio, t1.observaciones,t1.horNormal "
                 . " ,t8.codigo as ceco, t1.turno"
                 . " from ccap_plazas as t1 "
-                . " inner join ccap_uf as t2 on t2.id = t1.uf_id "
-                . " inner join ccap_pa as t3 on t3.id = t1.pa_id "
-                . " inner join ccap_modalidad as t4 on t4.id = t1.modalidad_id"
-                . " inner join ccap_catgen as t5 on t5.id = t1.catgen_id"
-                . " inner join ccap_catfp as t6 on t6.id = t1.catfp_id"
-                . " inner join comun_edificio as t7 on t7.id = t2.edificio_id"
+                . " left join ccap_uf as t2 on t2.id = t1.uf_id "
+                . " left join ccap_pa as t3 on t3.id = t1.pa_id "
+                . " left join gums_moa as t4 on t4.id = t1.moa_id"
+                . " left join gums_catgen as t5 on t5.id = t1.catgen_id"
+                . " left join gums_catfp as t6 on t6.id = t1.catfp_id"
+                . " left join comun_edificio as t7 on t7.id = t2.edificio_id"
                 . " left join ccap_cecos as t8 on t8.id = t1.ceco_id"
                 . " where t1.cias = :cias";
         $query = $JanoControl->prepare($sentencia);
@@ -804,24 +826,24 @@ function selectPlazabyCias($cias) {
     }
 }
 
-function selectEqCateg($codigo, $edificio) {
-    global $JanoInte;
+function selectEqCateg($categ_id, $edificio_id) {
+    global $JanoControl;
     try {
-        $sentencia = " select codigo_loc from eq_categ "
-                . " where edificio = :edificio and codigo_uni = :codigo ";
-        $query = $JanoInte->prepare($sentencia);
-        $params = array(":edificio" => $edificio,
-            ":codigo" => $codigo);
+        $sentencia = " select codigo_loc from gums_eq_categ "
+                . " where edificio_id = :edificio_id and categ_id = :categ_id and enuso = 'S' ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":edificio_id" => $edificio_id,
+            ":categ_id" => $categ_id);
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
         if ($res) {
-            return $res['CODIGO_LOC'];
+            return $res['codigo_loc'];
         } else {
-            echo "NO EXISTE EQ_CATEG CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . " NO SE TRATA \n";
+            echo "NO EXISTE EQUIVALENCIA(EQ_CATEG) CATEG_ID = " . $categ_id . " EDIFICIO_ID = " . $edificio_id . " NO SE TRATA \n";
             return null;
         }
     } catch (PDOException $ex) {
-        echo "**PDOERROR EN EQ_CATEG CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . " " . $ex->getMessage() . "\n";
+        echo "**PDOERROR EN EQUIVALENCIA(EQ_CATEG) CATEG_ID = " . $categ_id . " EDIFICIO_ID = " . $edificio_id . " " . $ex->getMessage() . "\n";
         return null;
     }
 }
@@ -832,8 +854,8 @@ function selectEqCategById($id) {
         $sentencia = " select t1.id as id, t1.codigo_loc as codigo_loc , t3.codigo as codigo_uni "
                 . ", t1.edificio_id, t2.codigo as edificio "
                 . ", t1.categ_id as categ_id "
-                . " from ccap_eq_categ as t1"
-                . " inner join ccap_categ as t3 on t3.id = t1.categ_id "
+                . " from gums_eq_categ as t1"
+                . " inner join gums_categ as t3 on t3.id = t1.categ_id "
                 . " inner join comun_edificio as t2 on t2.id = t1.edificio_id "
                 . " where t1.id = :id ";
         $query = $JanoControl->prepare($sentencia);
@@ -843,11 +865,11 @@ function selectEqCategById($id) {
         if ($res) {
             return $res;
         } else {
-            echo "**ERROR NO EXISTE CCAP_EQ_CATEG ID = " . $id . "\n";
+            echo "**ERROR NO EXISTE gums_eq_categ ID = " . $id . "\n";
             return null;
         }
     } catch (PDOException $ex) {
-        echo "**PDOERROR EN CCAP_EQ_CATEG ID = " . $id . " " . $ex->getMessage() . "\n";
+        echo "**PDOERROR EN gums_eq_categ ID = " . $id . " " . $ex->getMessage() . "\n";
         return null;
     }
 }
@@ -864,7 +886,7 @@ function selectEqCentro($codigo, $edificio, $vista) {
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
         if ($res) {
-            return $res['CODIGO_LOC'];
+            return $res['codigo_loc'];
         } else {
             echo "**ERROR NO EXISTE EQ_CENTROS DE CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . "VISTA= " . $vista . "\n";
             return null;
@@ -875,202 +897,191 @@ function selectEqCentro($codigo, $edificio, $vista) {
     }
 }
 
-function selectEqCatGen($codigo, $edificio) {
-    global $JanoInte;
+function selectEqCatGen($catgen_id, $edificio_id) {
+    global $JanoControl;
     try {
-        $sentencia = " select codigo_loc from eq_catgen "
-                . " where edificio = :edificio and codigo_uni = :codigo ";
-        $query = $JanoInte->prepare($sentencia);
-        $params = array(":edificio" => $edificio,
-            ":codigo" => $codigo);
+        $sentencia = " select codigo_loc from gums_eq_catgen "
+                . " where edificio_id = :edificio_id and catgen_id = :catgen_id and enuso = 'S' ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":edificio_id" => $edificio_id,
+            ":catgen_id" => $catgen_id);
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
         if ($res) {
-            return $res['CODIGO_LOC'];
+            return $res['codigo_loc'];
         } else {
-            echo "**ERROR NO EXISTE EQ_CATGEN DE CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . "\n";
+            echo "**NO EXISTE EQUIVALENCIA(EQ_CATGEN) PARA CATGEN_ID " . $catgen_id . " EDIFICIO_ID = " . $edificio_id . "\n";
             return null;
         }
     } catch (PDOException $ex) {
-        echo "***PDOERROR EN EQ_CATEN CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . " " . $ex->getMessage();
+        echo "****PDOERROR EN EQUIVALENCIA(EQ_CATGEN) PARA CATGEN_ID " . $catgen_id . " EDIFICIO_ID = " . $edificio_id . "\n" . $ex->getMessage() . "\n";
         return null;
     }
 }
 
-function selectEqCatFp($codigo, $edificio) {
-    global $JanoInte;
+function selectEqCatFp($catfp_id, $edificio_id) {
+    global $JanoControl;
     try {
-        $sentencia = " select codigo_loc from eq_catfp "
-                . " where edificio = :edificio and codigo_uni = :codigo ";
-        $query = $JanoInte->prepare($sentencia);
-        $params = array(":edificio" => $edificio,
-            ":codigo" => $codigo);
+        $sentencia = " select codigo_loc from gums_eq_catfp "
+                . " where edificio_id = :edificio_id and catfp_id = :catfp_id and enuso = 'S' ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":edificio_id" => $edificio_id,
+            ":catfp_id" => $catfp_id);
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
         if ($res) {
-            return $res['CODIGO_LOC'];
+            return $res['codigo_loc'];
         } else {
-            echo "**ERROR NO EXISTE EQ_CATFP DE CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . "\n";
+            echo "**ERROR NO EXISTE EQUIVALENCIA(EQ_CATFP) PARA CATFP_ID = " . $catfp_id . " EDIFICIO_ID = " . $edificio_id . "\n";
             return null;
         }
     } catch (PDOException $ex) {
-        echo "***PDOERROR EN EQ_CATFP CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . " " . $ex->getMessage();
+        echo "***PDOERROR EN EQUIVALENCIA(EQ_CATFP) CATFP_ID = " . $catfp_id . " EDIFICIO_ID = " . $edificio_id . " " . $ex->getMessage() . "\n";
         return null;
     }
 }
 
-
-function selectEqTurno($codigo, $edificio) {
-    global $JanoInte;
+function selectEqCatAnexo($catanexo_id, $edificio_id) {
+    global $JanoControl;
     try {
-        $sentencia = " select codigo_loc from eq_turno "
-                . " where edificio = :edificio and codigo_uni = :codigo ";
-        $query = $JanoInte->prepare($sentencia);
-        $params = array(":edificio" => $edificio,
-            ":codigo" => $codigo);
+        $sentencia = " select codigo_loc from gums_eq_catanexo "
+                . " where edificio_id = :edificio_id and catanexo_id = :catanexo_id  and enuso = 'S' ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":edificio_id" => $edificio_id,
+            ":catanexo_id" => $catanexo_id);
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
         if ($res) {
-            return $res['CODIGO_LOC'];
+            return $res['codigo_loc'];
         } else {
-            echo "**ERROR NO EXISTE EQ_TURNO DE CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . "\n";
+            echo "**ERROR NO EXISTE EQUIVALENCIA(EQ_CATANEXO) CATANEXO_ID = " . $catanexo_id . " EDIFICIO_ID = " . $edificio_id . "\n";
             return null;
         }
     } catch (PDOException $ex) {
-        echo "***PDOERROR EN EQ_TURNO CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . " " . $ex->getMessage();
+        echo "***PDOERROR EN EQUIVALENCIA(EQ_CATANEXO) CATANEXO_ID = " . $catanexo_id . " EDIFICIO_ID = " . $edificio_id . " " . $ex->getMessage() . "\n";
         return null;
     }
 }
 
-function selectEqCatAnexo($codigo, $edificio) {
-    global $JanoInte;
+function selectEqGrupoCot($grupocot_id, $edificio_id) {
+    global $JanoControl;
     try {
-        $sentencia = " select codigo_loc from eq_catanexo "
-                . " where edificio = :edificio and codigo_uni = :codigo ";
-        $query = $JanoInte->prepare($sentencia);
-        $params = array(":edificio" => $edificio,
-            ":codigo" => $codigo);
+        $sentencia = " select codigo_loc from gums_eq_grupocot "
+                . " where edificio_id = :edificio_id and  grupocot_id = :grupocot_id ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":edificio_id" => $edificio_id,
+            ":grupocot_id" => $grupocot_id);
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
         if ($res) {
-            return $res['CODIGO_LOC'];
+            return $res['codigo_loc'];
         } else {
-            echo "**ERROR NO EXISTE EQ_CATANEXO CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . "\n";
+            echo "**ERROR NO EXISTE EQUIVALENCIA(EQ_GRUPOCOT) PARA GRUPOCOT_ID = " . $grupocot_id . " EDIFICIO_ID = " . $edificio_id . "\n";
             return null;
         }
     } catch (PDOException $ex) {
-        echo "***PDOERROR EN EQ_CATANEXO CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . " " . $ex->getMessage();
+        echo "***PDOERROR EN EQUIVALENCIA(EQ_GRUPOCOT) PARA GRUPOCOT_ID = " . $grupocot_id . " EDIFICIO_ID = " . $edificio_id . " " . $ex->getMessage() . "\n";
         return null;
     }
 }
 
-function selectEqGrupoCot($codigo, $edificio) {
-    global $JanoInte;
+function selectEqGrupoCobro($grupocobro_id, $edificio_id) {
+    global $JanoControl;
     try {
-        $sentencia = " select codigo_loc from eq_grupcot "
-                . " where edificio = :edificio and codigo_uni = :codigo ";
-        $query = $JanoInte->prepare($sentencia);
-        $params = array(":edificio" => $edificio,
-            ":codigo" => $codigo);
+        $sentencia = " select codigo_loc from gums_eq_grc "
+                . " where edificio_id = :edificio_id and grupocobro_id = :grupocobro_id and enuso = 'S'";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":edificio_id" => $edificio_id,
+            ":grupocobro_id" => $grupocobro_id);
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
         if ($res) {
-            return $res['CODIGO_LOC'];
+            return $res['codigo_loc'];
         } else {
-            echo "**ERROR NO EXISTE EQ_GRUPCOT DE CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . "\n";
+            echo "**ERROR NO EXISTE EQUIVALENCIA(EQ_GRC) PARA GRUPOCOBRO_ID = " . $grupocobro_id . " EDIFICIO_ID = " . $edificio_id . "\n";
             return null;
         }
     } catch (PDOException $ex) {
-        echo "***PDOERROR EN EQ_GRUPCOT CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . " " . $ex->getMessage();
+        echo "***PDOERROR EN EQUIVALENCIA(EQ_GRC) PARA GRUPOCOBRO_ID = " . $grupocobro_id . " EDIFICIO_ID = " . $edificio_id . " " . $ex->getMessage() . "\n";
         return null;
     }
 }
 
-/*
-  function selectEqEpiAcc($codigo,$edificio) {
-  try {
-  $sentencia = " select codigo_loc from eq_epiacc "
-  ." where edificio = :edificio and codigo_uni = :codigo ";
-  $query = $JanoInte->prepare($sentencia);
-  $params = array(":edificio" => $edificio ,
-  ":codigo" => $codigo);
-  $query->execute($params);
-  $res = $query->fetch(PDO::FETCH_ASSOC);
-  if ( $res ) {
-  return $res;
-  } else {
-  echo " ERROR NO EXISTE eq_epiacc DE CODIGO_UNI = ". $codigo ." EDIFICIO = ". $edificio."\n";
-  return null;
-  }
-  } catch (PDOException $ex) {
-  echo " PDOERROR EN eq_epiacc CODIGO_UNI = ". $codigo ." EDIFICIO = ". $edificio;
-  return null;
-  }
-  }
- */
-
-function selectEqGrupoCobro($codigo, $edificio) {
-    global $JanoInte;
+function selectEqGrupoProf($grupoprof_id, $edificio) {
+    global $JanoControl;
     try {
-        $sentencia = " select codigo_loc from eq_grc "
-                . " where edificio = :edificio and codigo_uni = :codigo ";
-        $query = $JanoInte->prepare($sentencia);
-        $params = array(":edificio" => $edificio,
-            ":codigo" => $codigo);
+        $sentencia = " select codigo_loc from gums_eq_grupoprof "
+                . " where edificio_id = :edificio_id and grupoprof_id = :grupoprof_id ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":edificio_id" => $edificio,
+            ":grupoprof_id" => $grupoprof_id);
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
         if ($res) {
-            return $res['CODIGO_LOC'];
+            return $res['codigo_loc'];
         } else {
-            echo "**ERROR NO EXISTE EQ_GRC DE CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . "\n";
+            echo "**ERROR NO EXISTE EQUIVALENCIA(EQ_GRUPOPROF) PARA GRUPOPROF_ID= " . $grupoprof_id . " EDIFICIO_ID = " . $edificio_id . "\n";
             return null;
         }
     } catch (PDOException $ex) {
-        echo "***PDOERROR EN EQ_GRC CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . " " . $ex->getMessage();
+        echo "***PDOERROR EN EQUIVALENCIA(EQ_GRUPOPROF) PARA GRUPOPROF_ID= " . $grupoprof_id . " EDIFICIO_ID = " . $edificio_id . " " . $ex->getMessage() . "\n";
         return null;
     }
 }
 
-function selectEqGrupoProf($codigo, $edificio) {
-    global $JanoInte;
+function selectEqOcupacion($ocupacion_id, $edificio_id) {
+    global $JanoControl;
     try {
-        $sentencia = " select codigo_loc from eq_grupoprof "
-                . " where edificio = :edificio and codigo_uni = :codigo ";
-        $query = $JanoInte->prepare($sentencia);
-        $params = array(":edificio" => $edificio,
-            ":codigo" => $codigo);
+        $sentencia = " select codigo_loc from gums_eq_ocupacion "
+                . " where edificio_id = :edificio_id and ocupacion_id = :ocupacion_id ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":edificio_id" => $edificio_id,
+            ":ocupacion_id" => $ocupacion_id);
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
         if ($res) {
-            return $res['CODIGO_LOC'];
+            return $res['codigo_loc'];
         } else {
-            echo "**ERROR NO EXISTE EQ_GRUPOPROF DE CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . "\n";
+            echo "**ERROR NO EXISTE EQUIVALENCIA(EQ_OCUPACION) PARA OCUPACION_ID= " . $ocupacion_id . " EDIFICIO_ID = " . $edificio_id . "\n";
             return null;
         }
     } catch (PDOException $ex) {
-        echo "***PDOERROR EN EQ_GRUPOPROF CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . " " . $ex->getMessage();
+        echo "***PDOERROR EN EQUIVALENCIA(EQ_OCUPACION) PARA OCUPACION_ID= " . $ocupacion_id . " EDIFICIO_ID = " . $edificio_id . " " . $ex->getMessage() . "\n";
         return null;
     }
 }
 
-function selectEqOcupacion($codigo, $edificio) {
-    global $JanoInte;
+function selectMoviPat($codigo) {
+    global $JanoControl;
+    if ($codigo == null)
+        return null;
+
     try {
-        $sentencia = " select codigo_loc from eq_ocupacion "
-                . " where edificio = :edificio and codigo_uni = :codigo ";
-        $query = $JanoInte->prepare($sentencia);
-        $params = array(":edificio" => $edificio,
-            ":codigo" => $codigo);
+        $sentencia = " select * from gums_movipat where codigo = :codigo";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":codigo" => $codigo);
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
-        if ($res) {
-            return $res['CODIGO_LOC'];
-        } else {
-            echo "**ERROR NO EXISTE EQ_OCUPACION DE CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . "\n";
-            return null;
-        }
+        return $res["id"];
     } catch (PDOException $ex) {
-        echo "***PDOERROR EN EQ_OCUPACION CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . " " . $ex->getMessage();
+        echo "** ERROR EN SELECT GUMS_MOVIPAT CODIGO= " . $codigo . " " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
+function selectModOcupa($codigo) {
+    global $JanoControl;
+    if ($codigo == null)
+        return null;
+    try {
+        $sentencia = " select id from gums_modocupa where codigo = :codigo";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":codigo" => $codigo);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        return $res["id"];
+    } catch (PDOException $ex) {
+        echo "**ERROR EN SELECT GUMS_MODOCUPA CODIGO= " . $codigo . " " . $ex->getMessage() . "\n";
         return null;
     }
 }

@@ -187,7 +187,7 @@ class CatFpController extends Controller {
         $fechaProceso = new \DateTime();
 
         $SincroLog->setUsuario($Usuario);
-        $SincroLog->setTabla("ccap_catfp");
+        $SincroLog->setTabla("gums_catfp");
         $SincroLog->setIdElemento($CatFp->getId());
         $SincroLog->setFechaProceso($fechaProceso);
         $SincroLog->setEstado($Estado);
@@ -210,7 +210,7 @@ class CatFpController extends Controller {
 
         $ficheroLog = 'sincroCatFp-'.$CatFp->getCodigo().'.log';
         $ServicioLog = $this->get('app.escribelog');
-        $ServicioLog->setLogger('ccap_catfp->codigo:'.$CatFp->getCodigo());
+        $ServicioLog->setLogger('gums_catfp->codigo:'.$CatFp->getCodigo());
         foreach ($SALIDA as $linea) {
             $ServicioLog->setMensaje($linea);
             $ServicioLog->escribeLog($ficheroLog);

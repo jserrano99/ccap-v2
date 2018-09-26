@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * EqCatFp
  *
- * @ORM\Table(name="ccap_eq_catfp" 
+ * @ORM\Table(name="gums_eq_catfp" 
  *           )
  * @ORM\Entity
  */

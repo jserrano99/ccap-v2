@@ -57,9 +57,13 @@ class CategDatatable extends AbstractDatatable {
                         ->getQuery()->getResult();
 
         $this->columnBuilder
-                ->add('id', Column::class, array('title' => 'Id','width' => '20px','searchable' => false))
+                ->add('id', Column::class, array('title' => 'Id', 'width' => '20px', 'searchable' => false))
                 ->add('codigo', Column::class, array('title' => 'Codigo', 'width' => '80px'))
-                ->add('descripcion', Column::class, array('title' => 'Descripcion','width' => '420px'))
+                ->add('descripcion', Column::class, array('title' => 'Descripcion', 'width' => '420px'))
+                ->add('sincroLog.estado.descripcion', Column::class, array(
+                    'title' => 'Log',
+                    'width' => '120px',
+                    'default_content' => ''))
                 ->add('catGen.descripcion', Column::class, array(
                     'title' => 'Categoría General',
                     'width' => '200px',
@@ -102,7 +106,20 @@ class CategDatatable extends AbstractDatatable {
                             'attributes' => array('rel' => 'tooltip',
                                 'title' => 'Ver Equivalencias Categoría',
                                 'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button')))))
+                                'role' => 'button')),
+                        array('route' => 'descargaLogCateg',
+                            'route_parameters' => array('id' => 'id'),
+                            'label' => 'Logs',
+                            'icon' => 'glyphicon glyphicon-edit',
+                            'render_if' => function ($row) {
+                                if ($row['sincroLog'] != null)
+                                    return true;
+                            },
+                            'attributes' => array('rel' => 'tooltip',
+                                'title' => 'Logs',
+                                'class' => 'btn btn-primary btn-xs',
+                                'role' => 'button'))
+            )))
         ;
     }
 

@@ -1,8 +1,8 @@
-INSERT INTO ccap.comun_da( id, codigo, descripcion ) VALUES ( 1, '0', 'Direcci髇 Asistencial Centro' ); 
-INSERT INTO ccap.comun_da( id, codigo, descripcion ) VALUES ( 2, '1', 'Direcci髇 Asistencial Norte' ); 
-INSERT INTO ccap.comun_da( id, codigo, descripcion ) VALUES ( 3, '2', 'Direcci髇 Asistencial Este' ); 
-INSERT INTO ccap.comun_da( id, codigo, descripcion ) VALUES ( 4, '3', 'Direcci髇 Asistencial Sureste' ); 
-INSERT INTO ccap.comun_da( id, codigo, descripcion ) VALUES ( 5, '4', 'Direcci髇 Asistencial Sur' ); 
-INSERT INTO ccap.comun_da( id, codigo, descripcion ) VALUES ( 6, '5', 'Direcci髇 Asistencial Oeste' ); 
-INSERT INTO ccap.comun_da( id, codigo, descripcion ) VALUES ( 7, '6', 'Direcci髇 Asistencial Noroeste' ); 
+INSERT INTO ccap.comun_da( id, codigo, descripcion ) VALUES ( 1, '0', 'Direcci贸n Asistencial Centro' ); 
+INSERT INTO ccap.comun_da( id, codigo, descripcion ) VALUES ( 2, '1', 'Direcci贸n Asistencial Norte' ); 
+INSERT INTO ccap.comun_da( id, codigo, descripcion ) VALUES ( 3, '2', 'Direcci贸n Asistencial Este' ); 
+INSERT INTO ccap.comun_da( id, codigo, descripcion ) VALUES ( 4, '3', 'Direcci贸n Asistencial Sureste' ); 
+INSERT INTO ccap.comun_da( id, codigo, descripcion ) VALUES ( 5, '4', 'Direcci贸n Asistencial Sur' ); 
+INSERT INTO ccap.comun_da( id, codigo, descripcion ) VALUES ( 6, '5', 'Direcci贸n Asistencial Oeste' ); 
+INSERT INTO ccap.comun_da( id, codigo, descripcion ) VALUES ( 7, '6', 'Direcci贸n Asistencial Noroeste' ); 
 INSERT INTO ccap.comun_da( id, codigo, descripcion ) VALUES ( 8, '9', 'Servicios Centrales ' ); 

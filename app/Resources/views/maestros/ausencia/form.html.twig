@@ -1,0 +1,247 @@
+<script>
+    $(document).ready(function () {
+        $("#tabs").tabs();
+
+        verit($('#appbundle_ausencia_esIt').val());
+        vercsituadm($('#appbundle_ausencia_csituadm').val());
+
+
+        $('#appbundle_ausencia_esIt').change(function () {
+            verit($('#appbundle_ausencia_esIt').val());
+        });
+
+        $('#appbundle_ausencia_csituadm').change(function () {
+            vercsituadm($('#appbundle_ausencia_csituadm').val());
+        });
+
+    });
+
+    function verit(es_it) {
+        if (es_it === 'N') {
+            $("#tabs").tabs("disable", "#esit");
+        } else {
+            $("#tabs").tabs("enable", "#esit");
+        }
+    }
+    function vercsituadm(csituadm) {
+        if (csituadm === 'N') {
+            $("#tabs").tabs("disable", '#situadm');
+            $("#tabs").tabs("enable", '#jano');
+            $("#tabs").tabs("enable", '#ausencia');
+            $("#ausencia").focus();
+            $("#appbundle_ausencia_naturales").focus()
+            $("#appbundle_ausencia_naturales").select();
+        } else {
+            $("#tabs").tabs("disable", '#ausencia');
+            $("#tabs").tabs("disable", '#jano');
+            $("#tabs").tabs("enable", '#situadm');
+            $("#situadm").focus();
+            $("#appbundle_ausencia_reserva").focus();
+            $("#appbundle_ausencia_reserva").select();
+        }
+    }
+
+</script>
+<div id="divAusencia" class="container">
+    <div class="container">
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-danger">
+                {{message}}
+            </div>
+            <hr/>
+        {% endfor %}
+    </div>
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Identificación</div>
+        <div class="panel-body">
+            <div class="form-row mismalinea">{{form_row(form.codigo)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.descrip)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.enUso)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.csituadm)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.esIt)}}</div>
+        </div>
+    </div>
+    <div id="tabs" class="pestana container">
+        <ul>
+            <li><a id="tdatosGen" href="#datosGen">Datos Generales</a></li>
+            <li><a id="tausencia" href="#ausencia">Ausencias y Permisos</a></li>
+            <li><a id="tjano" href="#jano">Datos JANO</a></li>
+            <li><a id="tesit" href="#esit">Incapacidad Temporal</a></li>
+            <li><a id="tsituadm" href="#situadm">Situaciones Administrativas</a></li>
+            <li><a id="totros" href="#otros">Otros Datos</a></li>
+        </ul>
+        <div id="datosGen">
+            <div class="form-row mismalinea">{{form_row(form.a22)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.red)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.finRed)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.cotizass)}}</div>
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{form_row(form.modOcupa)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.pagotit)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.contador)}}</div>
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{form_row(form.dtrab)}}</div>
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{form_row(form.dtrabperm)}}</div>
+        </div>
+        <div id="jano">
+            <div class="form-row mismalinea">{{form_row(form.janoCodigo)}}</div>
+            <div class="form-row mismalinea izda">{{form_row(form.janoApartado)}}</div>
+            <div class="form-row mismalinea izda">{{form_row(form.janoApd)}}</div>
+            <div class="form-row mismalinea izda">{{form_row(form.janoConn2annos)}}</div>
+            <div class="form-row mismalinea izda">{{form_row(form.janoGrautoriza)}}</div>
+
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{form_row(form.janoDescripcion)}}</div>
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{form_row(form.janoDescripseg)}}</div>
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{form_row(form.janoNombrelargo)}}</div>
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{form_row(form.janoMir)}}</div>
+            <div class="form-row mismalinea izda">{{form_row(form.janoSar)}}</div>
+            <div class="clearfix"></div>
+
+            <div class="form-row mismalinea">{{form_row(form.janoEnHoras)}}</div>
+            <div class="form-row mismalinea izda">{{form_row(form.janoFecfinAbierta)}}</div>
+            <div class="form-row mismalinea izda">{{form_row(form.janoFeclimant)}}</div>
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{form_row(form.janoGrado)}}</div>
+            <div class="form-row mismalinea izda">{{form_row(form.janoLocalidad)}}</div>
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{form_row(form.janoDocumPermiso)}}</div>
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea ">{{form_row(form.janoMaxadelanto)}}</div>
+            <div class="form-row mismalinea izda">{{form_row(form.janoMaxlab)}}</div>
+            <div class="form-row mismalinea izda">{{form_row(form.janoMaxnat)}}</div>
+            <div class="form-row mismalinea izda">{{form_row(form.janoSumaDiasCont)}}</div>
+            <div class="form-row mismalinea izda">{{form_row(form.janoSumaDiasDisc)}}</div>
+            <div class="clearfix"></div>
+
+            <div class="panel panel-success btn-t medio flotante "  >
+                <div class="panel-heading">Tipo de Permiso</div>
+                <div class="panel-body">
+                    <div class="form-row mismalinea">{{form_row(form.janoDldold)}}</div>
+                    <div class="form-row mismalinea izda">{{form_row(form.janoVarold)}}</div>
+
+                </div>
+            </div>
+            <div class="panel panel-success btn-t medio flotante izda" >
+                <div class="panel-heading">Visibildad </div>
+                <div class="panel-body">
+                    <div class="form-row mismalinea ">{{form_row(form.janoResponsable)}}</div>
+                    <div class="form-row mismalinea izda">{{form_row(form.janoUsuario)}}</div>
+                    <div class="form-row mismalinea izda">{{form_row(form.janoResto)}}</div>
+                </div>
+            </div>
+        </div>
+        <div id="ausencia">
+            <div class="panel panel-default">
+                <div class="panel-heading">Control Días</div>
+                <div class="panel-body">
+                    <div class="form-row mismalinea">{{form_row(form.naturales)}}</div>
+                    <div class="form-row mismalinea">{{form_row(form.naturalesEv)}}</div>
+                    <div class="form-row mismalinea">{{form_row(form.maxAnual)}}</div>
+                    <div class="form-row mismalinea">{{form_row(form.maxTotal)}}</div>
+                    <div class="form-row mismalinea">{{form_row(form.redondeo)}}</div>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{form_row(form.ctrlHorario)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.otrosPerm)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.absentismo)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.autog)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.autogDesde)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.autogHasta)}}</div>
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{form_row(form.justificar)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.justificanteDias)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.descuTrienios)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.proporcional)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.cambiopuesto)}}</div>
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{form_row(form.huelga)}}</div>
+            <div class="form-row mismalinea izda">{{form_row(form.calculoFfin)}}</div>
+            <div class="form-row mismalinea izda">{{form_row(form.predecible)}}</div>
+            <div class="form-row mismalinea izda">{{form_row(form.guarda)}}</div>
+            <div class="form-row mismalinea izda">{{form_row(form.sindicato)}}</div>
+            <div class="form-row mismalinea izda">{{form_row(form.reduccion)}}</div>
+            <div class="form-row mismalinea izda">{{form_row(form.persinsu)}}</div>
+
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{form_row(form.cuentaTurnic)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.cuentaPago)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.itinerancia)}}</div>
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{form_row(form.tipoInactividad)}}</div>
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{form_row(form.afectaRevision)}}</div>
+            <div class="form-row mismalinea"></div>
+            <div class="form-row mismalinea"></div>
+            <div class="form-row mismalinea"></div>
+        </div>
+        <div id="esit">
+            <div class="form-row mismalinea">{{form_row(form.tipoIlt)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.porcenIt)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.mejoraIt)}}</div>
+            <div class="clearfix"></div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Porcentajes Indemnización</div>
+                <div class="panel-body">
+                    <div class="form-row mismalinea">{{form_row(form.porcen1)}}</div>
+                    <div class="form-row mismalinea">{{form_row(form.didesde1)}}</div>
+                    <div class="form-row mismalinea">{{form_row(form.dihasta1)}}</div>
+                    <div class="clearfix"></div>
+                    <div class="form-row mismalinea">{{form_row(form.porcen2)}}</div>
+                    <div class="form-row mismalinea">{{form_row(form.didesde2)}}</div>
+                    <div class="form-row mismalinea">{{form_row(form.dihasta2)}}</div>
+                    <div class="clearfix"></div>
+                    <div class="form-row mismalinea">{{form_row(form.porcen3)}}</div>
+                    <div class="form-row mismalinea">{{form_row(form.didesde3)}}</div>
+                    <div class="form-row mismalinea">{{form_row(form.dihasta3)}}</div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="form-row mismalinea">{{form_row(form.epiAcc)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.moviPat)}}</div>
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{form_row(form.ocupacion)}}</div>
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{form_row(form.ocupacionNew)}}</div>
+        </div>
+        <div id="situadm">
+            <div class="form-row  mismalinea">{{form_row(form.reserva)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.durReserva)}}</div>
+            <div class="clearfix"></div>
+            <div class="form-row  mismalinea">{{form_row(form.fco)}}</div>
+            <div class="clearfix"></div>
+            <div class="form-row  mismalinea">{{form_row(form.destino)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.excluirPlpage)}}</div>
+        </div>
+        <div id="otros">
+            <div class="form-row  mismalinea">{{form_row(form.txtab)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.cambiogrc)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.btcTipoCon)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.codigonom)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.idbasescon)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.cambiosgrc)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.mapturnos)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.maxTotalH)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.maxAnualH)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.ausenciasrptid)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.ausrptCodigo)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.ausrptDescripcion)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.turnos)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.ctact)}}</div>
+        </div>
+    </div>
+    <div class="form_row " >
+        {{form_row(form.Guardar)}}
+        {{form_end(form)}}
+    </div>
+
+</div>

@@ -1,0 +1,63 @@
+<?php
+
+/**
+ * Description of CatFp
+ *
+ * @author jluis
+ */
+
+namespace MaestrosBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+/**
+ * CatFp
+ *
+ * @ORM\Table(name="ccap_catfp"
+ *         ,uniqueConstraints={@ORM\UniqueConstraint(name="uk_codigo", columns={"codigo"})}
+ *           )
+ * @ORM\Entity(repositoryClass="MaestrosBundle\Repository\CatFpRepository")
+ */
+class CatFp {
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="codigo", type="string", length=4, nullable=true)
+     */
+    private $codigo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion", type="string", length=40, nullable=true)
+     */
+    private $descripcion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="enuso", type="string", length=1, nullable=true)
+     */
+    private $enuso;
+
+    /**
+     * @var ComunBundle\Entity\SincroLog|null
+     *
+     * @ORM\ManyToOne(targetEntity="ComunBundle\Entity\SincroLog")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sincrolog_id", referencedColumnName="id")
+     * })
+     */
+
+    private $sincroLog;
+    
+}

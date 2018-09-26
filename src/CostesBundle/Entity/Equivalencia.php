@@ -13,7 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Equivalencia
  *
- * @ORM\Table(name="ccap_equivalencia")
+ * @ORM\Table(name="ccap_equivalencia"
+ *           ,uniqueConstraints={@ORM\UniqueConstraint(name="uk_area_zona", columns={"area_zona"})}
+             )
  * @ORM\Entity
  */
 class Equivalencia {

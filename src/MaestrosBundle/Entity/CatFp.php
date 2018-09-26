@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * CatFp
  *
- * @ORM\Table(name="ccap_catfp"
+ * @ORM\Table(name="gums_catfp"
  *         ,uniqueConstraints={@ORM\UniqueConstraint(name="uk_codigo", columns={"codigo"})}
  *           )
  * @ORM\Entity(repositoryClass="MaestrosBundle\Repository\CatFpRepository")

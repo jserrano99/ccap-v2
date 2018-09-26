@@ -2,42 +2,42 @@
 
 include_once __DIR__ . '/../funcionesDAO.php';
 
-function selectEqCatFpById() {
+function selectEqCatFpAll() {
     global $CatFp, $JanoControl, $gblError;
     try {
         $sentencia = " select t1.id, t1.codigo_loc, t2.codigo as edificio, t2.id as edificio_id,  t1.enuso as enuso "
-                . " from ccap_eq_catfp as t1 "
+                . " from gums_eq_catfp as t1 "
                 . " inner join comun_edificio as t2 on t1.edificio_id = t2.id "
-                . " where t1.catfp_id = :id";
+                . " where t1.catfp_id = :id"
+                . " and t1.enuso = 'S' ";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":id" => $CatFp["id"]);
         $query->execute($params);
         $EqCatFpAll = $query->fetchAll(PDO::FETCH_ASSOC);
         return $EqCatFpAll;
     } catch (PDOException $ex) {
-        echo "***PDOERROR EN SELECT CCAP_EQ_CATFP ID = " . $CatFp["id"] . " CODIGO_UNI = " . $CatFp["codigo"] . "\n"
+        echo "***PDOERROR EN SELECT gums_eq_catfp ID = " . $CatFp["id"] . " CODIGO_UNI = " . $CatFp["codigo"] . "\n"
         . $ex->getMessage() . "\n";
         $gblError = 1;
         return null;
     }
 }
 
-function selectEqCatFpByEdificio($edificio) {
+function selectEqCatFpById() {
     global $CatFp, $JanoControl, $gblError;
     try {
         $sentencia = " select t1.id, t1.codigo_loc, t2.codigo as edificio, t2.id as edificio_id,  t1.enuso as enuso "
-                . " from ccap_eq_catfp as t1 "
+                . " from gums_eq_catfp as t1 "
                 . " inner join comun_edificio as t2 on t1.edificio_id = t2.id "
-                . " where t1.catfp_id = :id "
-                . " and t2.codigo = :edificio";
+                . " where t1.catfp_id = :id"
+                . " and t1.enuso = 'S' ";
         $query = $JanoControl->prepare($sentencia);
-        $params = array(":id" => $CatFp["id"],
-            ":edificio" => $edificio);
+        $params = array(":id" => $CatFp["id"]);
         $query->execute($params);
         $EqCatFpAll = $query->fetchAll(PDO::FETCH_ASSOC);
         return $EqCatFpAll;
     } catch (PDOException $ex) {
-        echo "***PDOERROR EN SELECT CCAP_EQ_CATFP ID = " . $CatFp["id"] . " CODIGO_UNI = " . $CatFp["codigo"] . " EDIFICIO = " . $edificio . "\n"
+        echo "***PDOERROR EN SELECT gums_eq_catfp ID = " . $CatFp["id"] . " CODIGO_UNI = " . $CatFp["codigo"] . "\n"
         . $ex->getMessage() . "\n";
         $gblError = 1;
         return null;
@@ -55,7 +55,7 @@ function insertEqCatFp() {
         $ins = $query->execute($params);
         if ($ins) {
             try {
-                $setencia = " update ccap_eq_catfp set codigo_loc = :codigo_loc "
+                $setencia = " update gums_eq_catfp set codigo_loc = :codigo_loc "
                         . " enuso = 'S' "
                         . " where catfp_id = :catfp_id "
                         . " and edificio_id = :edificio_id ";
@@ -134,24 +134,24 @@ function updateCatFp($conexion, $codigo) {
 function updateEqCatFpControl() {
     global $CatFp, $EqCatFp, $JanoControl;
     try {
-        $sentencia = " update ccap_eq_catfp set enuso = :enuso where catfp_id = :catfp_id and edificio_id = :edificio_id";
+        $sentencia = " update gums_eq_catfp set enuso = :enuso where catfp_id = :catfp_id and edificio_id = :edificio_id";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":catfp_id" => $CatFp["id"],
             ":edificio_id" => $EqCatFp["edificio_id"],
             ":enuso" => $EqCatFp["enuso"]);
         $ins = $query->execute($params);
         if ($ins == 0) {
-            echo "**ERROR EN UPDATE CCAP_EQ_CATFP : ID= " . $CatFp["id"] . " CODIGO= " . $codigo . " DESCRIPCION= " . $CatFp["descripcion"] . "\n";
+            echo "**ERROR EN UPDATE gums_eq_catfp : ID= " . $CatFp["id"] . " CODIGO= " . $codigo . " DESCRIPCION= " . $CatFp["descripcion"] . "\n";
             $gblError = 1;
             return null;
         }
-        echo "==>UPDATE CCAP_EQ_CATFP : ID= " . $CatFp["id"]
+        echo "==>UPDATE gums_eq_catfp : ID= " . $CatFp["id"]
         . " CODIGO= " . $codigo . " DESCRIPCION= " . $CatFp["descripcion"]
         . " EDIFICIO= " . $EqCatFp["edificio"]
         . " ENUSO= " . $EqCatFp["enuso"] . "\n";
         return true;
     } catch (PDOException $ex) {
-        echo "**PDOERROR EN UPDATE CCAP_CATFP : ID= " . $CatFp["id"] . " CODIGO= " . $codigo . " DESCRIPCION= " . $CatFp["descripcion"] . "\n"
+        echo "**PDOERROR EN UPDATE gums_catfp : ID= " . $CatFp["id"] . " CODIGO= " . $codigo . " DESCRIPCION= " . $CatFp["descripcion"] . "\n"
         . $ex->getMessage() . "\n";
         $gblError = 1;
         return null;
@@ -172,7 +172,6 @@ if (!$JanoControl) {
 $tipo = $argv[1];
 $catfp_id = $argv[2];
 $actuacion = $argv[3];
-$edificio = $argv[4];
 $gblError = 0;
 
 if ($tipo == 'REAL') {
@@ -191,15 +190,15 @@ $CatFp = selectCatFpById($catfp_id);
 if (!$CatFp) {
     exit(1);
 }
-echo "==> CATEGORIA PROFESIONAL : ID=" . $CatFp["id"]
+echo "==> CATEGORIA FP : ID=" . $CatFp["id"]
  . " CODIGO= " . $CatFp["codigo"]
  . " DESCRIPCION= " . $CatFp["descripcion"]
  . " ACTUACION : " . $actuacion
- . " EDIFICIO : " . $edificio . "\n";
+ . "\n";
 
 if ($actuacion == 'INSERT') {
     if (insertCatFp($JanoUnif)) {
-        $EqCatFpAll = selectEqCatFpById();
+        $EqCatFpAll = selectEqCatFpAll();
         foreach ($EqCatFpAll as $EqCatFp) {
             $conexion = conexionEdificio($EqCatFp["edificio"], $tipobd);
             if ($conexion) {
@@ -215,7 +214,7 @@ if ($actuacion == 'INSERT') {
 
 if ($actuacion == 'UPDATE') {
     if (updateCatFp($JanoUnif, $CatFp["codigo"])) {
-        $EqCatFpAll = selectEqCatFpById();
+        $EqCatFpAll = selectEqCatFpAll();
         foreach ($EqCatFpAll as $EqCatFp) {
             $conexion = conexionEdificio($EqCatFp["edificio"], $tipobd);
             if ($conexion) {
@@ -226,41 +225,35 @@ if ($actuacion == 'UPDATE') {
 }
 
 if ($actuacion == 'ACTIVAR') {
-    $EqCatFpAll = selectEqCatFpByEdificio($edificio);
-    foreach ($EqCatFpAll as $EqCatFp) {
-        $conexion = conexionEdificio($EqCatFp["edificio"], $tipobd);
-        $CatFp["enuso"] = 'S';
-        if ($conexion) {
-            updateCatFp($conexion, $EqCatFp["codigo_loc"]);
-            $EqCatFp["enuso"] = 'S';
-            updateEqCatFpControl();
-        }
+    $EqCatFp = selectEqCatFpById($CatFp["id"]);
+    $conexion = conexionEdificio($EqCatFp["edificio"], $tipobd);
+    $CatFp["enuso"] = 'S';
+    if ($conexion) {
+        updateCatFp($conexion, $EqCatFp["codigo_loc"]);
+        $EqCatFp["enuso"] = 'S';
+        updateEqCatFpControl();
     }
 }
 
 if ($actuacion == 'DESACTIVAR') {
-    $EqCatFpAll = selectEqCatFpByEdificio($edificio);
-    foreach ($EqCatFpAll as $EqCatFp) {
-        $conexion = conexionEdificio($EqCatFp["edificio"], $tipobd);
-        $CatFp["enuso"] = 'N';
-        if ($conexion) {
-            updateCatFp($conexion, $EqCatFp["codigo_loc"]);
-            $EqCatFp["enuso"] = 'N';
-            updateEqCatFpControl();
-        }
+    $EqCatFp = selectEqCatFpById($CatFp["id"]);
+    $conexion = conexionEdificio($EqCatFp["edificio"], $tipobd);
+    $CatFp["enuso"] = 'N';
+    if ($conexion) {
+        updateCatFp($conexion, $EqCatFp["codigo_loc"]);
+        $EqCatFp["enuso"] = 'N';
+        updateEqCatFpControl();
     }
 }
 
 if ($actuacion == 'CREAR') {
-    $EqCatFpAll = selectEqCatFpByEdificio($edificio);
-    foreach ($EqCatFpAll as $EqCatFp) {
-        $conexion = conexionEdificio($EqCatFp["edificio"], $tipobd);
-        $CatFp["codigo"] = $EqCatFp["codigo_loc"];
-        if ($conexion) {
-            insertCatFp($conexion);
-            $EqCatFp["enuso"] = 'S';
-            updateEqCatFpControl();
-        }
+    $EqCatFp = selectEqCatFpById($CatFp["id"]);
+    $conexion = conexionEdificio($EqCatFp["edificio"], $tipobd);
+    $CatFp["codigo"] = $EqCatFp["codigo_loc"];
+    if ($conexion) {
+        insertCatFp($conexion);
+        $EqCatFp["enuso"] = 'S';
+        updateEqCatFpControl();
     }
 }
 

@@ -17,8 +17,7 @@ class GrupoCotRepository extends \Doctrine\orm\EntityRepository {
 
     public function createAlphabeticalQueryBuilder() {
         return $this->createQueryBuilder('u')
-                        ->orderBy('u.codigo', 'ASC')
-                ->where("u.enuso = 'S'");
+                        ->orderBy('u.codigo', 'ASC');
     }
 
 }

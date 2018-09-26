@@ -33,9 +33,9 @@ class TipoIlt {
     /**
      * @var string
      *
-     * @ORM\Column(name="descrip", type="string", length=25, nullable=true)
+     * @ORM\Column(name="descripcion", type="string", length=25, nullable=true)
      */
-    private $descrip;
+    private $descripcion;
 
     /**
      * Get id.
@@ -72,30 +72,30 @@ class TipoIlt {
     }
 
     /**
-     * Set descrip.
+     * Set descripcion.
      *
-     * @param string|null $descrip
+     * @param string|null $descripcion
      *
      * @return TipoIlt
      */
-    public function setDescrip($descrip = null)
+    public function setDescripcion($descripcion = null)
     {
-        $this->descrip = $descrip;
+        $this->descripcion = $descripcion;
 
         return $this;
     }
 
     /**
-     * Get descrip.
+     * Get descripcion.
      *
      * @return string|null
      */
-    public function getDescrip()
+    public function getDescripcion()
     {
-        return $this->descrip;
+        return $this->descripcion;
     }
     
     public function __toString() {
-        return $this->descrip;
+        return $this->descripcion;
     }
 }

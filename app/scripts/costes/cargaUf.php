@@ -88,7 +88,7 @@ foreach ($resultSet as $row) {
             . " OFICIAL:" . $row["OFICIAL"] . " EDIFICIO:" . $row["EDIFICIO"] . "\n";
         }
     } catch (PDOException $ex) {
-        echo "***PDOERROR EN INSERT UNIDADES FUNCIONALES ERROR=" . $ex->getMessage();
+        echo "***PDOERROR EN INSERT UNIDADES FUNCIONALES ERROR=" . $ex->getMessage()."\n";
         $gblError = 1;
     }
 }

@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                     @ORM\Index(name="idx002", columns={"pa_id"}),
  *                     @ORM\Index(name="idx003", columns={"catgen_id"}),
  *                     @ORM\Index(name="idx004", columns={"catfp_id"}),
- *                     @ORM\Index(name="idx005", columns={"modalidad_id"}),
+ *                     @ORM\Index(name="idx005", columns={"moa_id"}),
  *                     @ORM\Index(name="idx006", columns={"ceco_id"})
  *                    }
  *           )
@@ -74,7 +74,7 @@ class Plaza {
      * @var MaestrosBundle\Entity\Modalidad|null
      *
      * @ORM\ManyToOne(targetEntity="MaestrosBundle\Entity\Modalidad") 
-     *   @ORM\JoinColumn(name="modalidad_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="moa_id", referencedColumnName="id")
      */
     private $modalidad;
 

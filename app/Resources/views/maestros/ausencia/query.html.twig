@@ -1,0 +1,19 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} AUSENCIAS Y PERMISOS (AUSENCIAS) **CONSULTA**
+    <a href="{{path("addAusencia")}}" 
+       class="btn btn-success"
+       target="_blank">
+        <span class="glyphicon glyphicon-new-window"></span>  Nueva Ausencia</a>
+    <a href="{{path("exportaAusencia")}}" 
+       class="btn btn-success"
+       target="_blank">
+        <span class="glyphicon glyphicon-save-file"></span>  Exporta Excel</a>
+       
+    <hr/>
+{% endblock %} 
+
+{% block contenido %}
+    <div class="container">
+        {{ sg_datatables_render(datatable) }}
+    </div>
+{% endblock %}

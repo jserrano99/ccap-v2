@@ -1,6 +1,5 @@
 {% extends "layout.html.twig" %} 
 {% block titulo %} CONTROL CENTROS DE COSTE **CARGA FICHEROS**
-    <a href="{{path("queryCeco")}}" class="btn btn-success">Volver</a>
 {% endblock %}
 
 {% block contenido %}
@@ -8,7 +7,7 @@
         $(document).ready(function () {
             $("#importar_Guardar").click(function () {
                 $("#procesando").modal('show');
-                var recurso = Routing.generate("importaCeco", true);
+                var recurso = Routing.generate("cargaFichero", true);
                 window.location = recurso;
             });
         });
@@ -22,7 +21,7 @@
         {% endfor %}
         <h3>FORMATO DEL FICHERO </h3>
         <br/>
-        <img src= "{{asset('img/FormatoCargaCeco.JPG')}}"></img>  
+        <img src= "{{asset('img/FormatoFichero.JPG')}}"></img>  
 
         {{form_start (form,{'action':'','method':'POST'})}}
         {{form_end (form)}}

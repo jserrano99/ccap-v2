@@ -189,7 +189,7 @@ class CatGenController extends Controller {
         $fechaProceso = new \DateTime();
 
         $SincroLog->setUsuario($Usuario);
-        $SincroLog->setTabla("ccap_catgen");
+        $SincroLog->setTabla("gums_catgen");
         $SincroLog->setIdElemento($CatGen->getId());
         $SincroLog->setFechaProceso($fechaProceso);
         $SincroLog->setEstado($Estado);
@@ -212,7 +212,7 @@ class CatGenController extends Controller {
 
         $ficheroLog = 'sincroCatGen-'.$CatGen->getCodigo().'.log';
         $ServicioLog = $this->get('app.escribelog');
-        $ServicioLog->setLogger('ccap_catgen->codigo:'.$CatGen->getCodigo());
+        $ServicioLog->setLogger('gums_catgen->codigo:'.$CatGen->getCodigo());
         foreach ($SALIDA as $linea) {
             $ServicioLog->setMensaje($linea);
             $ServicioLog->escribeLog($ficheroLog);

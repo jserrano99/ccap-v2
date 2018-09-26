@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * CatAnexo
  *
- * @ORM\Table(name="ccap_catanexo"
+ * @ORM\Table(name="gums_catanexo"
  *         ,uniqueConstraints={@ORM\UniqueConstraint(name="uk_codigo", columns={"codigo"})}
  *         ,indexes={@ORM\Index(name="idx001", columns={"codigo"})}
  *           )

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Description of Categ
- *
- * @author jluis
- */
 
 namespace MaestrosBundle\Entity;
 
@@ -13,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Categ
  *
- * @ORM\Table(name="ccap_categ"
+ * @ORM\Table(name="gums_categ"
  *  *         ,uniqueConstraints={@ORM\UniqueConstraint(name="uk_codigo", columns={"codigo"})}
  *           )
  * @ORM\Entity
@@ -65,7 +60,7 @@ class Categ {
      *
      * @ORM\ManyToOne(targetEntity="CatAnexo")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="catAnexo_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="catanexo_id", referencedColumnName="id")
      * })
      */
     private $catAnexo;
@@ -239,6 +234,17 @@ class Categ {
      * @ORM\Column(name="replica", type="string",length=1, nullable=true)
      */
     private $replica;
+    
+    /**
+     * @var ComunBundle\Entity\SincroLog|null
+     *
+     * @ORM\ManyToOne(targetEntity="ComunBundle\Entity\SincroLog")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sincro_log_id", referencedColumnName="id")
+     * })
+     */
+
+    private $sincroLog;
     
 
     /**
@@ -758,9 +764,9 @@ class Categ {
     }
 
     /**
-     * Set grupoCot
+     * Set GrupoCot
      *
-     * @param \MaestrosBundle\Entity\GrupoCot $grupoCot
+     * @param \MaestrosBundle\Entity\GrupoCot $GrupoCot
      *
      * @return Categ
      */
@@ -899,5 +905,29 @@ class Categ {
     public function getReplica()
     {
         return $this->replica;
+    }
+
+    /**
+     * Set sincroLog.
+     *
+     * @param \ComunBundle\Entity\SincroLog|null $sincroLog
+     *
+     * @return Categ
+     */
+    public function setSincroLog(\ComunBundle\Entity\SincroLog $sincroLog = null)
+    {
+        $this->sincroLog = $sincroLog;
+
+        return $this;
+    }
+
+    /**
+     * Get sincroLog.
+     *
+     * @return \ComunBundle\Entity\SincroLog|null
+     */
+    public function getSincroLog()
+    {
+        return $this->sincroLog;
     }
 }

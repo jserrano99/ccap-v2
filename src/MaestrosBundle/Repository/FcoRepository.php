@@ -1,4 +1,3 @@
-
 <?php
 
 /*
@@ -18,8 +17,7 @@ class FcoRepository extends \Doctrine\orm\EntityRepository {
 
     public function createAlphabeticalQueryBuilder() {
         return $this->createQueryBuilder('u')
-                        ->where(" u.enuso = 'S' ")
-                        ->orderBy('u.descrip', 'ASC');
+                        ->orderBy('u.descripcion', 'ASC');
     }
 
 }

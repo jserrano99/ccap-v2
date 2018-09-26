@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Ocupacion
  *
- * @ORM\Table(name="ccap_ocupacion"
+ * @ORM\Table(name="gums_ocupacion"
  *         ,uniqueConstraints={@ORM\UniqueConstraint(name="uk_codigo", columns={"codigo"})}
  *         ,   indexes={@ORM\Index(name="idx001", columns={"codigo"})}
  *           )

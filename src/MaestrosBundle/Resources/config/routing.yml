@@ -409,32 +409,32 @@ ajaxComprobarEqTipoIlt:
 # AUSENCIAS
 #
 queryAusencia:
-    path: /Ausencia/query/
+    path: /ausencia/query/
     defaults: { _controller: MaestrosBundle:Ausencia:query}    
     options:
         expose: true
 addAusencia:
-    path: /Ausencia/add/
+    path: /ausencia/add/
     defaults: { _controller: MaestrosBundle:Ausencia:add}    
     options:
         expose: true
 editAusencia:
-    path: /Ausencia/edit/{id}
+    path: /ausencia/edit/{id}
     defaults: { _controller: MaestrosBundle:Ausencia:edit}    
     options:
         expose: true
 deleteAusencia:
-    path: /Ausencia/delete/{id}
+    path: /ausencia/delete/{id}
     defaults: { _controller: MaestrosBundle:Ausencia:delete}    
     options:
         expose: true
 equiAusencia:
-    path: /Ausencia/verequi/{id}
+    path: /ausencia/verequi/{id}
     defaults: { _controller: MaestrosBundle:Ausencia:verEqui}    
     options:
         expose: true
 exportaAusencia:
-    path: /Ausencia/exporta/
+    path: /ausencia/exporta/
     defaults: { _controller: MaestrosBundle:Ausencia:exporta}    
     options:
         expose: true
@@ -479,9 +479,14 @@ deleteCateg:
     defaults: { _controller: MaestrosBundle:Categ:delete}
     options:
         expose: true
-replicaCateg:
-    path:   /categ/replica/{id}/{actuacion}
-    defaults: { _controller: MaestrosBundle:Categ:replica}
+sincroCateg:
+    path: /categ/sincro/{id}/{actuacion}/{eqcateg_id}
+    defaults: { _controller: MaestrosBundle:Categ:sincro}    
+    options:
+        expose: true
+descargaLogCateg:
+    path: /categ/descargaLog/{id}
+    defaults: { _controller: MaestrosBundle:Categ:descargaLog}    
     options:
         expose: true
 ajaxCalculaCodigo:
@@ -489,8 +494,6 @@ ajaxCalculaCodigo:
     defaults: { _controller: MaestrosBundle:Categ:ajaxCalculaCodigo}
     options:
         expose: true
-        
-        
 queryEqCateg:
     path:   /categ/equivalencias/{categ_id}
     defaults: { _controller: MaestrosBundle:Categ:queryEqCateg}
@@ -498,17 +501,17 @@ queryEqCateg:
         expose: true
 activaEqCateg:
     path:   /categ/equivalencias/activa/{id}
-    defaults: { _controller: MaestrosBundle:EqCateg:activa}
+    defaults: { _controller: MaestrosBundle:Categ:activa}
     options:
         expose: true
 desactivaEqCateg:
     path:   /categ/equivalencias/desactiva/{id}
-    defaults: { _controller: MaestrosBundle:EqCateg:desactiva}
+    defaults: { _controller: MaestrosBundle:Categ:desactiva}
     options:
         expose: true
 addEqCateg:
     path:   /categ/equivalencias/add/{id}
-    defaults: { _controller: MaestrosBundle:EqCateg:add}
+    defaults: { _controller: MaestrosBundle:Categ:crear}
     options:
         expose: true
 

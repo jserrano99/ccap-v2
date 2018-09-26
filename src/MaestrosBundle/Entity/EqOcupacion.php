@@ -47,16 +47,7 @@ class EqOcupacion {
      *   @ORM\JoinColumn(name="ocupacion_id", referencedColumnName="id",onDelete="CASCADE")
      * })
      */
-    private $epiAcc;
-
-    /**
-     * @var enUso
-     * 
-     * @ORM\Column(name="enuso",type="string",length=1,nullable=false)
-     */
-    private $enUso;
-
-
+    private $ocupacion;
 
     /**
      * Get id.
@@ -93,30 +84,6 @@ class EqOcupacion {
     }
 
     /**
-     * Set enUso.
-     *
-     * @param string $enUso
-     *
-     * @return EqOcupacion
-     */
-    public function setEnUso($enUso)
-    {
-        $this->enUso = $enUso;
-
-        return $this;
-    }
-
-    /**
-     * Get enUso.
-     *
-     * @return string
-     */
-    public function getEnUso()
-    {
-        return $this->enUso;
-    }
-
-    /**
      * Set edificio.
      *
      * @param \ComunBundle\Entity\Edificio|null $edificio
@@ -141,26 +108,26 @@ class EqOcupacion {
     }
 
     /**
-     * Set epiAcc.
+     * Set ocupacion.
      *
-     * @param \MaestrosBundle\Entity\Ocupacion|null $epiAcc
+     * @param \MaestrosBundle\Entity\Ocupacion|null $ocupacion
      *
      * @return EqOcupacion
      */
-    public function setEpiAcc(\MaestrosBundle\Entity\Ocupacion $epiAcc = null)
+    public function setOcupacion(\MaestrosBundle\Entity\Ocupacion $ocupacion = null)
     {
-        $this->epiAcc = $epiAcc;
+        $this->ocupacion = $ocupacion;
 
         return $this;
     }
 
     /**
-     * Get epiAcc.
+     * Get ocupacion.
      *
      * @return \MaestrosBundle\Entity\Ocupacion|null
      */
-    public function getEpiAcc()
+    public function getOcupacion()
     {
-        return $this->epiAcc;
+        return $this->ocupacion;
     }
 }
