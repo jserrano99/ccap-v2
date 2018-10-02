@@ -1,0 +1,13 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} MOTIVOS DE BAJA (BAJAS) **CONSULTA**
+    <a href="{{path("addBajas")}}" 
+       class="btn btn-success">
+        <span class="glyphicon glyphicon-new-window"></span> Nuevo Motivo de Baja</a>
+    <hr/>
+{% endblock %} 
+
+{% block contenido %}
+    <div class="container">
+        {{ sg_datatables_render(datatable) }}
+    </div>
+{% endblock %}

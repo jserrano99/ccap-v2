@@ -1,0 +1,12 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} MOTIVOS DE ALTA (ALTAS) **{{accion}}**
+   <a href="{{path("queryAltas")}}" class="btn btn-success">
+       <span class="glyphicon glyphicon-th-list"></span> Volver</a>
+{% endblock %}
+    
+{% block contenido %}
+    <div class="container">
+        {% include 'maestros/altas/form.html.twig' %}
+    </div>
+    <div class="clearfix"> </div>
+{% endblock %}  

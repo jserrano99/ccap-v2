@@ -11,7 +11,7 @@ function insertEqGrc($EqGrc) {
         $params = array(":edificio_id" => $EqGrc["edificio_id"],
             ":grupocobro_id" => $EqGrc["grupocobro_id"],
             ":codigo_loc" => $EqGrc["codigo_loc"],
-            ":enuso" => $EqGrc["enUso"]);
+            ":enuso" => $EqGrc["enuso"]);
         $res = $query->execute($params);
         if ($res == 0) {
             echo "**ERROR EN INSERT gums_eq_grc EDIFICIO: " . $EqGrc["edificio"]
@@ -22,7 +22,7 @@ function insertEqGrc($EqGrc) {
         echo "==>INSERT gums_eq_grc EDIFICIO: " . $EqGrc["edificio"]
         . " GRC=" . $EqGrc["codigo_uni"]
         . " CODIGO_LOC= " . $EqGrc["codigo_loc"]
-        . " EN USO = " . $EqGrc["enUso"] . "\n";
+        . " EN USO = " . $EqGrc["enuso"] . "\n";
     } catch (PDOException $ex) {
         echo "**PDOERROR EN INSERT gums_eq_grc EDIFICIO: " . $row["EDIFICIO"]
         . " GRC=" . $codigo
@@ -32,7 +32,7 @@ function insertEqGrc($EqGrc) {
     }
 }
 
-function selectGrcEnUso($conexion, $codigo) {
+function selectGrcEnuso($conexion, $codigo) {
     global $gblError;
     try {
         $sentencia = " select enuso from grc as t1 "
@@ -201,7 +201,7 @@ foreach ($resultSet as $row) {
                 $EqGrc["codigo_loc"] = "XXXX";
                 $EqGrc["codigo_uni"] = $row["CODIGO"];
                 $EqGrc["grupocobro_id"] = $row["ID"];
-                $EqGrc["enUso"] = "X";
+                $EqGrc["enuso"] = "X";
                 insertEqGrc($EqGrc);
             } else {
                 $conexion = conexionEdificio($Edificio["codigo"], $tipobd);
@@ -212,7 +212,7 @@ foreach ($resultSet as $row) {
                         $EqGrc["codigo_loc"] = $rowEq["CODIGO_LOC"];
                         $EqGrc["codigo_uni"] = $row["CODIGO"];
                         $EqGrc["grupocobro_id"] = $row["ID"];
-                        $EqGrc["enUso"] = selectGrcEnUso($conexion, $rowEq["CODIGO_LOC"]);
+                        $EqGrc["enuso"] = selectGrcEnuso($conexion, $rowEq["CODIGO_LOC"]);
                         insertEqGrc($EqGrc);
                     }
                 }

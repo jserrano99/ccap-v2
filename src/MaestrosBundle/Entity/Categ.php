@@ -338,7 +338,7 @@ class Categ {
      *
      * @return Categ
      */
-    public function setEnUso($enuso)
+    public function setEnuso($enuso)
     {
         $this->enuso = $enuso;
 
@@ -350,7 +350,7 @@ class Categ {
      *
      * @return string
      */
-    public function getEnUso()
+    public function getEnuso()
     {
         return $this->enuso;
     }

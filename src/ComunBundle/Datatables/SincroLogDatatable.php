@@ -66,7 +66,7 @@ class SincroLogDatatable extends AbstractDatatable {
                 ))
                 ->add('ficheroLog', Column::class, array('title' => 'log',
                 ))
-                ->add('fechaProceso', DateTimeColumn::class, array('title' => 'Fecha Proceso', 'width' => '190px',
+                ->add('fechaProceso', DateTimeColumn::class, array('title' => 'Fecha Proceso', 'width' => '150px',
                     'date_format' => 'DD/MM/YYYY HH:MM:ss',
                     'filter' => array(DateRangeFilter::class, array(
                             'cancel_button' => false,

@@ -31,7 +31,7 @@ class EqGrupoCot {
     /**
      * @var codigoLoc
      *
-     * @ORM\Column(name="codigo_loc", type="string", length=4, nullable=false)
+     * @ORM\Column(name="codigo_loc", type="string", length=3, nullable=false)
      */
     private $codigoLoc;
 

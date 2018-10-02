@@ -59,44 +59,6 @@ class EqModOcupaDatatable extends AbstractDatatable {
                             'select_options' => array('' => 'Todo') + $this->getOptionsArrayFromEntities($modOcupaAll, 'descrip', 'descrip'),
                             'search_type' => 'eq')),
                     'width' => '320px'))
-                ->add(null, ActionColumn::class, array('title' => 'Acciones',
-                    'actions' => array(
-                        array('route' => 'activaEqModOcupa',
-                            'route_parameters' => array('id' => 'id'),
-                            'label' => 'Activar',
-                            'icon' => 'glyphicon glyphicon-ok-sign',
-                            'render_if' => function($row) {
-                                if ($row['enUso'] === 'N')
-                                    return true;
-                            },
-                            'attributes' => array('rel' => 'tooltip',
-                                'title' => 'Activar',
-                                'class' => 'btn btn-info btn-xs',
-                                'role' => 'button')),
-                        array('route' => 'desactivaEqModOcupa',
-                            'route_parameters' => array('id' => 'id'),
-                            'label' => 'Desactivar',
-                            'icon' => 'glyphicon glyphicon-remove-sign',
-                            'render_if' => function($row) {
-                                if ($row['enUso'] === 'S')
-                                    return true;
-                            },
-                            'attributes' => array('rel' => 'tooltip',
-                                'title' => 'Desactivar',
-                                'class' => 'btn btn-danger btn-xs',
-                                'role' => 'button')),
-                        array('route' => 'addEqModOcupa',
-                            'route_parameters' => array('id' => 'id'),
-                            'label' => 'Crear',
-                            'icon' => 'glyphicon glyphicon-new-window',
-                            'render_if' => function($row) {
-                                if ($row['enUso'] == 'X')
-                                    return true;
-                            },
-                            'attributes' => array('rel' => 'tooltip',
-                                'title' => 'Crear',
-                                'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button')))))
 
         ;
     }

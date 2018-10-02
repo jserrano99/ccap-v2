@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Datatables;
+namespace MaestrosBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\AbstractDatatable;
 use Sg\DatatablesBundle\Datatable\Style;
@@ -30,8 +30,8 @@ class EqModoPagoDatatable extends AbstractDatatable {
             'search_in_non_visible_columns' => true,
         ));
 
-        $edificios = $this->em->getRepository('AppBundle:Edificio')->findAll();
-        $modoPagoAll = $this->em->getRepository('AppBundle:ModoPago')->findAll();
+        $edificios = $this->em->getRepository('ComunBundle:Edificio')->findAll();
+        $modoPagoAll = $this->em->getRepository('MaestrosBundle:ModoPago')->findAll();
 
         $this->features->set(array(
             'auto_width' => false,
@@ -59,23 +59,6 @@ class EqModoPagoDatatable extends AbstractDatatable {
                             'select_options' => array('' => 'Todo') + $this->getOptionsArrayFromEntities($modoPagoAll, 'descrip', 'descrip'),
                             'search_type' => 'eq')),
                     'width' => '320px'))
-                ->add(null, ActionColumn::class, array(
-                    'title' => 'Acciones',
-                    'actions' => array(
-                        array(
-                            'route' => 'deleteEqModoPago',
-                            'route_parameters' => array(
-                                'id' => 'id'),
-                            'label' => 'Eliminar',
-                            'icon' => 'glyphicon glyphicon-trash',
-                            'attributes' => array(
-                                'rel' => 'tooltip',
-                                'title' => 'Eliminar',
-                                'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button'),
-                            'confirm' => true,
-                            'confirm_message' => 'Confirmar la Eliminación de la Equivalencia',
-                            ))))
         ;
     }
 
@@ -83,7 +66,7 @@ class EqModoPagoDatatable extends AbstractDatatable {
      * {@inheritdoc}
      */
     public function getEntity() {
-        return 'AppBundle\Entity\EqModoPago';
+        return 'MaestrosBundle\Entity\EqModoPago';
     }
 
     /**

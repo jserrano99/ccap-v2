@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Datatables;
+namespace MaestrosBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\AbstractDatatable;
 use Sg\DatatablesBundle\Datatable\Style;
@@ -46,7 +46,7 @@ class MoviPatDatatable extends AbstractDatatable {
                     'title' => 'Descripción', 'width' => '450px'))
                 ->add('numeroSeg', Column::class, array(
                     'title' => 'Codigo Cuenta ', 'width' => '100px'))
-                ->add('enUso', Column::class, array(
+                ->add('enuso', Column::class, array(
                     'title' => 'Uso',
                     'filter' => array(SelectFilter::class,
                         array(
@@ -64,32 +64,6 @@ class MoviPatDatatable extends AbstractDatatable {
                 ->add(null, ActionColumn::class, array(
                     'title' => 'Acciones',
                     'actions' => array(
-                        array(
-                            'route' => 'editMoviPat',
-                            'route_parameters' => array(
-                                'id' => 'id'),
-                            'label' => 'Editar',
-                            'icon' => 'glyphicon glyphicon-edit',
-                            'attributes' => array(
-                                'rel' => 'tooltip',
-                                'title' => 'Editar',
-                                'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button'
-                            )
-                        ),
-                        array(
-                            'route' => 'deleteMoviPat',
-                            'route_parameters' => array(
-                                'id' => 'id'),
-                            'label' => 'Eliminar',
-                            'icon' => 'glyphicon glyphicon-trash',
-                            'attributes' => array(
-                                'rel' => 'tooltip',
-                                'title' => 'Eliminar',
-                                'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button'),
-                            'confirm' => true,
-                            'confirm_message' => 'Confirmar la Eliminación Cuenta Cotización'),
                         array(
                             'route' => 'equiMoviPat',
                             'route_parameters' => array(
@@ -112,7 +86,7 @@ class MoviPatDatatable extends AbstractDatatable {
      * {@inheritdoc}
      */
     public function getEntity() {
-        return 'AppBundle\Entity\MoviPat';
+        return 'MaestrosBundle\Entity\MoviPat';
     }
 
     /**

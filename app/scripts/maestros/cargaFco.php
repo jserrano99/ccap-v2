@@ -11,7 +11,7 @@ function insertEqFco($EqFco) {
         $params = array(":edificio_id" => $EqFco["edificio_id"],
             ":fco_id" => $EqFco["fco_id"],
             ":codigo_loc" => $EqFco["codigo_loc"],
-            ":enuso" => $EqFco["enUso"]);
+            ":enuso" => $EqFco["enuso"]);
         $res = $query->execute($params);
         if ($res == 0) {
             echo "**ERROR EN INSERT gums_eq_fco EDIFICIO: " . $EqFco["edificio"]
@@ -22,7 +22,7 @@ function insertEqFco($EqFco) {
         echo "==>INSERT gums_eq_fco EDIFICIO: " . $EqFco["edificio"]
         . " FCO=" . $EqFco["codigo_uni"]
         . " CODIGO_LOC= " . $EqFco["codigo_loc"]
-        . " EN USO = " . $EqFco["enUso"] . "\n";
+        . " EN USO = " . $EqFco["enuso"] . "\n";
     } catch (PDOException $ex) {
         echo "**PDOERROR EN INSERT gums_eq_fco EDIFICIO: " . $row["EDIFICIO"]
         . " FCO=" . $codigo
@@ -32,7 +32,7 @@ function insertEqFco($EqFco) {
     }
 }
 
-function selectFcoEnUso($conexion, $codigo) {
+function selectFcoEnuso($conexion, $codigo) {
     global $gblError;
     try {
         $sentencia = " select enuso from fco as t1 "
@@ -163,7 +163,7 @@ foreach ($resultSet as $row) {
                 $EqFco["codigo_loc"] = "XXXX";
                 $EqFco["codigo_uni"] = $row["CODIGO"];
                 $EqFco["fco_id"] = $row["ID"];
-                $EqFco["enUso"] = "X";
+                $EqFco["enuso"] = "X";
                 insertEqFco($EqFco);
             } else {
                 $conexion = conexionEdificio($Edificio["codigo"], $tipobd);
@@ -174,7 +174,7 @@ foreach ($resultSet as $row) {
                         $EqFco["codigo_loc"] = $rowEq["CODIGO_LOC"];
                         $EqFco["codigo_uni"] = $row["CODIGO"];
                         $EqFco["fco_id"] = $row["ID"];
-                        $EqFco["enUso"] = selectFcoEnUso($conexion, $rowEq["CODIGO_LOC"]);
+                        $EqFco["enuso"] = selectFcoEnuso($conexion, $rowEq["CODIGO_LOC"]);
                         insertEqFco($EqFco);
                     }
                 }

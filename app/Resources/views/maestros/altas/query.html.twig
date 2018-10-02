@@ -1,0 +1,13 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} MOTIVOS DE ALTA (ALTAS) **CONSULTA**
+    <a href="{{path("addAltas")}}" 
+       class="btn btn-success">
+        <span class="glyphicon glyphicon-new-window"></span> Nuevo Motivo de Alta</a>
+    <hr/>
+{% endblock %} 
+
+{% block contenido %}
+    <div class="container">
+        {{ sg_datatables_render(datatable) }}
+    </div>
+{% endblock %}

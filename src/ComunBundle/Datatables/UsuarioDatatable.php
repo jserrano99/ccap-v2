@@ -18,7 +18,9 @@ class UsuarioDatatable extends AbstractDatatable {
     public function buildDatatable(array $options = array()) {
         $this->language->set(array(
             //'cdn_language_by_locale' => true
+            //'language_by_locale' => true
             'language' => 'es'
+
         ));
 
         $this->ajax->set(array());
@@ -44,7 +46,7 @@ class UsuarioDatatable extends AbstractDatatable {
                 ->add('nombre', Column::class, array('title' => 'Nombre', 'width' => '400px', 'searchable' => true))
                 ->add('fcAlta', DateTimeColumn::class, array(
                     'title' => 'Fecha Alta',
-                    'date_format' => 'L',
+                    'date_format' => 'DD/MM/YYYY',
                     'filter' => array(DateRangeFilter::class, array(
                             'cancel_button' => true,
                         )),
@@ -57,7 +59,8 @@ class UsuarioDatatable extends AbstractDatatable {
                             'select_options' => array(
                                 '' => 'Todo',
                                 'Usuario' => 'ROLE_USER',
-                                'Administrador' => 'ROLE_ADMIN'),
+                                'Administrador' => 'ROLE_ADMIN',
+                                'Control de Costes' => 'ROLE_COSTES'),
                             'cancel_button' => false
                         ),
                     ),

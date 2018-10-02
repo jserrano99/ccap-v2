@@ -1,12 +1,13 @@
 <?php
 
-namespace AppBundle\Datatables;
+namespace MaestrosBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\AbstractDatatable;
 use Sg\DatatablesBundle\Datatable\Style;
 use Sg\DatatablesBundle\Datatable\Column\Column;
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Filter\SelectFilter;
+use Sg\DatatablesBundle\Datatable\Editable\TextEditable;
 
 class EqAltasDatatable extends AbstractDatatable {
 
@@ -30,9 +31,9 @@ class EqAltasDatatable extends AbstractDatatable {
             'search_in_non_visible_columns' => true,
         ));
 
-        $edificios = $this->em->getRepository('AppBundle:Edificio')->findAll();
-        
-        $altasAll = $this->em->getRepository('AppBundle:Altas')->findAll();
+        $edificios = $this->em->getRepository('ComunBundle:Edificio')->findAll();
+
+        $altasAll = $this->em->getRepository('MaestrosBundle:Altas')->findAll();
 
         $this->features->set(array(
             'auto_width' => false,
@@ -50,9 +51,14 @@ class EqAltasDatatable extends AbstractDatatable {
                             'multiple' => false,
                             'select_options' => array('' => 'Todo') + $this->getOptionsArrayFromEntities($edificios, 'descripcion', 'descripcion'),
                             'search_type' => 'eq'))))
-                ->add('codigoLoc', Column::class, array('title' => 'Código Local', 'width' => '30px'))
+                ->add('codigoLoc', Column::class, array('title' => 'Código Local', 'width' => '30px',
+                      'editable' => array(TextEditable::class, array(
+                            'pk' => 'id',
+                            'mode' => 'inline'
+                        ))))
+                
                 ->add('altas.codigo', Column::class, array('title' => 'Codigo Unificado', 'width' => '30px'))
-                ->add('altas.descrip', Column::class, array(
+                ->add('altas.descripcion', Column::class, array(
                     'title' => 'Descripción',
                     'filter' => array(SelectFilter::class,
                         array(
@@ -60,23 +66,59 @@ class EqAltasDatatable extends AbstractDatatable {
                             'select_options' => array('' => 'Todo') + $this->getOptionsArrayFromEntities($altasAll, 'descrip', 'descrip'),
                             'search_type' => 'eq')),
                     'width' => '320px'))
-                ->add(null, ActionColumn::class, array(
-                    'title' => 'Acciones',
+                ->add('enuso', Column::class, array(
+                    'title' => 'Uso',
+                    'width' => '40px',
+                    'filter' => array(SelectFilter::class, array('search_type' => 'eq',
+                            'multiple' => false,
+                            'select_options' => array(
+                                '' => 'Todo',
+                                'S' => 'Si',
+                                'N' => 'No',
+                                'X' => 'Pdte. Crear'),
+                            'cancel_button' => false
+                        ),
+                    ),
+                ))
+                ->add(null, ActionColumn::class, array('title' => 'Acciones',
                     'actions' => array(
-                        array(
-                            'route' => 'deleteEqAltas',
-                            'route_parameters' => array(
-                                'id' => 'id'),
-                            'label' => 'Eliminar',
-                            'icon' => 'glyphicon glyphicon-trash',
-                            'attributes' => array(
-                                'rel' => 'tooltip',
-                                'title' => 'Eliminar',
+                        array('route' => 'activaEqAltas',
+                            'route_parameters' => array('id' => 'id'),
+                            'label' => 'Activar',
+                            'icon' => 'glyphicon glyphicon-ok-sign',
+                            'render_if' => function($row) {
+                                if ($row['enuso'] === 'N')
+                                    return true;
+                            },
+                            'attributes' => array('rel' => 'tooltip',
+                                'title' => 'Activar',
+                                'class' => 'btn btn-info btn-xs',
+                                'role' => 'button')),
+                        array('route' => 'desactivaEqAltas',
+                            'route_parameters' => array('id' => 'id'),
+                            'label' => 'Desactivar',
+                            'icon' => 'glyphicon glyphicon-remove-sign',
+                            'render_if' => function($row) {
+                                if ($row['enuso'] === 'S')
+                                    return true;
+                            },
+                            'attributes' => array('rel' => 'tooltip',
+                                'title' => 'Desactivar',
+                                'class' => 'btn btn-danger btn-xs',
+                                'role' => 'button')),
+                        array('route' => 'addEqAltas',
+                            'route_parameters' => array('id' => 'id'),
+                            'label' => 'Crear',
+                            'icon' => 'glyphicon glyphicon-new-window',
+                            'render_if' => function($row) {
+                                if ($row['enuso'] == 'X')
+                                    return true;
+                            },
+                            'attributes' => array('rel' => 'tooltip',
+                                'title' => 'Crear',
                                 'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button'),
-                            'confirm' => true,
-                            'confirm_message' => 'Confirmar la Eliminación de la Equivalencia',
-                ))))
+                                'role' => 'button')))))
+
         ;
     }
 
@@ -84,7 +126,7 @@ class EqAltasDatatable extends AbstractDatatable {
      * {@inheritdoc}
      */
     public function getEntity() {
-        return 'AppBundle\Entity\EqAltas';
+        return 'MaestrosBundle\Entity\EqAltas';
     }
 
     /**

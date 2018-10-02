@@ -17,7 +17,7 @@ class MoviPatRepository extends \Doctrine\orm\EntityRepository {
 
     public function createAlphabeticalQueryBuilder() {
         return $this->createQueryBuilder('u')
-                        ->where(" u.enUso = 'S' ")
+                        ->where(" u.enuso = 'S' ")
                         ->orderBy('u.descrip', 'ASC');
     }
 

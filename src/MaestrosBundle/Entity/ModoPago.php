@@ -33,9 +33,9 @@ class ModoPago {
     /**
      * @var string
      *
-     * @ORM\Column(name="descrip", type="string", length=25, nullable=true)
+     * @ORM\Column(name="descripcion", type="string", length=25, nullable=true)
      */
-    private $descrip;
+    private $descripcion;
 
     /**
      * @var string
@@ -76,25 +76,25 @@ class ModoPago {
     }
 
     /**
-     * Set descrip.
+     * Set descripcion.
      *
      * @param string|null $descrip
      *
      * @return ModoPago
      */
-    public function setDescrip($descrip = null) {
-        $this->descrip = $descrip;
+    public function setDescripcion($descripcion = null) {
+        $this->descripcion = $descripcion;
 
         return $this;
     }
 
     /**
-     * Get descrip.
+     * Get descripcion.
      *
      * @return string|null
      */
-    public function getDescrip() {
-        return $this->descrip;
+    public function getDescripcion() {
+        return $this->descripcion;
     }
 
     /**
@@ -120,7 +120,7 @@ class ModoPago {
     }
 
     public function __toString() {
-        return $this->descrip . ' (' . $this->codigo . ')';
+        return $this->descripcion . ' (' . $this->codigo . ')';
     }
 
 }

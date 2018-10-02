@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Datatables;
+namespace MaestrosBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\AbstractDatatable;
 use Sg\DatatablesBundle\Datatable\Style;
@@ -30,7 +30,7 @@ class FcoDatatable extends AbstractDatatable {
             'search_in_non_visible_columns' => true,
         ));
 
-        $edificios = $this->em->getRepository('AppBundle:Edificio')->findAll();
+        $edificios = $this->em->getRepository('ComunBundle:Edificio')->findAll();
 
         $this->features->set(array(
             'auto_width' => false,
@@ -42,36 +42,10 @@ class FcoDatatable extends AbstractDatatable {
         $this->columnBuilder
                 ->add('id', Column::class, array('title' => 'Id', 'width' => '20px', 'searchable' => false))
                 ->add('codigo', Column::class, array('title' => 'Código','width' => '20px', 'searchable' => true))
-                ->add('descrip', Column::class, array( 'title' => 'Descripción', 'width' => '500px'))
+                ->add('descripcion', Column::class, array( 'title' => 'Descripción', 'width' => '500px'))
                 ->add(null, ActionColumn::class, array(
                     'title' => 'Acciones',
                     'actions' => array(
-                        array(
-                            'route' => 'editFco',
-                            'route_parameters' => array(
-                                'id' => 'id'),
-                            'label' => 'Editar',
-                            'icon' => 'glyphicon glyphicon-edit',
-                            'attributes' => array(
-                                'rel' => 'tooltip',
-                                'title' => 'Editar',
-                                'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button'
-                            )
-                        ),
-                        array(
-                            'route' => 'deleteFco',
-                            'route_parameters' => array(
-                                'id' => 'id'),
-                            'label' => 'Eliminar',
-                            'icon' => 'glyphicon glyphicon-trash',
-                            'attributes' => array(
-                                'rel' => 'tooltip',
-                                'title' => 'Eliminar',
-                                'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button'),
-                            'confirm' => true,
-                            'confirm_message' => 'Confirmar la Eliminación Forma de Contratación'),
                         array(
                             'route' => 'equiFco',
                             'route_parameters' => array(
@@ -94,7 +68,7 @@ class FcoDatatable extends AbstractDatatable {
      * {@inheritdoc}
      */
     public function getEntity() {
-        return 'AppBundle\Entity\Fco';
+        return 'MaestrosBundle\Entity\Fco';
     }
 
     /**

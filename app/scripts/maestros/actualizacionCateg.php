@@ -136,15 +136,15 @@ function parametrosCateg($CATEG, $edificio) {
     return $params;
 }
 
-function updateEqCategControl($EqCateg) {
+function updateEqCategControl($Categ) {
     global $JanoControl;
     try {
         $sql = " update gums_eq_categ set "
                 . " codigo_loc = :codigo_loc"
-                . " enuso = :enuso"
+                . " ,enuso = :enuso"
                 . " where id = :id ";
         $query = $JanoControl->prepare($sql);
-        $params = array(":codigo_loc" => $EqCateg["codigo_loc"],
+        $params = array(":codigo_loc" => $Categ["codigo"],
             ":id" => $EqCateg["id"],
             ":enuso" => $EqCateg["enuso"]);
         $res = $query->execute($params);
@@ -315,7 +315,7 @@ function procesoInsert() {
         if ($conexion) {
             if (insertCategAreas($CATEG, $conexion, $i)) {
                 insertEqCateg($CATEG, $i);
-                updateEqCategControl($CATEG["codigo"], $i);
+                updateEqCategControl($CATEG, $i);
             }
         }
     }

@@ -24,7 +24,7 @@ class AusenciaType extends AbstractType {
                     "label" => 'Descripción',
                     "required" => true,
                     "attr" => array("class" => "form-control medio")))
-                ->add('enUso', ChoiceType::class, array(
+                ->add('enuso', ChoiceType::class, array(
                     "label" => 'En Uso',
                     'choices' => array('Si' => 'S','No' => 'N'),
                     'required' => true,
@@ -97,19 +97,25 @@ class AusenciaType extends AbstractType {
                 ->add('sindicato', ChoiceType::class, array(
                     "label" => 'Sindicato',
                     'choices' => array('No' => 'N', 'Si' => 'S'),
-                    'required' => false,
+                    'required' => true,
                     'disabled' => false,
                     "attr" => array("class" => "form-control sino")))
                 ->add('naturales', ChoiceType::class, array(
                     "label" => 'Naturales Titular',
                     'choices' => array('No' => 'N', 'Si' => 'S'),
-                    'required' => false,
+                    'required' => true,
+                    'disabled' => false,
+                    "attr" => array("class" => "form-control sino")))
+                ->add('itContadorJano', ChoiceType::class, array(
+                    "label" => 'Descuenta Días Contador JANO',
+                    'choices' => array('Si' => 'S','No' => 'N'),
+                    'required' => true,
                     'disabled' => false,
                     "attr" => array("class" => "form-control sino")))
                 ->add('naturalesEv', ChoiceType::class, array(
                     "label" => 'Naturales Eventual',
                     'choices' => array('No' => 'N', 'Si' => 'S'),
-                    'required' => false,
+                    'required' => true,
                     'disabled' => false,
                     "attr" => array("class" => "form-control sino")))
                 ->add('contador', ChoiceType::class, array(
@@ -132,6 +138,7 @@ class AusenciaType extends AbstractType {
                     'label' => 'Redondeo',
                     'required' => false,
                     'disabled' => false,
+                    'empty_data' => 0,
                     'attr' => array('class' => 'form-control muycorto')))
                 ->add('ctrlHorario', ChoiceType::class, array(
                     "label" => 'Control Horario',
@@ -189,37 +196,37 @@ class AusenciaType extends AbstractType {
                 ->add('predecible', ChoiceType::class, array(
                     "label" => 'Predecible',
                     'choices' => array('No' => 'N', 'Si' => 'S'),
-                    'required' => false,
+                    'required' => true,
                     'disabled' => false,
                     "attr" => array("class" => "form-control sino")))
                 ->add('cotizass', ChoiceType::class, array(
                     "label" => 'Cotiza S.S.',
                     'choices' => array('No' => 'N', 'Si' => 'S'),
-                    'required' => false,
+                    'required' => true,
                     'disabled' => false,
                     "attr" => array("class" => "form-control muycorto")))
                 ->add('descuTrienios', ChoiceType::class, array(
                     "label" => 'Retrasa Trienios',
                     'choices' => array('No' => 'N', 'Si' => 'S'),
-                    'required' => false,
+                    'required' => true,
                     'disabled' => false,
                     "attr" => array("class" => "form-control sino")))
                 ->add('proporcional', ChoiceType::class, array(
                     "label" => 'Proporcional',
                     'choices' => array('No' => 'N', 'Si' => 'S'),
-                    'required' => false,
+                    'required' => true,
                     'disabled' => false,
                     "attr" => array("class" => "form-control sino")))
                 ->add('huelga', ChoiceType::class, array(
                     "label" => 'Huelga',
                     'choices' => array('No' => 'N', 'Si' => 'S'),
-                    'required' => false,
+                    'required' => true,
                     'disabled' => false,
                     "attr" => array("class" => "form-control sino")))
                 ->add('calculoFfin', ChoiceType::class, array(
                     "label" => 'Cálculo F.Fin',
                     'choices' => array('No' => 'N', 'Si' => 'S'),
-                    'required' => false,
+                    'required' => true,
                     'disabled' => false,
                     "attr" => array("class" => "form-control sino")))
                 ->add('guarda', ChoiceType::class, array(
@@ -243,13 +250,13 @@ class AusenciaType extends AbstractType {
                 ->add('dtrab', ChoiceType::class, array(
                     "label" => 'Contabilizar como días trabajados Certificados',
                     'choices' => array('No' => 'N', 'Si' => 'S'),
-                    'required' => false,
+                    'required' => true,
                     'disabled' => false,
                     "attr" => array("class" => "form-control sino")))
                 ->add('dtrabperm', ChoiceType::class, array(
                     "label" => 'Contabilizar como días trabajados Ausencias',
                     'choices' => array('No' => 'N', 'Si' => 'S'),
-                    'required' => false,
+                    'required' => true,
                     'disabled' => false,
                     "attr" => array("class" => "form-control sino")))
                 ->add('csituadm', ChoiceType::class, array(
@@ -261,13 +268,13 @@ class AusenciaType extends AbstractType {
                 ->add('esIt', ChoiceType::class, array(
                     "label" => 'I.T',
                     'choices' => array('No' => 'N', 'Si' => 'S'),
-                    'required' => false,
+                    'required' => true,
                     'disabled' => false,
                     "attr" => array("class" => "form-control sino")))
                 ->add('a22', ChoiceType::class, array(
                     "label" => 'Variación A22',
                     'choices' => array('Sin Cambio' => 'N', 'Cambio' => 'C', 'Baja' => 'B', 'Alta' => 'A', 'Variación' => 'V'),
-                    'required' => false,
+                    'required' => true,
                     'disabled' => false,
                     "attr" => array("class" => "form-control muycorto")))
                 ->add('red', NumberType::class, array(
@@ -346,7 +353,7 @@ class AusenciaType extends AbstractType {
                 ->add('itinerancia', ChoiceType::class, array(
                     "label" => 'Dto en Itinerancia',
                     'choices' => array('No' => 'N', 'Si' => 'S'),
-                    'required' => false,
+                    'required' => true,
                     'disabled' => false,
                     "attr" => array("class" => "form-control sino")))
                 ->add('afectaRevision', ChoiceType::class, array(

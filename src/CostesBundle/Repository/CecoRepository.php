@@ -29,8 +29,7 @@ class CecoRepository extends \Doctrine\orm\EntityRepository {
 
     public function createAlphabeticalQueryBuilder() {
         return $this->createQueryBuilder('u')
-                        ->orderBy('u.descripcion', 'ASC')
-                        ->where("u.enuso = 'S' ");
+                        ->orderBy('u.descripcion', 'ASC');
     }
 
 }

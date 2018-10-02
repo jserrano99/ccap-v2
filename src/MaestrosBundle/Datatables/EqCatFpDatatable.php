@@ -56,7 +56,7 @@ class EqCatFpDatatable extends AbstractDatatable {
                         ))))
                 ->add('catfp.codigo', Column::class, array('title' => 'Codigo Unificado', 'width' => '30px'))
                 ->add('catfp.descripcion', Column::class, array('title' => 'Descripción', 'width' => '320px'))
-                ->add('enUso', Column::class, array(
+                ->add('enuso', Column::class, array(
                     'title' => 'Uso',
                     'width' => '40px',
                     'filter' => array(SelectFilter::class, array('search_type' => 'eq',
@@ -77,7 +77,7 @@ class EqCatFpDatatable extends AbstractDatatable {
                             'label' => 'Activar',
                             'icon' => 'glyphicon glyphicon-ok-sign',
                             'render_if' => function($row) {
-                                if ($row['enUso'] === 'N')
+                                if ($row['enuso'] === 'N')
                                     return true;
                             },
                             'attributes' => array('rel' => 'tooltip',
@@ -89,7 +89,7 @@ class EqCatFpDatatable extends AbstractDatatable {
                             'label' => 'Desactivar',
                             'icon' => 'glyphicon glyphicon-remove-sign',
                             'render_if' => function($row) {
-                                if ($row['enUso'] === 'S')
+                                if ($row['enuso'] === 'S')
                                     return true;
                             },
                             'attributes' => array('rel' => 'tooltip',
@@ -101,7 +101,7 @@ class EqCatFpDatatable extends AbstractDatatable {
                             'label' => 'Crear',
                             'icon' => 'glyphicon glyphicon-new-window',
                             'render_if' => function($row) {
-                                if ($row['enUso'] == 'X')
+                                if ($row['enuso'] == 'X')
                                     return true;
                             },
                             'attributes' => array('rel' => 'tooltip',

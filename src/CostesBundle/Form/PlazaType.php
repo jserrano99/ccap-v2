@@ -34,7 +34,7 @@ class PlazaType extends AbstractType {
                     'query_builder' => function (\MaestrosBundle\Repository\CatFpRepository $er) {
                         return $er->createAlphabeticalQueryBuilder();
                     },
-                    'required' => true,
+                    'required' => false,
                     'disabled' => false,
                     "attr" => array("class" => "form-control")))
                 ->add('ceco', EntityType::class, array(

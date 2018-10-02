@@ -61,7 +61,7 @@ class UfController extends Controller {
         $EM = $this->getDoctrine()->getManager();
         $Uf_repo = $EM->getRepository("CostesBundle:Uf");
         $Uf = $Uf_repo->find($id);
-        $Uf->setEnUso('N');
+        $Uf->setEnuso('N');
 
         $EM->persist($Uf);
         $EM->flush();

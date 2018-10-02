@@ -17,7 +17,7 @@ class ModoPagoRepository extends \Doctrine\orm\EntityRepository {
 
     public function createAlphabeticalQueryBuilder() {
         return $this->createQueryBuilder('u')
-                        ->orderBy('u.descrip', 'ASC');
+                        ->orderBy('u.descripcion', 'ASC');
     }
 
 }

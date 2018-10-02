@@ -102,7 +102,7 @@ class CatGenController extends Controller {
             $EqCatGen->setCatGen($CatGen);
             $EqCatGen->setEdificio($Edificio);
             $EqCatGen->setCodigoLoc($CatGen->getCodigo());
-            $EqCatGen->setEnUso('X');
+            $EqCatGen->setEnuso('X');
             $entityManager->persist($EqCatGen);
             $entityManager->flush();
         }
@@ -166,19 +166,20 @@ class CatGenController extends Controller {
     public function crearAction($eqcatgen_id) {
         $em = $this->getDoctrine()->getManager();
         $EqCatGen = $em->getRepository("MaestrosBundle:EqCatGen")->find($eqcatgen_id);
-        if ($EqCatGen->getCodigoLoc() == 'XXXX') {
-            $status = "ERROR EN EL CODIGO NO PUEDE SER (XXXX) ";
+        if ($EqCatGen->getCodigoLoc() == 'XX') {
+            $status = "ERROR EN EL CODIGO NO PUEDE SER (XX) ";
             $this->sesion->getFlashBag()->add("status", $status);
             $params = array("catgen_id" => $EqCatGen->getCatGen()->getId());
             return $this->redirectToRoute("queryEqCatGen", $params);
         }
         $params = array("id" => $EqCatGen->getCatGen()->getId(),
             "actuacion" => 'CREAR',
+            "eqcatgen_id" => $EqCatGen->getId(),
             "edificio" => $EqCatGen->getEdificio()->getCodigo());
         return $this->redirectToRoute("sincroCatGen", $params);
     }
 
-    public function sincroAction($id, $actuacion,$eqcatgen_id, $edificio) {
+    public function sincroAction($id, $actuacion, $eqcatgen_id, $edificio) {
         $em = $this->getDoctrine()->getManager();
         $CatGen = $em->getRepository("MaestrosBundle:CatGen")->find($id);
         $usuario_id = $this->sesion->get('usuario_id');
@@ -201,7 +202,7 @@ class CatGenController extends Controller {
 
         $root = $this->get('kernel')->getRootDir();
         $modo = $this->getParameter('modo');
-        $php_script = "php " . $root . "/scripts/maestros/actualizacionCatGen.php " . $modo . " " . $CatGen->getId() . " " . $actuacion." " .$eqcatgen_id . " " . $edificio;
+        $php_script = "php " . $root . "/scripts/maestros/actualizacionCatGen.php " . $modo . " " . $CatGen->getId() . " " . $actuacion . " " . $eqcatgen_id . " " . $edificio;
         $mensaje = exec($php_script, $SALIDA, $resultado);
 
         if ($resultado == 0) {
@@ -210,9 +211,9 @@ class CatGenController extends Controller {
             $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(3);
         }
 
-        $ficheroLog = 'sincroCatGen-'.$CatGen->getCodigo().'.log';
+        $ficheroLog = 'sincroCatGen-' . $CatGen->getCodigo() . '.log';
         $ServicioLog = $this->get('app.escribelog');
-        $ServicioLog->setLogger('gums_catgen->codigo:'.$CatGen->getCodigo());
+        $ServicioLog->setLogger('gums_catgen->codigo:' . $CatGen->getCodigo());
         foreach ($SALIDA as $linea) {
             $ServicioLog->setMensaje($linea);
             $ServicioLog->escribeLog($ficheroLog);

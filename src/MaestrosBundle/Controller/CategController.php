@@ -92,22 +92,7 @@ class CategController extends Controller {
         return $this->render("maestros/categ/edit.html.twig", $params);
     }
 
-    public function crearEquivalencias($Categ) {
-        $entityManager = $this->getDoctrine()->getManager();
-        $Edificio_repo = $entityManager->getRepository("ComunBundle:Edificio");
-        $EdificioAll = $Edificio_repo->querySoloAreas();
-        foreach ($EdificioAll as $Edificio) {
-            $EqCateg = new \MaestrosBundle\Entity\EqCateg();
-            $EqCateg->setCateg($Categ);
-            $EqCateg->setEdificio($Edificio);
-            $EqCateg->setCodigoLoc('XXXX');
-            $EqCateg->setEnUso('X');
-            $entityManager->persist($EqCateg);
-            $entityManager->flush();
-        }
-        return true;
-    }
-
+    
     public function addAction(Request $request) {
         $entityManager = $this->getDoctrine()->getManager();
         $Categ = new \MaestrosBundle\Entity\Categ();
@@ -139,6 +124,22 @@ class CategController extends Controller {
             "accion" => "CREACIÓN",
             "form" => $form->createView());
         return $this->render("maestros/categ/edit.html.twig", $params);
+    }
+
+    public function crearEquivalencias($Categ) {
+        $entityManager = $this->getDoctrine()->getManager();
+        $Edificio_repo = $entityManager->getRepository("ComunBundle:Edificio");
+        $EdificioAll = $Edificio_repo->querySoloAreas();
+        foreach ($EdificioAll as $Edificio) {
+            $EqCateg = new \MaestrosBundle\Entity\EqCateg();
+            $EqCateg->setCateg($Categ);
+            $EqCateg->setEdificio($Edificio);
+            $EqCateg->setCodigoLoc('XXXX');
+            $EqCateg->setEnuso('X');
+            $entityManager->persist($EqCateg);
+            $entityManager->flush();
+        }
+        return true;
     }
 
     public function ajaxCalculaCodigoAction($catgen_id) {

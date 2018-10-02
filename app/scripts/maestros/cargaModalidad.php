@@ -11,7 +11,7 @@ function insertEqMoa($EqMoa) {
         $params = array(":edificio_id" => $EqMoa["edificio_id"],
             ":moa_id" => $EqMoa["moa_id"],
             ":codigo_loc" => $EqMoa["codigo_loc"],
-            ":enuso" => $EqMoa["enUso"]);
+            ":enuso" => $EqMoa["enuso"]);
         $res = $query->execute($params);
         if ($res == 0) {
             echo "**ERROR EN INSERT gums_eq_moa EDIFICIO: " . $EqMoa["edificio"]
@@ -22,7 +22,7 @@ function insertEqMoa($EqMoa) {
         echo "==>INSERT gums_eq_moa EDIFICIO: " . $EqMoa["edificio"]
         . " MOA=" . $EqMoa["codigo_uni"]
         . " CODIGO_LOC= " . $EqMoa["codigo_loc"]
-        . " EN USO = " . $EqMoa["enUso"] . "\n";
+        . " EN USO = " . $EqMoa["enuso"] . "\n";
     } catch (PDOException $ex) {
         echo "**PDOERROR EN INSERT gums_eq_moa EDIFICIO: " . $row["EDIFICIO"]
         . " MOA=" . $codigo
@@ -32,7 +32,7 @@ function insertEqMoa($EqMoa) {
     }
 }
 
-function selectMoaEnUso($conexion, $codigo) {
+function selectMoaEnuso($conexion, $codigo) {
     global $gblError;
     try {
         $sentencia = " select enuso from moa as t1 "
@@ -59,12 +59,12 @@ function insertMoa($row) {
         $sentencia = " insert into gums_moa ("
                 . " codigo "
                 . " ,descripcion"
-                . " ,enUso"
+                . " ,enuso"
                 . " ,eap "
                 . " ) values ( "
                 . " :codigo"
                 . " ,:descripcion"
-                . " ,:enUso"
+                . " ,:enuso"
                 . " ,:eap )";
 
         $query = $JanoControl->prepare($sentencia);
@@ -72,7 +72,7 @@ function insertMoa($row) {
         $params = array(
                      ":codigo" => $row['CODIGO'] ,
                      ":descripcion"=> $row['DESCRIP'],
-                     ":enUso"=> $row['ENUSO'],
+                     ":enuso"=> $row['ENUSO'],
                      ":eap"=> $row['EAP'],
                      );
         
@@ -168,7 +168,7 @@ foreach ($resultSet as $row) {
                 $EqMoa["codigo_loc"] = "XXXX";
                 $EqMoa["codigo_uni"] = $row["CODIGO"];
                 $EqMoa["moa_id"] = $row["ID"];
-                $EqMoa["enUso"] = "X";
+                $EqMoa["enuso"] = "X";
                 insertEqMoa($EqMoa);
             } else {
                 $conexion = conexionEdificio($Edificio["codigo"], $tipobd);
@@ -179,7 +179,7 @@ foreach ($resultSet as $row) {
                         $EqMoa["codigo_loc"] = $rowEq["CODIGO_LOC"];
                         $EqMoa["codigo_uni"] = $row["CODIGO"];
                         $EqMoa["moa_id"] = $row["ID"];
-                        $EqMoa["enUso"] = selectMoaEnUso($conexion, $rowEq["CODIGO_LOC"]);
+                        $EqMoa["enuso"] = selectMoaEnuso($conexion, $rowEq["CODIGO_LOC"]);
                         insertEqMoa($EqMoa);
                     }
                 }

@@ -154,7 +154,7 @@ function insertAusencia($Ausencia, $janoMaePer) {
         }
         $Ausencia["ID"] = $JanoControl->lastInsertId();
         echo " CREADA GUMS_AUSENCIA ID= " . $Ausencia["ID"] . " CODIGO= " . $Ausencia["CODIGO"] . " " . $Ausencia["DESCRIP"] . "\n";
-        return true;
+        return $Ausencia["ID"];
     } catch (PDOException $ex) {
         echo "**PDOERROR EN INSERT GUMS_AUSENCIAS CODIGO= " . $Ausencia["CODIGO"] . $ex->getMessage() . " \n";
         return null;
@@ -167,15 +167,15 @@ function insertEqAusencia($EqAusencia) {
         $sentencia = " insert into gums_eq_ausencias "
                 . " (edificio_id, codigo_loc, ausencia_id, enuso ) values  ( :edificio_id, :codigo_loc, :ausencia_id, :enuso)";
         $insert = $JanoControl->prepare($sentencia);
-        $params = array(":edificio_id" => $edificio["id"],
+        $params = array(":edificio_id" => $EqAusencia["edificio_id"],
             ":codigo_loc" => $EqAusencia["codigo_loc"],
             ":enuso" => $EqAusencia["enuso"],
-            ":ausencia_id" => $Ausencia["ID"]);
+            ":ausencia_id" => $EqAusencia["ausencia_id"]);
         $res = $insert->execute($params);
         if ($res == 0) {
-            echo "***ERROR EN INSERT GUMS_EQ_AUSENCIAS EDIFICIO_ID= " . $edificio["id"] . " CODIGO_LOC = " . $EqAusencia["codigo_loc"] . "\n";
+            echo "***ERROR EN INSERT GUMS_EQ_AUSENCIAS EDIFICIO= " . $EqAusencia["edificio"] . " CODIGO_LOC = " . $EqAusencia["codigo_loc"] . "\n";
         }
-        echo "GENERADA EQUIVALENCIA GUMS_EQ_AUSENCIAS EDIFICIO_ID= (" . $edificio["id"] . ") CODIGO_LOC= (" . $EqAusencia["codigo_loc"] . ") USO= (" . $EqAusencia["enuso"] . ") \n";
+        echo "GENERADA EQUIVALENCIA GUMS_EQ_AUSENCIAS EDIFICIO= (" . $EqAusencia["edificio"] . ") CODIGO_LOC= (" . $EqAusencia["codigo_loc"] . ") USO= (" . $EqAusencia["enuso"] . ") \n";
     } catch (PDOException $ex) {
         echo "***PDOERROR EN INSERT GUMS_EQ_AUSENCIAS " . $ex->getMessage() . "\n";
     }
@@ -277,9 +277,11 @@ $EdificioAll = $query->fetchAll(PDO::FETCH_ASSOC);
 echo " Registros a Cargar = " . count($AusenciasAll) . "\n";
 foreach ($AusenciasAll as $Ausencia) {
     $janoMaePer = selectJanoMaePer($Ausencia["CODIGO"]);
-    if (!insertAusencia($Ausencia, $janoMaePer)) {
+    $id =insertAusencia($Ausencia, $janoMaePer); 
+    if ($id == null) {
         continue;
     }
+    $Ausencia["ID"] = $id;
     foreach ($EdificioAll as $Edificio) {
         $sql = " select * from eq_ausencias where codigo_uni = :codigo_uni and edificio = :edificio";
         $query = $JanoInte->prepare($sql);

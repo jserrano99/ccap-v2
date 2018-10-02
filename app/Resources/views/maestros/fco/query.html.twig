@@ -1,0 +1,10 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} FORMAS DE CONTRATACION (FCO) **CONSULTA** 
+    <hr/>
+{% endblock %} 
+
+{% block contenido %}
+    <div class="container">
+        {{ sg_datatables_render(datatable) }}
+    </div>
+{% endblock %}

@@ -11,7 +11,7 @@ function insertEqCatAnexo($EqCatAnexo) {
         $params = array(":edificio_id" => $EqCatAnexo["edificio_id"],
             ":catanexo_id" => $EqCatAnexo["catanexo_id"],
             ":codigo_loc" => $EqCatAnexo["codigo_loc"],
-            ":enuso" => $EqCatAnexo["enUso"]);
+            ":enuso" => $EqCatAnexo["enuso"]);
         $res = $query->execute($params);
         if ($res == 0) {
             echo "**ERROR EN INSERT gums_eq_catanexo EDIFICIO: " . $EqCatAnexo["edificio"]
@@ -22,7 +22,7 @@ function insertEqCatAnexo($EqCatAnexo) {
         echo "==>INSERT gums_eq_catanexo EDIFICIO: " . $EqCatAnexo["edificio"]
         . " CATANEXO=" . $EqCatAnexo["codigo_uni"]
         . " CODIGO_LOC= " . $EqCatAnexo["codigo_loc"]
-        . " EN USO = " . $EqCatAnexo["enUso"] . "\n";
+        . " EN USO = " . $EqCatAnexo["enuso"] . "\n";
     } catch (PDOException $ex) {
         echo "**PDOERROR EN INSERT gums_eq_catanexo EDIFICIO: " . $row["EDIFICIO"]
         . " CATANEXO=" . $codigo
@@ -32,7 +32,7 @@ function insertEqCatAnexo($EqCatAnexo) {
     }
 }
 
-function selectCatAnexoEnUso($conexion, $codigo) {
+function selectCatAnexoEnuso($conexion, $codigo) {
     global $gblError;
     try {
         $sentencia = " select enuso from catanexo as t1 "
@@ -165,7 +165,7 @@ foreach ($resultSet as $row) {
                 $EqCatAnexo["codigo_loc"] = "XXXX";
                 $EqCatAnexo["codigo_uni"] = $row["CODIGO"];
                 $EqCatAnexo["catanexo_id"] = $row["ID"];
-                $EqCatAnexo["enUso"] = "X";
+                $EqCatAnexo["enuso"] = "X";
                 insertEqCatAnexo($EqCatAnexo);
             } else {
                 $conexion = conexionEdificio($Edificio["codigo"], $tipobd);
@@ -176,7 +176,7 @@ foreach ($resultSet as $row) {
                         $EqCatAnexo["codigo_loc"] = $rowEq["CODIGO_LOC"];
                         $EqCatAnexo["codigo_uni"] = $row["CODIGO"];
                         $EqCatAnexo["catanexo_id"] = $row["ID"];
-                        $EqCatAnexo["enUso"] = selectCatAnexoEnUso($conexion, $rowEq["CODIGO_LOC"]);
+                        $EqCatAnexo["enuso"] = selectCatAnexoEnuso($conexion, $rowEq["CODIGO_LOC"]);
                         insertEqCatAnexo($EqCatAnexo);
                     }
                 }

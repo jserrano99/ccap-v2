@@ -2,7 +2,7 @@
 
 include_once __DIR__ . '../../funcionesDAO.php';
 
-function selectMoviPatEnUso($conexion, $codigo) {
+function selectMoviPatEnuso($conexion, $codigo) {
     global $gblError;
     try {
         $sentencia = " select enuso from movipat as t1 "
@@ -96,21 +96,6 @@ function insertMoviPat($MoviPat) {
     }
 }
 
-function selectEqMoviPat($codigo) {
-    global $JanoInte;
-    try {
-        $sentencia = " select * from eq_movipat where codigo_uni = :codigo";
-        $query = $JanoInte->prepare($sentencia);
-        $params = array(":codigo" => $codigo);
-        $query->execute($params);
-        $res = $query->fetchALL(PDO::FETCH_ASSOC);
-        return $res;
-    } catch (PDOException $ex) {
-        echo "** ERROR EN SELECT EQ_MOVIPAT CODIGO= " . $codigo . " " . $ex->getMessage() . "\n";
-        return null;
-    }
-}
-
 /*
  * Carga Inicial de la Tabla MoviPat y la correspondiente Tabla de Equivalencias
  */
@@ -200,21 +185,19 @@ foreach ($MoviPatAll as $MoviPat) {
             $EqMoviPat["edificio"] = $Edificio["codigo"];
             $EqMoviPat["codigo_loc"] = "XXX";
             $EqMoviPat["codigo_uni"] = $MoviPat["CODIGO"];
-            $EqMoviPat["_id"] = $MoviPat["ID"];
+            $EqMoviPat["movipat_id"] = $MoviPat["ID"];
             $EqMoviPat["enuso"] = "X";
             insertEqMoviPat($EqMoviPat);
         } else {
             $conexion = conexionEdificio($Edificio["codigo"], $tipobd);
             if ($conexion) {
                 foreach ($EqMoviPatAll as $rowEq) {
-                    var_dump($rowEq);
                     $EqMoviPat["edificio_id"] = $Edificio["id"];
                     $EqMoviPat["edificio"] = $Edificio["codigo"];
                     $EqMoviPat["codigo_loc"] = $rowEq["CODIGO_LOC"];
                     $EqMoviPat["codigo_uni"] = $MoviPat["CODIGO"];
                     $EqMoviPat["movipat_id"] = $MoviPat["ID"];
-                    $EqMoviPat["enuso"] = selectMoviPatEnUso($conexion, $rowEq["CODIGO_LOC"]);
-                    var_dump($EqMoviPat);
+                    $EqMoviPat["enuso"] = selectMoviPatEnuso($conexion, $rowEq["CODIGO_LOC"]);
                     insertEqMoviPat($EqMoviPat);
                 }
             }

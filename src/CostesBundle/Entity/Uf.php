@@ -200,7 +200,7 @@ class Uf {
      *
      * @return Uf
      */
-    public function setEnUso($enuso)
+    public function setEnuso($enuso)
     {
         $this->enuso = $enuso;
 
@@ -212,7 +212,7 @@ class Uf {
      *
      * @return string
      */
-    public function getEnUso()
+    public function getEnuso()
     {
         return $this->enuso;
     }

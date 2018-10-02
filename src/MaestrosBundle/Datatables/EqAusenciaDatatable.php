@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Datatables;
+namespace MaestrosBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\AbstractDatatable;
 use Sg\DatatablesBundle\Datatable\Style;
@@ -30,9 +30,9 @@ class EqAusenciaDatatable extends AbstractDatatable {
             'search_in_non_visible_columns' => true,
         ));
 
-        $edificios = $this->em->getRepository('AppBundle:Edificio')->findAll();
-        
-        $ausenciaAll = $this->em->getRepository('AppBundle:Ausencia')->findAll();
+        $edificios = $this->em->getRepository('ComunBundle:Edificio')->findAll();
+
+        $ausenciaAll = $this->em->getRepository('MaestrosBundle:Ausencia')->findAll();
 
         $this->features->set(array(
             'auto_width' => false,
@@ -60,23 +60,58 @@ class EqAusenciaDatatable extends AbstractDatatable {
                             'select_options' => array('' => 'Todo') + $this->getOptionsArrayFromEntities($ausenciaAll, 'descrip', 'descrip'),
                             'search_type' => 'eq')),
                     'width' => '320px'))
-                ->add(null, ActionColumn::class, array(
-                    'title' => 'Acciones',
+                ->add('enuso', Column::class, array(
+                    'title' => 'Uso',
+                    'width' => '40px',
+                    'filter' => array(SelectFilter::class, array('search_type' => 'eq',
+                            'multiple' => false,
+                            'select_options' => array(
+                                '' => 'Todo',
+                                'S' => 'Si',
+                                'N' => 'No',
+                                'X' => 'Pdte. Crear'),
+                            'cancel_button' => false
+                        ),
+                    ),
+                ))
+                ->add(null, ActionColumn::class, array('title' => 'Acciones',
                     'actions' => array(
-                        array(
-                            'route' => 'deleteEqAusencia',
-                            'route_parameters' => array(
-                                'id' => 'id'),
-                            'label' => 'Eliminar',
-                            'icon' => 'glyphicon glyphicon-trash',
-                            'attributes' => array(
-                                'rel' => 'tooltip',
-                                'title' => 'Eliminar',
+                        array('route' => 'activaEqAusencia',
+                            'route_parameters' => array('id' => 'id'),
+                            'label' => 'Activar',
+                            'icon' => 'glyphicon glyphicon-ok-sign',
+                            'render_if' => function($row) {
+                                if ($row['enuso'] === 'N')
+                                    return true;
+                            },
+                            'attributes' => array('rel' => 'tooltip',
+                                'title' => 'Activar',
+                                'class' => 'btn btn-info btn-xs',
+                                'role' => 'button')),
+                        array('route' => 'desactivaEqAusencia',
+                            'route_parameters' => array('id' => 'id'),
+                            'label' => 'Desactivar',
+                            'icon' => 'glyphicon glyphicon-remove-sign',
+                            'render_if' => function($row) {
+                                if ($row['enuso'] === 'S')
+                                    return true;
+                            },
+                            'attributes' => array('rel' => 'tooltip',
+                                'title' => 'Desactivar',
+                                'class' => 'btn btn-danger btn-xs',
+                                'role' => 'button')),
+                        array('route' => 'addEqAusencia',
+                            'route_parameters' => array('id' => 'id'),
+                            'label' => 'Crear',
+                            'icon' => 'glyphicon glyphicon-new-window',
+                            'render_if' => function($row) {
+                                if ($row['enuso'] == 'X')
+                                    return true;
+                            },
+                            'attributes' => array('rel' => 'tooltip',
+                                'title' => 'Crear',
                                 'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button'),
-                            'confirm' => true,
-                            'confirm_message' => 'Confirmar la Eliminación de la Equivalencia',
-                ))))
+                                'role' => 'button')))))
         ;
     }
 
@@ -84,7 +119,7 @@ class EqAusenciaDatatable extends AbstractDatatable {
      * {@inheritdoc}
      */
     public function getEntity() {
-        return 'AppBundle\Entity\EqAusencia';
+        return 'MaestrosBundle\Entity\EqAusencia';
     }
 
     /**

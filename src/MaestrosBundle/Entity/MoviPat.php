@@ -147,7 +147,7 @@ class MoviPat {
      *
      * @ORM\Column(name="enuso", type="string", length=1, nullable=false, options={"default":"S"})
      */
-    private $enUso;
+    private $enuso;
 
     /**
      * @var string
@@ -568,25 +568,25 @@ class MoviPat {
     }
 
     /**
-     * Set enUso.
+     * Set enuso.
      *
-     * @param string $enUso
+     * @param string $enuso
      *
      * @return MoviPat
      */
-    public function setEnUso($enUso) {
-        $this->enUso = $enUso;
+    public function setEnuso($enuso) {
+        $this->enuso = $enuso;
 
         return $this;
     }
 
     /**
-     * Get enUso.
+     * Get enuso.
      *
      * @return string
      */
-    public function getEnUso() {
-        return $this->enUso;
+    public function getEnuso() {
+        return $this->enuso;
     }
 
     /**

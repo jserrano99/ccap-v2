@@ -51,7 +51,7 @@ class UfDatatable extends AbstractDatatable {
                 ))
                 ->add('uf', Column::class, array(
                     'title' => 'Uf',
-                    'width' => '25px'
+                    'width' => '50px'
                 ))
                 ->add('descripcion', Column::class, array(
                     'title' => 'Descripción',

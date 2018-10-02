@@ -11,7 +11,7 @@ function insertEqCateg($EqCateg) {
         $params = array(":edificio_id" => $EqCateg["edificio_id"],
             ":categ_id" => $EqCateg["categ_id"],
             ":codigo_loc" => $EqCateg["codigo_loc"],
-            ":enuso" => $EqCateg["enUso"]);
+            ":enuso" => $EqCateg["enuso"]);
         $res = $query->execute($params);
         if ($res == 0) {
             echo "**ERROR EN INSERT gums_eq_categ EDIFICIO: " . $EqCateg["edificio"]
@@ -22,7 +22,7 @@ function insertEqCateg($EqCateg) {
         echo "==>INSERT gums_eq_categ EDIFICIO: " . $EqCateg["edificio"]
         . " CATEG=" . $EqCateg["codigo_uni"]
         . " CODIGO_LOC= " . $EqCateg["codigo_loc"]
-        . " EN USO = " . $EqCateg["enUso"] . "\n";
+        . " EN USO = " . $EqCateg["enuso"] . "\n";
     } catch (PDOException $ex) {
         echo "**PDOERROR EN INSERT gums_eq_categ EDIFICIO: " . $row["EDIFICIO"]
         . " CATEG=" . $codigo
@@ -32,7 +32,7 @@ function insertEqCateg($EqCateg) {
     }
 }
 
-function selectCategEnUso($conexion, $codigo) {
+function selectCategEnuso($conexion, $codigo) {
     global $gblError;
     try {
         $sentencia = " select enuso from categ as t1 "
@@ -242,7 +242,7 @@ foreach ($resultSet as $row) {
                 $EqCateg["codigo_loc"] = "XXXX";
                 $EqCateg["codigo_uni"] = $row["CODIGO"];
                 $EqCateg["categ_id"] = $row["ID"];
-                $EqCateg["enUso"] = "X";
+                $EqCateg["enuso"] = "X";
                 insertEqCateg($EqCateg);
             } else {
                 $conexion = conexionEdificio($Edificio["codigo"], $tipobd);
@@ -253,7 +253,7 @@ foreach ($resultSet as $row) {
                         $EqCateg["codigo_loc"] = $rowEq["CODIGO_LOC"];
                         $EqCateg["codigo_uni"] = $row["CODIGO"];
                         $EqCateg["categ_id"] = $row["ID"];
-                        $EqCateg["enUso"] = selectCategEnUso($conexion, $rowEq["CODIGO_LOC"]);
+                        $EqCateg["enuso"] = selectCategEnuso($conexion, $rowEq["CODIGO_LOC"]);
                         insertEqCateg($EqCateg);
                     }
                 }

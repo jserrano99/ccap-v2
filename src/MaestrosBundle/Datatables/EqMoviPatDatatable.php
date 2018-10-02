@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Datatables;
+namespace MaestrosBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\AbstractDatatable;
 use Sg\DatatablesBundle\Datatable\Style;
@@ -30,8 +30,8 @@ class EqMoviPatDatatable extends AbstractDatatable {
             'search_in_non_visible_columns' => true,
         ));
 
-        $edificios = $this->em->getRepository('AppBundle:Edificio')->findAll();
-        $moviPatAll = $this->em->getRepository('AppBundle:MoviPat')->findAll();
+        $edificios = $this->em->getRepository('ComunBundle:Edificio')->findAll();
+        $moviPatAll = $this->em->getRepository('MaestrosBundle:MoviPat')->findAll();
 
         $this->features->set(array(
             'auto_width' => false,
@@ -59,23 +59,6 @@ class EqMoviPatDatatable extends AbstractDatatable {
                             'select_options' => array('' => 'Todo') + $this->getOptionsArrayFromEntities($moviPatAll, 'descrip', 'descrip'),
                             'search_type' => 'eq')),
                     'width' => '320px'))
-                ->add(null, ActionColumn::class, array(
-                    'title' => 'Acciones',
-                    'actions' => array(
-                        array(
-                            'route' => 'deleteEqMoviPat',
-                            'route_parameters' => array(
-                                'id' => 'id'),
-                            'label' => 'Eliminar',
-                            'icon' => 'glyphicon glyphicon-trash',
-                            'attributes' => array(
-                                'rel' => 'tooltip',
-                                'title' => 'Eliminar',
-                                'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button'),
-                            'confirm' => true,
-                            'confirm_message' => 'Confirmar la Eliminación de la Equivalencia',
-                            ))))
         ;
     }
 
@@ -83,7 +66,7 @@ class EqMoviPatDatatable extends AbstractDatatable {
      * {@inheritdoc}
      */
     public function getEntity() {
-        return 'AppBundle\Entity\EqMoviPat';
+        return 'MaestrosBundle\Entity\EqMoviPat';
     }
 
     /**

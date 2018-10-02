@@ -31,7 +31,7 @@ class EqGrupoCobro {
     /**
      * @var codigoLoc
      *
-     * @ORM\Column(name="codigo_loc", type="string", length=4, nullable=false)
+     * @ORM\Column(name="codigo_loc", type="string", length=3, nullable=false)
      */
     private $codigoLoc;
 
@@ -57,11 +57,11 @@ class EqGrupoCobro {
 
     
     /**
-     * @var enUso
+     * @var enuso
      * 
      * @ORM\Column(name="enuso",type="string",length=1,nullable=false)
      */
-    private $enUso;
+    private $enuso;
 
     /**
      * Get id.
@@ -146,26 +146,26 @@ class EqGrupoCobro {
     }
 
     /**
-     * Set enUso.
+     * Set enuso.
      *
-     * @param string $enUso
+     * @param string $enuso
      *
      * @return EqGrupoCobro
      */
-    public function setEnUso($enUso)
+    public function setEnuso($enuso)
     {
-        $this->enUso = $enUso;
+        $this->enuso = $enuso;
 
         return $this;
     }
 
     /**
-     * Get enUso.
+     * Get enuso.
      *
      * @return string
      */
-    public function getEnUso()
+    public function getEnuso()
     {
-        return $this->enUso; 
+        return $this->enuso; 
     }
 }

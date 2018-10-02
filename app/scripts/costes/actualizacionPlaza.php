@@ -12,11 +12,11 @@ function selectCecoCias($conexion, $cias) {
         if ($res) {
             return true;
         } else {
-            echo " NO EXISTE RELACIÓN CECOCIAS PARA CIAS= " . $cias . "\n";
+//            echo " NO EXISTE RELACIÓN CECOCIAS PARA CIAS= " . $cias . "\n";
             return false;
         }
     } catch (PDOException $ex) {
-        echo "**PDOERROR SELECT CECOCIAS CIAS= " . $cias . " " . $ex->getMessage() . " \n";
+        echo "**PDOERROR SELECT CECOCIAS CIAS= (" . $cias . ") ERROR= " . $ex->getMessage() . " \n";
         return false;
     }
 }
@@ -44,11 +44,11 @@ function insertCecoCias($conexion, $cias, $ceco) {
             ":ceco" => $ceco];
         $res = $query->execute($params);
         if ($res == 0) {
-            echo "**ERROR INSERCIÓN CECOCIAS cias = " . $cias . " ceco= " . $ceco . "\n";
+            echo "**ERROR INSERCIÓN CECOCIAS CIAS= (" . $cias . ") CECO= (" . $ceco . ") \n";
             $gblError = 1;
             return false;
         } else {
-            echo "==>INSERCIÓN CECOCIAS cias = " . $cias . " ceco= " . $ceco . "\n";
+            echo "==>INSERCIÓN CECOCIAS CIAS= (" . $cias . ") CECO= (" . $ceco . ") \n";
             return true;
         }
     } catch (PDOException $ex) {
@@ -73,7 +73,7 @@ function updateCecoCias($conexion, $cias, $ceco) {
             $gblError = 1;
             return false;
         }
-        echo "UPDATE CECOCIAS cias = " . $cias . " ceco= " . $ceco . "\n";
+        echo "==>UPDATE CECOCIAS CIAS= (" . $cias . ") CECO= (" . $ceco . ") \n";
         return true;
     } catch (PDOException $ex) {
         echo "**PDOERROR EN UPDATE CECOCIAS CIAS=" . $cias . " CECO=" . $ceco . " " . $ex->getMessage() . " \n";
@@ -112,14 +112,16 @@ function equivalenciasPlaza($Plaza) {
     $Equi["p_asist"] = selectEqCentro($Plaza["pa"], $Plaza["edificio"], "P");
     $Equi["catgen"] = selectEqCatGen($Plaza["catgen"], $Plaza["edificio"]);
     $Equi["catfp"] = selectEqCatFp($Plaza["catfp"], $Plaza["edificio"]);
-    $Equi["turno"] = selectEqTurno($Plaza["turno"], $Plaza["edificio"]);
-
+    //$Equi["turno"] = selectEqTurno($Plaza["turno"], $Plaza["edificio"]);
+    
+//    $Equi["turno"] = $Plaza["turno"];
+    
     echo "**EQUIVALENCIAS**\n";
     echo "**-------------**\n";
-    echo " uf = " . $Plaza["uf"] . "/" . $Equi["uf"] . "\n";
-    echo " p_asist = " . $Plaza["pa"] . "/" . $Equi["p_asist"] . "\n";
-    echo " catgen = " . $Plaza["catgen"] . "/" . $Equi["catgen"] . "\n";
-    echo " catfp = " . $Plaza["catfp"] . "/" . $Equi["catfp"] . "\n";
+    echo " UNIDAD FUNCIONAL= (" . $Plaza["uf"] . ") / (" . $Equi["uf"] . ")\n";
+    echo " PUNTO ASISTENCIAL= " . $Plaza["pa"] . ") / (" . $Equi["p_asist"] . ")\n";
+    echo " CATEGORIA GENERAL= " . $Plaza["catgen"] . ") / (" . $Equi["catgen"] . ")\n";
+    echo " CATEGORIA FP= (" . $Plaza["catfp"] . ") / (" . $Equi["catfp"] . ")\n";
 
     return $Equi;
 }
@@ -303,7 +305,7 @@ function updatePlazaUnif($Plaza) {
         }
         return true;
     } catch (PDOException $ex) {
-        echo "***ERRORPDO EN  Actualicación " . $ex->getMessage() . " \n";
+        echo "***PDOERRO EN  Actualicación " . $ex->getMessage() . " \n";
         $gblError = 1;
         return false;
     }
@@ -355,11 +357,11 @@ function updatePlazaArea($Plaza) {
 
         $ins = $query->execute($params);
         if ($ins == 0) {
-            echo "**ERROR UPDATE PLAZA EN EDIIFICIO= " . $Plaza["edificio"] . " cias= " . $Plaza["cias"] . "\n";
+            echo "**ERROR UPDATE PLAZA EN EDIFICIO= " . $Plaza["edificio"] . " cias= " . $Plaza["cias"] . "\n";
             $gblError = 1;
             return false;
         }
-        echo "==> PLAZA " . $Plaza["cias"] . " MODIFICADA EN LA BASE DE DATOS AREA \n";
+        echo "==> PLAZA CIAS= (" . $Plaza["cias"] . ") MODIFICADA EN LA BASE DE DATOS AREA \n";
 
         if ($Plaza["ceco"] != null) {
             procesoCecoCias($conexionArea, $Plaza["cias"], $Plaza["ceco"]);
@@ -367,7 +369,7 @@ function updatePlazaArea($Plaza) {
 
         return true;
     } catch (PDOException $ex) {
-        echo "***PDOERROR EN UPDATE CIAS: ".Plaza["cias"] ."\n". $ex->getMessage() . "\n";
+        echo "***PDOERROR EN UPDATE PLAZAS CIAS= (".$Plaza["cias"] .") \n". $ex->getMessage() . "\n";
         $gblError=1;
         return false;
     }

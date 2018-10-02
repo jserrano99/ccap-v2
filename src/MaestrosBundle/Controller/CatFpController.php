@@ -102,7 +102,7 @@ class CatFpController extends Controller {
             $EqCatFp->setCatFp($CatFp);
             $EqCatFp->setEdificio($Edificio);
             $EqCatFp->setCodigoLoc($CatFp->getCodigo());
-            $EqCatFp->setEnUso('X');
+            $EqCatFp->setEnuso('X');
             $entityManager->persist($EqCatFp);
             $entityManager->flush();
         }

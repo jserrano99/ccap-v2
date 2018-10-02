@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Datatables;
+namespace MaestrosBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\AbstractDatatable;
 use Sg\DatatablesBundle\Datatable\Style;
@@ -30,8 +30,8 @@ class EqTipoIltDatatable extends AbstractDatatable {
             'search_in_non_visible_columns' => true,
         ));
 
-        $edificios = $this->em->getRepository('AppBundle:Edificio')->findAll();
-        $tipoIltAll = $this->em->getRepository('AppBundle:TipoIlt')->findAll();
+        $edificios = $this->em->getRepository('ComunBundle:Edificio')->findAll();
+        $tipoIltAll = $this->em->getRepository('MaestrosBundle:TipoIlt')->findAll();
 
         $this->features->set(array(
             'auto_width' => false,
@@ -51,7 +51,7 @@ class EqTipoIltDatatable extends AbstractDatatable {
                             'search_type' => 'eq'))))
                 ->add('codigoLoc', Column::class, array('title' => 'Código Local', 'width' => '30px'))
                 ->add('tipoIlt.codigo', Column::class, array('title' => 'Codigo Unificado', 'width' => '30px'))
-                ->add('tipoIlt.descrip', Column::class, array(
+                ->add('tipoIlt.descripcion', Column::class, array(
                     'title' => 'Descripción',
                     'filter' => array(SelectFilter::class,
                         array(
@@ -59,23 +59,6 @@ class EqTipoIltDatatable extends AbstractDatatable {
                             'select_options' => array('' => 'Todo') + $this->getOptionsArrayFromEntities($tipoIltAll, 'descrip', 'descrip'),
                             'search_type' => 'eq')),
                     'width' => '320px'))
-                ->add(null, ActionColumn::class, array(
-                    'title' => 'Acciones',
-                    'actions' => array(
-                        array(
-                            'route' => 'deleteEqTipoIlt',
-                            'route_parameters' => array(
-                                'id' => 'id'),
-                            'label' => 'Eliminar',
-                            'icon' => 'glyphicon glyphicon-trash',
-                            'attributes' => array(
-                                'rel' => 'tooltip',
-                                'title' => 'Eliminar',
-                                'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button'),
-                            'confirm' => true,
-                            'confirm_message' => 'Confirmar la Eliminación de la Equivalencia',
-                            ))))
         ;
     }
 
@@ -83,7 +66,7 @@ class EqTipoIltDatatable extends AbstractDatatable {
      * {@inheritdoc}
      */
     public function getEntity() {
-        return 'AppBundle\Entity\EqTipoIlt';
+        return 'MaestrosBundle\Entity\EqTipoIlt';
     }
 
     /**

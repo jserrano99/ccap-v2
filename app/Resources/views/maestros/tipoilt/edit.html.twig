@@ -1,0 +1,12 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} TIPOS DE IT (TIPOILT) **{{accion}}**
+   <a href="{{path("queryTipoIlt")}}" class="btn btn-success">
+        <span class="glyphicon glyphicon-th-list"></span> Volver</a>
+{% endblock %}
+    
+{% block contenido %}
+    <div class="container">
+        {% include 'maestros/tipoilt/form.html.twig' %}
+    </div>
+    <div class="clearfix"> </div>
+{% endblock %}  

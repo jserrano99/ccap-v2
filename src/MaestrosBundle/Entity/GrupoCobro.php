@@ -209,7 +209,7 @@ class GrupoCobro {
      *
      * @ORM\Column(name="enuso", type="string", length=1, nullable=false)
      */
-    private $enUso;
+    private $enuso;
 
     /**
      * @var string
@@ -832,27 +832,27 @@ class GrupoCobro {
     }
 
     /**
-     * Set enUso.
+     * Set enuso.
      *
-     * @param string $enUso
+     * @param string $enuso
      *
      * @return GrupoCobro
      */
-    public function setEnUso($enUso)
+    public function setEnuso($enuso)
     {
-        $this->enUso = $enUso;
+        $this->enuso = $enuso;
 
         return $this;
     }
 
     /**
-     * Get enUso.
+     * Get enuso.
      *
      * @return string
      */
-    public function getEnUso()
+    public function getEnuso()
     {
-        return $this->enUso;
+        return $this->enuso;
     }
 
     /**

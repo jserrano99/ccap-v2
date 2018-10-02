@@ -1,0 +1,108 @@
+<script>
+    $(document).ready(function () {
+
+    });
+</script>
+<div class="container">
+    <div class="container">
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-danger">
+                {{message}}
+            </div>
+            <hr/>
+        {% endfor %}
+    </div>
+    <div id="tabs" class="pestana container">
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        <ul class="nav nav-tabs">
+            <li><a href="#tabs-1">Datos Generales</a></li>
+            <li><a href="#tabs-2">Cuota Patronal</a></li>
+            <li><a href="#tabs-3">Cuota Obrera</a></li>
+        </ul>
+        <div id="tabs-1">
+            <div class="form-row  mismalinea">
+                {{form_row(form.codigo)}}
+            </div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.descrip)}}
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="form-row  mismalinea">
+                {{form_row(form.cif)}}
+            </div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.numeroSeg)}}
+            </div>
+
+            <div class="form-row">
+                {{form_row(form.empresa)}}
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.enuso)}}
+            </div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.clave)}}
+            </div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.eventual)}}
+            </div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.forzarL00)}}
+            </div>
+
+        </div>
+        <div id="tabs-2">
+            <div class="form-row  mismalinea">
+                {{form_row(form.patContin)}}
+            </div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.patHe)}}
+            </div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.patAcc)}}
+            </div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.patFp)}}
+            </div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.fogasa)}}
+            </div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.patMunpal)}}
+            </div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.patIntegra)}}
+            </div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.patAccAnt)}}
+            </div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.porcent)}}
+            </div>
+
+        </div>
+        <div id="tabs-3">
+            <div class="form-row  mismalinea">
+                {{form_row(form.obrContin)}}
+            </div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.obrHe)}}
+            </div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.obrAcc)}}
+            </div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.obrFp)}}
+            </div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.obrMunpal)}}
+            </div>
+        </div>
+    </div>
+    <div class="form_row " >
+        {{ form_end(form) }}
+    </div>
+</div>

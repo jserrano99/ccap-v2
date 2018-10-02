@@ -2,16 +2,16 @@
     $(document).ready(function () {
         $("#tabs").tabs();
 
-        verit($('#appbundle_ausencia_esIt').val());
-        vercsituadm($('#appbundle_ausencia_csituadm').val());
+        verit($('#maestrosbundle_ausencia_esIt').val());
+        vercsituadm($('#maestrosbundle_ausencia_csituadm').val());
 
 
-        $('#appbundle_ausencia_esIt').change(function () {
-            verit($('#appbundle_ausencia_esIt').val());
+        $('#maestrosbundle_ausencia_esIt').change(function () {
+            verit($('#maestrosbundle_ausencia_esIt').val());
         });
 
-        $('#appbundle_ausencia_csituadm').change(function () {
-            vercsituadm($('#appbundle_ausencia_csituadm').val());
+        $('#maestrosbundle_ausencia_csituadm').change(function () {
+            vercsituadm($('#maestrosbundle_ausencia_csituadm').val());
         });
 
     });
@@ -29,15 +29,15 @@
             $("#tabs").tabs("enable", '#jano');
             $("#tabs").tabs("enable", '#ausencia');
             $("#ausencia").focus();
-            $("#appbundle_ausencia_naturales").focus()
-            $("#appbundle_ausencia_naturales").select();
+            $("#maestrosbundle_ausencia_naturales").focus()
+            $("#maestrosbundle_ausencia_naturales").select();
         } else {
             $("#tabs").tabs("disable", '#ausencia');
             $("#tabs").tabs("disable", '#jano');
             $("#tabs").tabs("enable", '#situadm');
             $("#situadm").focus();
-            $("#appbundle_ausencia_reserva").focus();
-            $("#appbundle_ausencia_reserva").select();
+            $("#maestrosbundle_ausencia_reserva").focus();
+            $("#maestrosbundle_ausencia_reserva").select();
         }
     }
 
@@ -59,13 +59,13 @@
         <div class="panel-body">
             <div class="form-row mismalinea">{{form_row(form.codigo)}}</div>
             <div class="form-row mismalinea">{{form_row(form.descrip)}}</div>
-            <div class="form-row mismalinea">{{form_row(form.enUso)}}</div>
+            <div class="form-row mismalinea">{{form_row(form.enuso)}}</div>
             <div class="form-row mismalinea">{{form_row(form.csituadm)}}</div>
             <div class="form-row mismalinea">{{form_row(form.esIt)}}</div>
         </div>
     </div>
-    <div id="tabs" class="pestana container">
-        <ul>
+    <div id="tabs" class="pestana container" >
+        <ul class="nav nav-tabs">
             <li><a id="tdatosGen" href="#datosGen">Datos Generales</a></li>
             <li><a id="tausencia" href="#ausencia">Ausencias y Permisos</a></li>
             <li><a id="tjano" href="#jano">Datos JANO</a></li>
@@ -86,6 +86,9 @@
             <div class="form-row mismalinea">{{form_row(form.dtrab)}}</div>
             <div class="clearfix"></div>
             <div class="form-row mismalinea">{{form_row(form.dtrabperm)}}</div>
+            <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{form_row(form.itContadorJano)}}</div>
+
         </div>
         <div id="jano">
             <div class="form-row mismalinea">{{form_row(form.janoCodigo)}}</div>
@@ -210,17 +213,16 @@
             <div class="form-row mismalinea">{{form_row(form.moviPat)}}</div>
             <div class="clearfix"></div>
             <div class="form-row mismalinea">{{form_row(form.ocupacion)}}</div>
-            <div class="clearfix"></div>
             <div class="form-row mismalinea">{{form_row(form.ocupacionNew)}}</div>
         </div>
         <div id="situadm">
             <div class="form-row  mismalinea">{{form_row(form.reserva)}}</div>
             <div class="form-row  mismalinea">{{form_row(form.durReserva)}}</div>
-            <div class="clearfix"></div>
             <div class="form-row  mismalinea">{{form_row(form.fco)}}</div>
             <div class="clearfix"></div>
             <div class="form-row  mismalinea">{{form_row(form.destino)}}</div>
             <div class="form-row  mismalinea">{{form_row(form.excluirPlpage)}}</div>
+            
         </div>
         <div id="otros">
             <div class="form-row  mismalinea">{{form_row(form.txtab)}}</div>

@@ -41,8 +41,9 @@ class AusenciaDatatable extends AbstractDatatable {
 
         $this->columnBuilder
                 ->add('id', Column::class, array('title' => 'Id', 'width' => '20px', 'searchable' => false))
-                ->add('codigo', Column::class, array('title' => 'Código Unif.', 'width' => '20px', 'searchable' => true))
+                ->add('codigo', Column::class, array('title' => 'Código Unif.', 'width' => '40px', 'searchable' => true))
                 ->add('descrip', Column::class, array('title' => 'Descripción', 'width' => '400px'))
+                ->add('janoCodigo', Column::class, array('title' => 'Código JANO', 'width' => '40px', 'searchable' => true))
                 ->add('enuso', Column::class, array(
                     'title' => 'Uso',
                     'filter' => array(SelectFilter::class,
@@ -81,11 +82,26 @@ class AusenciaDatatable extends AbstractDatatable {
                                 'S' => 'Si',
                                 'N' => 'No'),
                             'cancel_button' => false,
-                            'initial_search' => 'N'
+                            'initial_search' => ''
                         ),
                     ),
                 ))
-                ->add(null, ActionColumn::class, array('title' => 'Acciones',
+                ->add('itContadorJano', Column::class, array(
+                    'title' => 'Contador Dias JANO',
+                    'filter' => array(SelectFilter::class,
+                        array('search_type' => 'eq',
+                            'multiple' => false,
+                            'select_options' => array(
+                                '' => 'Todo',
+                                'S' => 'Si',
+                                'N' => 'No'),
+                            'cancel_button' => false,
+                            'initial_search' => ''
+                        ),
+                    ),
+                ))
+                
+                ->add(null, ActionColumn::class, array('title' => 'Acciones', 'width'=>'400px',
                     'actions' => array(
                         array('route' => 'editAusencia',
                             'route_parameters' => array('id' => 'id'),
@@ -95,24 +111,14 @@ class AusenciaDatatable extends AbstractDatatable {
                                 'title' => 'Editar',
                                 'class' => 'btn btn-primary btn-xs',
                                 'role' => 'button')),
-                        array('route' => 'deleteAusencia',
-                            'route_parameters' => array('id' => 'id'),
-                            'label' => 'Eliminar',
-                            'icon' => 'glyphicon glyphicon-trash',
-                            'attributes' => array('rel' => 'tooltip',
-                                'title' => 'Eliminar',
-                                'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button'),
-                            'confirm' => true,
-                            'confirm_message' => 'Confirmar la Eliminación de la Ausencia'),
-                        array('route' => 'equiAusencia',
-                            'route_parameters' => array('id' => 'id'),
+                        array('route' => 'queryEqAusencia',
+                            'route_parameters' => array('ausencia_id' => 'id'),
                             'label' => 'Equivalencias',
-                            'icon' => 'glyphicon glyphicon-edit',
+                            'icon' => 'glyphicon glyphicon-th-list',
                             'attributes' => array('rel' => 'tooltip',
                                 'title' => 'Equivalencias',
                                 'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button')))
+                                'role' => 'button'))) 
                 ))
         ;
     }

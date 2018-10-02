@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Datatables;
+namespace MaestrosBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\AbstractDatatable;
 use Sg\DatatablesBundle\Datatable\Style;
@@ -30,7 +30,7 @@ class AltasDatatable extends AbstractDatatable {
             'search_in_non_visible_columns' => true,
         ));
 
-        $edificios = $this->em->getRepository('AppBundle:Edificio')->findAll();
+        $edificios = $this->em->getRepository('ComunBundle:Edificio')->findAll();
 
         $this->features->set(array(
             'auto_width' => false,
@@ -42,7 +42,7 @@ class AltasDatatable extends AbstractDatatable {
         $this->columnBuilder
                 ->add('id', Column::class, array('title' => 'Id', 'width' => '20px', 'searchable' => false))
                 ->add('codigo', Column::class, array('title' => 'Código','width' => '20px', 'searchable' => true))
-                ->add('descrip', Column::class, array( 'title' => 'Descripción', 'width' => '500px'))
+                ->add('descripcion', Column::class, array( 'title' => 'Descripción', 'width' => '500px'))
                 ->add('enuso', Column::class, array(
                     'title' => 'Uso',
                     'filter' => array(SelectFilter::class,
@@ -72,21 +72,9 @@ class AltasDatatable extends AbstractDatatable {
                                 'role' => 'button'
                             )
                         ),
-                        array('route' => 'deleteAltas',
+                        array('route' => 'queryEqAltas',
                             'route_parameters' => array(
-                                'id' => 'id'),
-                            'label' => 'Eliminar',
-                            'icon' => 'glyphicon glyphicon-trash',
-                            'attributes' => array(
-                                'rel' => 'tooltip',
-                                'title' => 'Eliminar',
-                                'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button'),
-                            'confirm' => true,
-                            'confirm_message' => 'Confirmar la Eliminación Motivo de Alta'),
-                        array('route' => 'equiAltas',
-                            'route_parameters' => array(
-                                'id' => 'id'),
+                                'altas_id' => 'id'),
                             'label' => 'Equivalencias',
                             'icon' => 'glyphicon glyphicon-edit',
                             'attributes' => array(
@@ -104,7 +92,7 @@ class AltasDatatable extends AbstractDatatable {
      * {@inheritdoc}
      */
     public function getEntity() {
-        return 'AppBundle\Entity\Altas';
+        return 'MaestrosBundle\Entity\Altas';
     }
 
     /**

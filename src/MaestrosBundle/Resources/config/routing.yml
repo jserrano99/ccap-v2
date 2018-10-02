@@ -275,32 +275,35 @@ deleteAltas:
     defaults: { _controller: MaestrosBundle:Altas:delete}    
     options:
         expose: true
-equiAltas:
-    path: /altas/verequi/{id}
-    defaults: { _controller: MaestrosBundle:Altas:verEqui}    
+descargaLogAltas:
+    path: /altas/descargaLog/{id}
+    defaults: { _controller: MaestrosBundle:Altas:descargaLog}    
     options:
         expose: true
-#
-# equivalencias 
-#
+sincroAltas:
+    path: /altas/sincro/{id}/{actuacion}/{eqaltas_id}/
+    defaults: { _controller: MaestrosBundle:Altas:sincro}    
+    options:
+        expose: true
 queryEqAltas:
-    path: /eqaltas/query/
-    defaults: { _controller: MaestrosBundle:EqAltas:query}    
+    path:   /altas/equivalencias/query/{altas_id}
+    defaults: { _controller: MaestrosBundle:Altas:queryEqAltas}
+    options:
+        expose: true
+
+activaEqAltas:
+    path: /altas/equivalencias/activa/{id}
+    defaults: { _controller: MaestrosBundle:Altas:activar}    
+    options:
+        expose: true
+desactivaEqAltas:
+    path: /altas/equivalencias/desactiva/{id}
+    defaults: { _controller: MaestrosBundle:Altas:desActivar}    
     options:
         expose: true
 addEqAltas:
-    path: /eqaltas/add/
-    defaults: { _controller: MaestrosBundle:EqAltas:add}    
-    options:
-        expose: true
-deleteEqAltas:
-    path: /eqaltas/delete/{id}
-    defaults: { _controller: MaestrosBundle:EqAltas:delete}    
-    options:
-        expose: true
-ajaxComprobarEqAltas:  
-    path: /eqaltas/comprobar/{codigoLoc}/{edificio_id}
-    defaults: { _controller: MaestrosBundle:EqAltas:ajaxComprobar}    
+    path: /altas/equivalencias/add/{id}
+    defaults: { _controller: MaestrosBundle:Altas:crear}    
     options:
         expose: true
 #
@@ -428,37 +431,40 @@ deleteAusencia:
     defaults: { _controller: MaestrosBundle:Ausencia:delete}    
     options:
         expose: true
-equiAusencia:
-    path: /ausencia/verequi/{id}
-    defaults: { _controller: MaestrosBundle:Ausencia:verEqui}    
-    options:
-        expose: true
 exportaAusencia:
     path: /ausencia/exporta/
     defaults: { _controller: MaestrosBundle:Ausencia:exporta}    
     options:
         expose: true
-#
-# equivalencias 
-#
+
+descargaLogAusencia:
+    path: /ausencia/descargaLog/{id}
+    defaults: { _controller: MaestrosBundle:Ausencia:descargaLog}    
+    options:
+        expose: true
+sincroAusencia:
+    path: /ausencia/sincro/{id}/{actuacion}/{eqausencia_id}/
+    defaults: { _controller: MaestrosBundle:Ausencia:sincro}    
+    options:
+        expose: true
 queryEqAusencia:
-    path: /eqAusencia/query/
-    defaults: { _controller: MaestrosBundle:EqAusencia:query}    
+    path:   /ausencia/equivalencias/query/{ausencia_id}
+    defaults: { _controller: MaestrosBundle:Ausencia:queryEqAusencia}
+    options:
+        expose: true
+activaEqAusencia:
+    path: /ausencia/equivalencias/activa/{id}
+    defaults: { _controller: MaestrosBundle:Ausencia:activar}    
+    options:
+        expose: true
+desactivaEqAusencia:
+    path: /ausencia/equivalencias/desactiva/{id}
+    defaults: { _controller: MaestrosBundle:Ausencia:desActivar}    
     options:
         expose: true
 addEqAusencia:
-    path: /eqAusencia/add/
-    defaults: { _controller: MaestrosBundle:EqAusencia:add}    
-    options:
-        expose: true
-deleteEqAusencia:
-    path: /eqAusencia/delete/{id}
-    defaults: { _controller: MaestrosBundle:EqAusencia:delete}    
-    options:
-        expose: true
-ajaxComprobarEqAusencia:  
-    path: /eqAusencia/comprobar/{codigoLoc}/{edificio_id}
-    defaults: { _controller: MaestrosBundle:EqAusencia:ajaxComprobar}    
+    path: /ausencia/equivalencias/add/{id}
+    defaults: { _controller: MaestrosBundle:Ausencia:crear}    
     options:
         expose: true
 

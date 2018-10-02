@@ -56,7 +56,7 @@ class Modalidad {
      *
      * @ORM\Column(name="enuso", type="string", length=1, nullable=false)
      */
-    private $enUso;
+    private $enuso;
 
     
     public function __toString() {
@@ -80,8 +80,8 @@ class Modalidad {
         return $this->eap;
     }
 
-    public function getEnUso() {
-        return $this->enUso;
+    public function getEnuso() {
+        return $this->enuso;
     }
 
     public function setId($id) {
@@ -104,8 +104,8 @@ class Modalidad {
         return $this;
     }
 
-    public function setEnUso($enUso) {
-        $this->enUso = $enUso;
+    public function setEnuso($enuso) {
+        $this->enuso = $enuso;
         return $this;
     }
 

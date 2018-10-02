@@ -11,7 +11,7 @@ function insertEqCatGen($EqCatGen) {
         $params = array(":edificio_id" => $EqCatGen["edificio_id"],
             ":catgen_id" => $EqCatGen["catgen_id"],
             ":codigo_loc" => $EqCatGen["codigo_loc"],
-            ":enuso" => $EqCatGen["enUso"]);
+            ":enuso" => $EqCatGen["enuso"]);
         $res = $query->execute($params);
         if ($res == 0) {
             echo "**ERROR EN INSERT gums_eq_catgen EDIFICIO: " . $EqCatGen["edificio"]
@@ -22,7 +22,7 @@ function insertEqCatGen($EqCatGen) {
         echo "==>INSERT gums_eq_catgen EDIFICIO: " . $EqCatGen["edificio"]
         . " CATGEN=" . $EqCatGen["codigo_uni"]
         . " CODIGO_LOC= " . $EqCatGen["codigo_loc"]
-        . " EN USO = " . $EqCatGen["enUso"] . "\n";
+        . " EN USO = " . $EqCatGen["enuso"] . "\n";
     } catch (PDOException $ex) {
         echo "**PDOERROR EN INSERT gums_eq_catgen EDIFICIO: " . $row["EDIFICIO"]
         . " CATGEN=" . $codigo
@@ -32,7 +32,7 @@ function insertEqCatGen($EqCatGen) {
     }
 }
 
-function selectCatGenEnUso($conexion, $codigo) {
+function selectCatGenEnuso($conexion, $codigo) {
     global $gblError;
     try {
         $sentencia = " select enuso from catgen as t1 "
@@ -163,7 +163,7 @@ foreach ($resultSet as $row) {
                 $EqCatGen["codigo_loc"] = "XXXX";
                 $EqCatGen["codigo_uni"] = $row["CODIGO"];
                 $EqCatGen["catgen_id"] = $row["ID"];
-                $EqCatGen["enUso"] = "X";
+                $EqCatGen["enuso"] = "X";
                 insertEqCatGen($EqCatGen);
             } else {
                 $conexion = conexionEdificio($Edificio["codigo"], $tipobd);
@@ -174,7 +174,7 @@ foreach ($resultSet as $row) {
                         $EqCatGen["codigo_loc"] = $rowEq["CODIGO_LOC"];
                         $EqCatGen["codigo_uni"] = $row["CODIGO"];
                         $EqCatGen["catgen_id"] = $row["ID"];
-                        $EqCatGen["enUso"] = selectCatGenEnUso($conexion, $rowEq["CODIGO_LOC"]);
+                        $EqCatGen["enuso"] = selectCatGenEnuso($conexion, $rowEq["CODIGO_LOC"]);
                         insertEqCatGen($EqCatGen);
                     }
                 }

@@ -30,7 +30,7 @@ class DependenciaDatatable extends AbstractDatatable {
             'stripe_classes' => ['strip1', 'strip2', 'strip3'],
             'individual_filtering' => true,
             'individual_filtering_position' => 'head',
-            'order' => array(array(0, 'asc')),
+            'order' => array(array(2, 'asc')),
             'order_cells_top' => true,
             'search_in_non_visible_columns' => true,
         ));

@@ -59,10 +59,10 @@ foreach ($resultSet as $row) {
     try {
         $sentencia = " insert into ccap_plazas "
                 . " (cias, uf_id, pa_id, catgen_id, catfp_id, plantilla,f_creacion, f_amortiza, moa_id"
-                . " ,ficticia, refuerzo, colaboradora, observaciones,amortizada,orden )"
+                . " ,ficticia, refuerzo, colaboradora, observaciones,amortizada,orden, turno )"
                 . " values "
                 . "(:cias, :uf_id, :pa_id, :catgen_id, :catfp_id, :plantilla, :f_creacion, :f_amortiza, :moa_id"
-                . " ,:ficticia, :refuerzo, :colaboradora, :observaciones, :amortizada, :orden )";
+                . " ,:ficticia, :refuerzo, :colaboradora, :observaciones, :amortizada, :orden, :turno )";
         $query = $JanoControl->prepare($sentencia);
         $UF = selectUf($row["UF"]);
         if ($UF == null) {
@@ -96,7 +96,8 @@ foreach ($resultSet as $row) {
             ":refuerzo" => $row["REFUERZO"],
             ":observaciones" => $row["OBSERVACIONES"],
             ":amortizada" => $amortizada,
-            ":orden" => $orden);
+            ":orden" => $orden,
+            ":turno" => $row["TURNO"]);
         $insert = $query->execute($params);
 
         if ($insert == 0) {

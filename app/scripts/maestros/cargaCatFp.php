@@ -11,7 +11,7 @@ function insertEqCatFp($EqCatFp) {
         $params = array(":edificio_id" => $EqCatFp["edificio_id"],
             ":catfp_id" => $EqCatFp["catfp_id"],
             ":codigo_loc" => $EqCatFp["codigo_loc"],
-            ":enuso" => $EqCatFp["enUso"]);
+            ":enuso" => $EqCatFp["enuso"]);
         $res = $query->execute($params);
         if ($res == 0) {
             echo "**ERROR EN INSERT gums_eq_catfp EDIFICIO: " . $EqCatFp["edificio"]
@@ -22,7 +22,7 @@ function insertEqCatFp($EqCatFp) {
         echo "==>INSERT gums_eq_catfp EDIFICIO: " . $EqCatFp["edificio"]
         . " CATFP=" . $EqCatFp["codigo_uni"]
         . " CODIGO_LOC= " . $EqCatFp["codigo_loc"]
-        . " EN USO = " . $EqCatFp["enUso"] . "\n";
+        . " EN USO = " . $EqCatFp["enuso"] . "\n";
     } catch (PDOException $ex) {
         echo "**PDOERROR EN INSERT gums_eq_catfp EDIFICIO: " . $row["EDIFICIO"]
         . " CATFP=" . $codigo
@@ -32,7 +32,7 @@ function insertEqCatFp($EqCatFp) {
     }
 }
 
-function selectCatFpEnUso($conexion, $codigo) {
+function selectCatFpEnuso($conexion, $codigo) {
     global $gblError;
     try {
         $sentencia = " select enuso from catfp as t1 "
@@ -158,7 +158,7 @@ foreach ($resultSet as $row) {
                 $EqCatFp["codigo_loc"] = "XXXX";
                 $EqCatFp["codigo_uni"] = $row["CODIGO"];
                 $EqCatFp["catfp_id"] = $row["ID"];
-                $EqCatFp["enUso"] = "X";
+                $EqCatFp["enuso"] = "X";
                 insertEqCatFp($EqCatFp);
             } else {
                 $conexion = conexionEdificio($Edificio["codigo"], $tipobd); 
@@ -169,7 +169,7 @@ foreach ($resultSet as $row) {
                         $EqCatFp["codigo_loc"] = $rowEq["CODIGO_LOC"];
                         $EqCatFp["codigo_uni"] = $row["CODIGO"];
                         $EqCatFp["catfp_id"] = $row["ID"];
-                        $EqCatFp["enUso"] = selectCatFpEnUso($conexion, $rowEq["CODIGO_LOC"]);
+                        $EqCatFp["enuso"] = selectCatFpEnuso($conexion, $rowEq["CODIGO_LOC"]);
                         insertEqCatFp($EqCatFp);
                     }
                 }

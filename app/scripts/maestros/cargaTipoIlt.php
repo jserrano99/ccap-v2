@@ -21,7 +21,7 @@ function insertEqTipoIlt($EqTipoIlt) {
         echo "==>INSERT gums_eq_tipo_ilt EDIFICIO: " . $EqTipoIlt["edificio"]
         . " TIPO_ILT=" . $EqTipoIlt["codigo_uni"]
         . " CODIGO_LOC= " . $EqTipoIlt["codigo_loc"]
-        . " EN USO = " . $EqTipoIlt["enUso"] . "\n";
+        . " EN USO = " . $EqTipoIlt["enuso"] . "\n";
     } catch (PDOException $ex) {
         echo "**PDOERROR EN INSERT gums_eq_tipo_ilt EDIFICIO: " . $row["EDIFICIO"]
         . " TIPO_ILT=" . $codigo

@@ -32,9 +32,9 @@ class Altas {
     /**
      * @var string
      *
-     * @ORM\Column(name="descrip", type="string", length=50, nullable=true)
+     * @ORM\Column(name="descripcion", type="string", length=50, nullable=true)
      */
-    private $descrip;
+    private $descripcion;
 
     /**
      * @var string
@@ -159,6 +159,16 @@ class Altas {
     private $destino;
     
 
+     /**
+     * @var ComunBundle\Entity\SincroLog|null
+     *
+     * @ORM\ManyToOne(targetEntity="ComunBundle\Entity\SincroLog")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sincro_log_id", referencedColumnName="id")
+     * })
+     */
+
+    private $sincroLog;
     /**
      * Get id.
      *
@@ -194,27 +204,27 @@ class Altas {
     }
 
     /**
-     * Set descrip.
+     * Set descripcion
      *
-     * @param string|null $descrip
+     * @param string|null $descripcion
      *
      * @return Altas
      */
-    public function setDescrip($descrip = null)
+    public function setDescripcion($descripcion = null)
     {
-        $this->descrip = $descrip;
+        $this->descripcion = $descripcion;
 
         return $this;
     }
 
     /**
-     * Get descrip.
+     * Get descripcion
      *
      * @return string|null
      */
-    public function getDescrip()
+    public function getDescripcion()
     {
-        return $this->descrip;
+        return $this->descripcion;
     }
 
     /**
@@ -605,4 +615,28 @@ class Altas {
         return $this->descrip. ' ('. $this->codigo.')';
     }
 
+
+    /**
+     * Set sincroLog.
+     *
+     * @param \ComunBundle\Entity\SincroLog|null $sincroLog
+     *
+     * @return Altas
+     */
+    public function setSincroLog(\ComunBundle\Entity\SincroLog $sincroLog = null)
+    {
+        $this->sincroLog = $sincroLog;
+
+        return $this;
+    }
+
+    /**
+     * Get sincroLog.
+     *
+     * @return \ComunBundle\Entity\SincroLog|null
+     */
+    public function getSincroLog()
+    {
+        return $this->sincroLog;
+    }
 }

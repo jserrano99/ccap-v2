@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Datatables;
+namespace MaestrosBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\AbstractDatatable;
 use Sg\DatatablesBundle\Datatable\Style;
@@ -30,7 +30,7 @@ class ModoPagoDatatable extends AbstractDatatable {
             'search_in_non_visible_columns' => true,
         ));
 
-        $edificios = $this->em->getRepository('AppBundle:Edificio')->findAll();
+        $edificios = $this->em->getRepository('ComunBundle:Edificio')->findAll();
 
         $this->features->set(array(
             'auto_width' => false,
@@ -60,28 +60,6 @@ class ModoPagoDatatable extends AbstractDatatable {
                 ->add(null, ActionColumn::class, array(
                     'title' => 'Acciones',
                     'actions' => array(
-                        array('route' => 'editModoPago',
-                            'route_parameters' => array(
-                                'id' => 'id'),
-                            'label' => 'Editar',
-                            'icon' => 'glyphicon glyphicon-edit',
-                            'attributes' => array(
-                                'rel' => 'tooltip',
-                                'title' => 'Editar',
-                                'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button')),
-                        array('route' => 'deleteModoPago',
-                            'route_parameters' => array(
-                                'id' => 'id'),
-                            'label' => 'Eliminar',
-                            'icon' => 'glyphicon glyphicon-trash',
-                            'attributes' => array(
-                                'rel' => 'tooltip',
-                                'title' => 'Eliminar',
-                                'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button'),
-                            'confirm' => true,
-                            'confirm_message' => 'Confirmar la Eliminación Modo de Pago'),
                         array('route' => 'equiModoPago',
                             'route_parameters' => array(
                                 'id' => 'id'),
@@ -101,7 +79,7 @@ class ModoPagoDatatable extends AbstractDatatable {
      * {@inheritdoc}
      */
     public function getEntity() {
-        return 'AppBundle\Entity\ModoPago';
+        return 'MaestrosBundle\Entity\ModoPago';
     }
 
     /**

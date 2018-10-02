@@ -1,0 +1,43 @@
+<script>
+    $(document).ready(function () {
+
+    });
+</script>
+<div class="container">
+    <div class="container">
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-danger">
+                {{message}}
+            </div>
+            <hr/>
+        {% endfor %}
+    </div>
+    <div id="tabs" class="pestana container">
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        <ul class="nav nav-tabs">
+            <li><a href="#tabs-1">Datos Generales</a></li>
+            <li><a href="#tabs-2">Otros datos</a></li>
+        </ul>
+        <div id="tabs-1">
+            <div class="form-row  mismalinea">
+                {{form_row(form.codigo)}}
+            </div>
+            <div class="form-row  mismalinea">
+                {{form_row(form.descripcion)}}
+            </div>
+        </div>
+            <div id="tabs-2">
+            <div class="form-row  mismalinea">
+            </div>
+            <div class="form-row  mismalinea">
+            </div>
+        </div>
+        
+        <div class="form_row " >
+            {{form_row(form.Guardar)}}
+            {{ form_end(form) }}
+        </div>
+
+    </div>
+</div>

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Datatables;
+namespace MaestrosBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\AbstractDatatable;
 use Sg\DatatablesBundle\Datatable\Style;
@@ -30,8 +30,8 @@ class EqFcoDatatable extends AbstractDatatable {
             'search_in_non_visible_columns' => true,
         ));
 
-        $edificios = $this->em->getRepository('AppBundle:Edificio')->findAll();
-        $fcoAll = $this->em->getRepository('AppBundle:Fco')->findAll();
+        $edificios = $this->em->getRepository('ComunBundle:Edificio')->findAll();
+        $fcoAll = $this->em->getRepository('MaestrosBundle:Fco')->findAll();
 
         $this->features->set(array(
             'auto_width' => false,
@@ -51,7 +51,7 @@ class EqFcoDatatable extends AbstractDatatable {
                             'search_type' => 'eq'))))
                 ->add('codigoLoc', Column::class, array('title' => 'Código Local', 'width' => '30px'))
                 ->add('fco.codigo', Column::class, array('title' => 'Codigo Unificado', 'width' => '30px'))
-                ->add('fco.descrip', Column::class, array(
+                ->add('fco.descripcion', Column::class, array(
                     'title' => 'Descripción',
                     'filter' => array(SelectFilter::class,
                         array(
@@ -59,23 +59,6 @@ class EqFcoDatatable extends AbstractDatatable {
                             'select_options' => array('' => 'Todo') + $this->getOptionsArrayFromEntities($fcoAll, 'descrip', 'descrip'),
                             'search_type' => 'eq')),
                     'width' => '320px'))
-                ->add(null, ActionColumn::class, array(
-                    'title' => 'Acciones',
-                    'actions' => array(
-                        array(
-                            'route' => 'deleteEqFco',
-                            'route_parameters' => array(
-                                'id' => 'id'),
-                            'label' => 'Eliminar',
-                            'icon' => 'glyphicon glyphicon-trash',
-                            'attributes' => array(
-                                'rel' => 'tooltip',
-                                'title' => 'Eliminar',
-                                'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button'),
-                            'confirm' => true,
-                            'confirm_message' => 'Confirmar la Eliminación de la Equivalencia',
-                            ))))
         ;
     }
 
@@ -83,7 +66,7 @@ class EqFcoDatatable extends AbstractDatatable {
      * {@inheritdoc}
      */
     public function getEntity() {
-        return 'AppBundle\Entity\EqFco';
+        return 'MaestrosBundle\Entity\EqFco';
     }
 
     /**

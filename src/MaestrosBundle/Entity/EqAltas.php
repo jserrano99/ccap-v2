@@ -54,6 +54,14 @@ class EqAltas {
      * })
      */
     private $altas;
+    
+    /**
+     * @var enuso
+     * 
+     * @ORM\Column(name="enuso",type="string",length=1,nullable=false)
+     */
+    private $enuso;
+
 
     /**
      * Get id.
@@ -89,11 +97,11 @@ class EqAltas {
     /**
      * Set edificio.
      *
-     * @param \MaestrosBundle\Entity\Edificio|null $edificio
+     * @param \ComunBundle\Entity\Edificio|null $edificio
      *
      * @return EqAltas
      */
-    public function setEdificio(\MaestrosBundle\Entity\Edificio $edificio = null) {
+    public function setEdificio(\ComunBundle\Entity\Edificio $edificio = null) {
         $this->edificio = $edificio;
 
         return $this;
@@ -102,7 +110,7 @@ class EqAltas {
     /**
      * Get edificio.
      *
-     * @return \MaestrosBundle\Entity\Edificio|null
+     * @return \ComunBundle\Entity\Edificio|null
      */
     public function getEdificio() {
         return $this->edificio;
@@ -130,4 +138,28 @@ class EqAltas {
         return $this->altas;
     }
 
+
+    /**
+     * Set enuso.
+     *
+     * @param string $enuso
+     *
+     * @return EqAltas
+     */
+    public function setEnuso($enuso)
+    {
+        $this->enuso = $enuso;
+
+        return $this;
+    }
+
+    /**
+     * Get enuso.
+     *
+     * @return string
+     */
+    public function getEnuso()
+    {
+        return $this->enuso;
+    }
 }

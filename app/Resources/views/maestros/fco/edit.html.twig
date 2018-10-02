@@ -1,0 +1,12 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} FORMAS DE CONTRATACIÓN (FCO) **{{accion}}**
+   <a href="{{path("queryFco")}}" class="btn btn-success">
+        <span class="glyphicon glyphicon-th-list"></span> Volver</a>
+{% endblock %}
+    
+{% block contenido %}
+    <div class="container">
+        {% include 'maestros/fco/form.html.twig' %}
+    </div>
+    <div class="clearfix"> </div>
+{% endblock %}  

@@ -490,7 +490,8 @@ function selectTipoIlt($codigo) {
 
 function selectFco($codigo) {
     global $JanoControl;
-    if ($codigo==null) return null;
+    if ($codigo == null)
+        return null;
 
     try {
         $sentencia = " select id from gums_fco where "
@@ -826,6 +827,28 @@ function selectPlazabyCias($cias) {
     }
 }
 
+function selectEqAusencia($ausencia_id, $edificio_id) {
+    global $JanoControl;
+    try {
+        $sentencia = " select codigo_loc from gums_eq_ausencias "
+                . " where edificio_id = :edificio_id and ausencia_id = :ausencia_id and enuso = 'S' ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":edificio_id" => $edificio_id,
+            ":ausencia_id" => $ausencia_id);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        if ($res) {
+            return $res['codigo_loc'];
+        } else {
+            echo "NO EXISTE EQUIVALENCIA(EQ_AUSENCIA) AUSENCIA_ID = " . $ausencia_id . " EDIFICIO_ID = " . $edificio_id . " NO SE TRATA \n";
+            return null;
+        }
+    } catch (PDOException $ex) {
+        echo "**PDOERROR EN EQUIVALENCIA(EQ_AUSENCIA) AUSENCIA_ID = " . $ausencia_id . " EDIFICIO_ID = " . $edificio_id . " " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
 function selectEqCateg($categ_id, $edificio_id) {
     global $JanoControl;
     try {
@@ -886,7 +909,7 @@ function selectEqCentro($codigo, $edificio, $vista) {
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
         if ($res) {
-            return $res['codigo_loc'];
+            return $res['CODIGO_LOC'];
         } else {
             echo "**ERROR NO EXISTE EQ_CENTROS DE CODIGO_UNI = " . $codigo . " EDIFICIO = " . $edificio . "VISTA= " . $vista . "\n";
             return null;
@@ -921,6 +944,8 @@ function selectEqCatGen($catgen_id, $edificio_id) {
 
 function selectEqCatFp($catfp_id, $edificio_id) {
     global $JanoControl;
+    if ($catfp_id == null ) return null;
+    
     try {
         $sentencia = " select codigo_loc from gums_eq_catfp "
                 . " where edificio_id = :edificio_id and catfp_id = :catfp_id and enuso = 'S' ";
@@ -987,6 +1012,7 @@ function selectEqGrupoCot($grupocot_id, $edificio_id) {
 
 function selectEqGrupoCobro($grupocobro_id, $edificio_id) {
     global $JanoControl;
+    
     try {
         $sentencia = " select codigo_loc from gums_eq_grc "
                 . " where edificio_id = :edificio_id and grupocobro_id = :grupocobro_id and enuso = 'S'";
@@ -1031,6 +1057,7 @@ function selectEqGrupoProf($grupoprof_id, $edificio) {
 
 function selectEqOcupacion($ocupacion_id, $edificio_id) {
     global $JanoControl;
+    if ($ocupacion_id == null) return null;
     try {
         $sentencia = " select codigo_loc from gums_eq_ocupacion "
                 . " where edificio_id = :edificio_id and ocupacion_id = :ocupacion_id ";
@@ -1051,13 +1078,59 @@ function selectEqOcupacion($ocupacion_id, $edificio_id) {
     }
 }
 
+function selectEqTipoIlt($tipo_ilt_id, $edificio_id) {
+    global $JanoControl;
+    if ($tipo_ilt_id == null ) return null;
+    try {
+        $sentencia = " select codigo_loc from gums_eq_tipo_ilt "
+                . " where edificio_id = :edificio_id and tipo_ilt_id = :tipo_ilt_id ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":edificio_id" => $edificio_id,
+            ":tipo_ilt_id" => $tipo_ilt_id);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        if ($res) {
+            return $res['codigo_loc'];
+        } else {
+            echo "**ERROR NO EXISTE EQUIVALENCIA(EQ_TIPO_ILT) PARA TIPO_ILT_ID= " . $tipo_ilt_id . " EDIFICIO_ID = " . $edificio_id . "\n";
+            return null;
+        }
+    } catch (PDOException $ex) {
+        echo "***PDOERROR EN EQUIVALENCIA(EQ_TIPO_ILT) PARA TIPO_ILT_ID= " . $tipo_ilt_id . " EDIFICIO_ID = " . $edificio_id . " " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
+function selectEqEpiAcc($epiacc_id, $edificio_id) {
+    global $JanoControl;
+    if ($epiacc_id == null) return null;
+    try {
+        $sentencia = " select codigo_loc from gums_eq_epiacc "
+                . " where edificio_id = :edificio_id and epiacc_id = :epiacc_id ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":edificio_id" => $edificio_id,
+            ":epiacc_id" => $epiacc_id);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        if ($res) {
+            return $res['codigo_loc'];
+        } else {
+            echo "**ERROR NO EXISTE EQUIVALENCIA(EQ_EPIACC) PARA EPIACC_ID= " . $epiacc_id . " EDIFICIO_ID = " . $edificio_id . "\n";
+            return null;
+        }
+    } catch (PDOException $ex) {
+        echo "***PDOERROR EN EQUIVALENCIA(EQ_EPIACC) PARA EPIACC_ID= " . $epiacc_id . " EDIFICIO_ID = " . $edificio_id . " " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
 function selectMoviPat($codigo) {
     global $JanoControl;
     if ($codigo == null)
         return null;
 
     try {
-        $sentencia = " select * from gums_movipat where codigo = :codigo";
+        $sentencia = " select id from gums_movipat where codigo = :codigo";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":codigo" => $codigo);
         $query->execute($params);
@@ -1082,6 +1155,112 @@ function selectModOcupa($codigo) {
         return $res["id"];
     } catch (PDOException $ex) {
         echo "**ERROR EN SELECT GUMS_MODOCUPA CODIGO= " . $codigo . " " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
+function selectModoPago($codigo) {
+    global $JanoControl;
+    try {
+        $sentencia = " select id from gums_modopago where codigo = :codigo";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":codigo" => $codigo);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        return $res["id"];
+    } catch (PDOException $ex) {
+        echo "** ERROR EN SELECT GUMS_MODOPAGO CODIGO= " . $codigo . " " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
+function selectEqModOcupa($modocupa_id, $edificio_id) {
+    global $JanoControl;
+    if ($modocupa_id == null ) return null;
+    try {
+        $sentencia = " select codigo_loc from gums_eq_modocupa "
+                . " where edificio_id = :edificio_id and modocupa_id = :modocupa_id";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":edificio_id" => $edificio_id,
+            ":modocupa_id" => $modocupa_id);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        if ($res) {
+            return $res['codigo_loc'];
+        } else {
+            echo "**ERROR NO EXISTE EQUIVALENCIA(EQ_MODOCUPA) PARA MODOCUPA_ID= " . $modocupa_id . " EDIFICIO_ID = " . $edificio_id . "\n";
+            return null;
+        }
+    } catch (PDOException $ex) {
+        echo "***PDOERROR EN EQUIVALENCIA(EQ_MODOCUPA) PARA MODOCUPA_ID= " . $modocupa_id . " EDIFICIO_ID = " . $edificio_id . " " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
+function selectEqFco($fco_id, $edificio_id) {
+    global $JanoControl;
+    if ($fco_id == null) return null;
+    try {
+        $sentencia = " select codigo_loc from gums_eq_fco "
+                . " where edificio_id = :edificio_id and fco_id = :fco_id";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":edificio_id" => $edificio_id,
+            ":fco_id" => $fco_id);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        if ($res) {
+            return $res['codigo_loc'];
+        } else {
+            echo "**ERROR NO EXISTE EQUIVALENCIA(EQ_FCO) PARA FCO_ID= " . $fco_id . " EDIFICIO_ID = " . $edificio_id . "\n";
+            return null;
+        }
+    } catch (PDOException $ex) {
+        echo "***PDOERROR EN EQUIVALENCIA(EQ_FCO) PARA FCO_ID= " . $fco_id . " EDIFICIO_ID = " . $edificio_id . " " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
+function selectEqMoviPat($movipat_id, $edificio_id) {
+    global $JanoControl;
+    if ($movipat_id == null) return null;
+    try {
+        $sentencia = " select codigo_loc from gums_eq_movipat "
+                . " where edificio_id = :edificio_id and movipat_id = :movipat_id and enuso = 'S' ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":edificio_id" => $edificio_id,
+            ":movipat_id" => $movipat_id);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        if ($res) {
+            return $res['codigo_loc'];
+        } else {
+            echo "**ERROR NO EXISTE EQUIVALENCIA(EQ_MOVIPAT) PARA MOVIPAT_ID= " . $movipat_id . " EDIFICIO_ID = " . $edificio_id . "\n";
+            return null;
+        }
+    } catch (PDOException $ex) {
+        echo "****PDOERROR EN SELECT EQUIVALENCIA(EQ_MOVIPAT) PARA MOVIPAT_ID= " . $movipat_id . " ERROR:" . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
+function selectEqModoPago($modopago_id, $edificio_id) {
+    global $JanoControl;
+    try {
+        $sentencia = " select codigo_loc from gums_eq_modopago "
+                . " where edificio_id = :edificio_id and modopago_id = :modopago_id ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":edificio_id" => $edificio_id,
+            ":modopago_id" => $modopago_id);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        if ($res) {
+            return $res['codigo_loc'];
+        } else {
+            echo "**ERROR NO EXISTE EQUIVALENCIA(EQ_MODOPAGO) PARA MODOPAGO_ID= " . $modopago_id . " EDIFICIO_ID = " . $edificio_id . "\n";
+            return null;
+        }
+    } catch (PDOException $ex) {
+        echo "**PDOERROR EN SELECT EQUIVALENCIA(EQ_MODOPAGO) PARA MODOPAGO_ID= " . $modopago_id . " " . $ex->getMessage() . "\n";
         return null;
     }
 }

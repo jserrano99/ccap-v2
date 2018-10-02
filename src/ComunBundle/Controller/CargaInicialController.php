@@ -90,9 +90,9 @@ class CargaInicialController extends Controller {
 
         $db = $em->getConnection();
  
-        $query = "delete from ".$CargaInicial->getTabla();
-        $stmt = $db->prepare($query);
-        $stmt->execute();
+        //$query = "delete from ".$CargaInicial->getTabla();
+        //$stmt = $db->prepare($query);
+        //$stmt->execute();
 
         $CargaInicial->setEstadoCargaInicial($EstadoCargaInicial);
         $CargaInicial->setFechaCarga(null);

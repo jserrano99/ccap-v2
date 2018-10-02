@@ -56,32 +56,6 @@ class ModOcupaDatatable extends AbstractDatatable {
                     'title' => 'Acciones',
                     'actions' => array(
                         array(
-                            'route' => 'editModOcupa',
-                            'route_parameters' => array(
-                                'id' => 'id'),
-                            'label' => 'Editar',
-                            'icon' => 'glyphicon glyphicon-edit',
-                            'attributes' => array(
-                                'rel' => 'tooltip',
-                                'title' => 'Editar',
-                                'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button'
-                            )
-                        ),
-                        array(
-                            'route' => 'deleteModOcupa',
-                            'route_parameters' => array(
-                                'id' => 'id'),
-                            'label' => 'Eliminar',
-                            'icon' => 'glyphicon glyphicon-trash',
-                            'attributes' => array(
-                                'rel' => 'tooltip',
-                                'title' => 'Eliminar',
-                                'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button'),
-                            'confirm' => true,
-                            'confirm_message' => 'Confirmar la Eliminación Modo Ocupación'),
-                        array(
                             'route' => 'equiModOcupa',
                             'route_parameters' => array(
                                 'id' => 'id'),

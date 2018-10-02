@@ -1,0 +1,37 @@
+<div class="container">
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+        
+    <div class="form_row mismalinea">
+        {{form_row(form.codigo)}}
+    </div>
+    <div class="form-row  mismalinea">
+        {{form_row(form.descripcion)}}
+    </div>
+
+    <div class="form-row  mismalinea">
+        {{form_row(form.propietario)}}
+    </div>
+    <div class="form-row  mismalinea">
+        {{form_row(form.soliOrigen)}}
+    </div>
+    <div class="form-row  mismalinea">
+        {{form_row(form.enuso)}}
+    </div>
+    <div class="form-row  mismalinea">
+        {{form_row(form.fcorptid)}}
+    </div>
+    <div class="form-row  mismalinea">
+        {{form_row(form.fcorptCodigo)}}
+    </div>
+    <div class="form-row  mismalinea">
+        {{form_row(form.fcorptDescripcion)}}
+    </div>
+
+    <div class="clearfix"></div>
+    <div class="form-row">
+        {{form_row(form.Guardar)}}
+        {{ form_end(form) }}
+    </div>
+
+</div>

@@ -60,7 +60,7 @@ class PaController extends Controller {
         $EM = $this->getDoctrine()->getManager();
         $Pa_repo = $EM->getRepository("CostesBundle:Pa");
         $Pa = $Pa_repo->find($id);
-        $Pa->setEnUso('N');
+        $Pa->setEnuso('N');
 
         $EM->persist($Pa);
         $EM->flush();

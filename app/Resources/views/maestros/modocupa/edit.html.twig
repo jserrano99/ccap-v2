@@ -1,0 +1,12 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} MODOS DE OCUPACIÓN (MODOCUPA) **{{accion}}**
+   <a href="{{path("queryModOcupa")}}" class="btn btn-success">
+        <span class="glyphicon glyphicon-th-list"></span> Volver</a>
+{% endblock %}
+    
+{% block contenido %}
+    <div class="container">
+        {% include 'maestros/modocupa/form.html.twig' %}
+    </div>
+    <div class="clearfix"> </div>
+{% endblock %}  

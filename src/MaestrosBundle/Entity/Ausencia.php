@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Ausencia
  *
  * @ORM\Table(name="gums_ausencias"
- *         ,uniqueConstraints={@ORM\UniqueConstraint(name="uk_codigo", columns={"codigo"})}
+ *         ,uniqueConstraints={@ORM\UniqueConstraint(name="uk_ausencia_codigo", columns={"codigo"})}
  *         ,uniqueConstraints={@ORM\UniqueConstraint(name="uk_jano_codigo", columns={"jano_codigo"})}
  *           )
  * @ORM\Entity(repositoryClass="MaestrosBundle\Repository\AusenciaRepository")
@@ -29,7 +29,6 @@ class Ausencia {
      */
     private $id;
 
-    
     /**
      * @var string
      *
@@ -606,6 +605,13 @@ class Ausencia {
     /**
      * @var string 
      *
+     * @ORM\Column(name="it_contador_jano",type="string",length=1,nullable=true)
+     */
+    private $itContadorJano;
+
+    /**
+     * @var string 
+     *
      * @ORM\Column(name="jano_apartado",type="string",length=1,nullable=true)
      */
     private $janoApartado;
@@ -794,6 +800,18 @@ class Ausencia {
      * })
      */
     private $janoDocumPermiso;
+    
+    /**
+     * @var ComunBundle\Entity\SincroLog|null
+     *
+     * @ORM\ManyToOne(targetEntity="ComunBundle\Entity\SincroLog")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sincro_log_id", referencedColumnName="id")
+     * })
+     */
+
+    private $sincroLog;
+    
     
 
     /**
@@ -3348,5 +3366,53 @@ class Ausencia {
     public function getJanoDocumPermiso()
     {
         return $this->janoDocumPermiso;
+    }
+
+    /**
+     * Set itContadorJano.
+     *
+     * @param string|null $itContadorJano
+     *
+     * @return Ausencia
+     */
+    public function setItContadorJano($itContadorJano = null)
+    {
+        $this->itContadorJano = $itContadorJano;
+
+        return $this;
+    }
+
+    /**
+     * Get itContadorJano.
+     *
+     * @return string|null
+     */
+    public function getItContadorJano()
+    {
+        return $this->itContadorJano;
+    }
+
+    /**
+     * Set sincroLog.
+     *
+     * @param \ComunBundle\Entity\SincroLog|null $sincroLog
+     *
+     * @return Ausencia
+     */
+    public function setSincroLog(\ComunBundle\Entity\SincroLog $sincroLog = null)
+    {
+        $this->sincroLog = $sincroLog;
+
+        return $this;
+    }
+
+    /**
+     * Get sincroLog.
+     *
+     * @return \ComunBundle\Entity\SincroLog|null
+     */
+    public function getSincroLog()
+    {
+        return $this->sincroLog;
     }
 }
