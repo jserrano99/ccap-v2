@@ -13,12 +13,13 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Ausencia
  *
- * @ORM\Table(name="gums_ausencias"
- *         ,uniqueConstraints={@ORM\UniqueConstraint(name="uk_ausencia_codigo", columns={"codigo"})}
- *         ,uniqueConstraints={@ORM\UniqueConstraint(name="uk_jano_codigo", columns={"jano_codigo"})}
- *           )
+ * @ORM\Table(name="gums_ausencias",
+ *          uniqueConstraints={@ORM\UniqueConstraint(name="uk_ausencia_codigo", columns={"codigo"}),
+                               @ORM\UniqueConstraint(name="uk_jano_codigo", columns={"jano_codigo"})})
  * @ORM\Entity(repositoryClass="MaestrosBundle\Repository\AusenciaRepository")
  */
+
+
 class Ausencia {
     /**
      * @var integer
@@ -45,7 +46,7 @@ class Ausencia {
     /**
      * @var string
      *
-     * @ORM\Column(name="predecible", type="string", length=1, nullable=false)
+     * @ORM\Column(name="predecible", type="string", length=1, nullable=false, options={"default":"N"}))
      */
     private $predecible;
 
@@ -605,7 +606,7 @@ class Ausencia {
     /**
      * @var string 
      *
-     * @ORM\Column(name="it_contador_jano",type="string",length=1,nullable=true)
+     * @ORM\Column(name="it_contador_jano",type="string",length=1,nullable=true,options={"default":"N"}))
      */
     private $itContadorJano;
 
@@ -806,7 +807,7 @@ class Ausencia {
      *
      * @ORM\ManyToOne(targetEntity="ComunBundle\Entity\SincroLog")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sincro_log_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sincro_log_id", referencedColumnName="id", onDelete="SET NULL")
      * })
      */
 

@@ -4,6 +4,36 @@ include_once __DIR__ . '../../funcionesDAO.php';
 
 /**
  * 
+ * @global type $JanoControl
+ * @param type $EqAusencia
+ * @return type
+ */
+function updateEqAusenciaControl($EqAusencia) {
+    global $JanoControl;
+    try {
+        $sql = " update gums_eq_ausencias set "
+                . " codigo_loc = :codigo_loc"
+                . " ,enuso = :enuso"
+                . " where id = :id ";
+        $query = $JanoControl->prepare($sql);
+        $params = array(":codigo_loc" => $EqAusencia["codigo_loc"],
+            ":id" => $EqAusencia["id"],
+            ":enuso" => $EqAusencia["enuso"]);
+        $res = $query->execute($params);
+        if ($res == 0) {
+            echo "**ERROR EN UPDATE GUMS_EQ_AUSENCIA CODIGO_LOC=(" . $EqAusencia["codigo_loc"] . ") EDIFICIO=(" . $EqAusencia["edificio"] . ") Uso= (" . $EqAusencia["enuso"] . ") \n";
+            return null;
+        }
+        echo "-->UPDATE GUMS_EQ_AUSENCIA CODIGO_LOC=(" . $EqAusencia["codigo_loc"] . ") EDIFICIO=(" . $EqAusencia["edificio"] . ") Uso= (" . $EqAusencia["enuso"] . ") \n";
+    } catch (PDOException $ex) {
+        echo "***PDOERROR EN UPDATE GUMS_EQ_AUSENCIA AUSENCIA= " . $EqAusencia["codigo_loc"] . " EDIFICIO=" . $EqAusencia["edificio"] . "\n"
+        . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
+/**
+ * 
  * @param type $Ausencia
  * @param type $edificio_id
  * @return type
@@ -124,37 +154,6 @@ function insertEqAusencia($Ausencia, $area) {
         . " CODIGO_UNI=" . $Ausencia["codigo"]
         . " \t  " . $ex->getMessage()
         . " \n";
-        return null;
-    }
-}
-
-/**
- * 
- * @global type $JanoControl
- * @param type $id
- * @return type
- */
-function selectAusenciaById($id) {
-    global $JanoControl;
-    try {
-        $sentencia = "select t1.*, t2.codigo as ocupacion, t3.codigo as epiacc, t4.codigo as tipo_ilt "
-                . " , t5.codigo as fco , t6.codigo as movipat, t7.codigo as modocupa, t8.codigo as ocupacion_new  "
-                . " from gums_ausencias as t1 "
-                . " left join gums_ocupacion as t2 on t1.ocupacion_id = t2.id "
-                . " left join gums_epiacc as t3 on t1.epiacc_id = t3.id "
-                . " left join gums_tipo_ilt as t4 on t1.tipo_ilt_id = t4.id "
-                . " left join gums_fco as t5 on t1.fco_id = t5.id "
-                . " left join gums_movipat as t6 on t1.movipat_id = t6.id "
-                . " left join gums_modocupa as t7 on t1.modocupa_id = t7.id "
-                . " left join gums_ocupacion as t8 on t1.ocupacion_new_id = t8.id "
-                . " where t1.id = :id";
-        $query = $JanoControl->prepare($sentencia);
-        $params = array(":id" => $id);
-        $query->execute($params);
-        $res = $query->fetch(PDO::FETCH_ASSOC);
-        return $res;
-    } catch (PDOException $ex) {
-        echo "*** PDOERROR EN SELECT GUMS_AUSENCIA ID= (" . $id . ") ERROR= " . $ex->getMessage() . "\n";
         return null;
     }
 }
@@ -345,13 +344,13 @@ function equivalenciasAusencia($Ausencia, $edificio_id) {
 
     echo " EQUIVALENCIAS (LOCAL/UNIFICADA) \n";
     echo " =============================== \n";
-    echo " EPIACC = (" . $Equi["epiacc"] . ")/(" . $Ausencia["epiacc_id"] . ") \n";
-    echo " MODOCUPA= (" . $Equi["modocupa"] . ")/(" . $Ausencia["modocupa_id"] . ") \n";
-    echo " FCO= (" . $Equi["fco"] . ")/(" . $Ausencia["fco_id"] . ") \n";
-    echo " OCUPACION= (" . $Equi["ocupacion"] . ")/(" . $Ausencia["ocupacion_id"] . ") \n";
-    echo " OCUPACION_NEW= (" . $Equi["ocupacion_new"] . ")/(" . $Ausencia["ocupacion_new_id"] . ") \n";
-    echo " TIPO_ILT= (" . $Equi["tipo_ilt"] . ")/(" . $Ausencia["tipo_ilt_id"] . ") \n";
-    echo " PATRONAL= (" . $Equi["patronal"] . ")/(" . $Ausencia["movipat_id"] . ") \n";
+    echo " EPIACC = (" . $Equi["epiacc"] . ")/(" . $Ausencia["epiacc"] . ") \n";
+    echo " MODOCUPA= (" . $Equi["modocupa"] . ")/(" . $Ausencia["modocupa"] . ") \n";
+    echo " FCO= (" . $Equi["fco"] . ")/(" . $Ausencia["fco"] . ") \n";
+    echo " OCUPACION= (" . $Equi["ocupacion"] . ")/(" . $Ausencia["ocupacion"] . ") \n";
+    echo " OCUPACION_NEW= (" . $Equi["ocupacion_new"] . ")/(" . $Ausencia["ocupacion_new"] . ") \n";
+    echo " TIPO_ILT= (" . $Equi["tipo_ilt"] . ")/(" . $Ausencia["tipo_ilt"] . ") \n";
+    echo " PATRONAL= (" . $Equi["patronal"] . ")/(" . $Ausencia["movipat"] . ") \n";
 
     return $Equi;
 }
@@ -899,6 +898,39 @@ if ($actuacion == 'INSERT') {
 if ($actuacion == 'UPDATE') {
     if (!procesoUpdate($Ausencia)) {
         exit(1);
+    }
+}
+if ($actuacion == 'ACTIVAR') {
+    $EqAusencia = selectEqAusenciaById($eqausencia_id);
+    $conexion = conexionEdificio($EqAusencia["edificio"], $tipobd);
+    $Ausencia["enuso"] = 'S';
+    if ($conexion) {
+        updateAusenciaAreas($Ausencia, $conexion, $EqAusencia["codigo_loc"],$EqAusencia["edificio_id"]);
+        $EqAusencia["enuso"] = 'S';
+        updateEqAusenciaControl($EqAusencia);
+    }
+}
+
+if ($actuacion == 'DESACTIVAR') {
+    $EqAusencia = selectEqAusenciaById($eqausencia_id);
+    $conexion = conexionEdificio($EqAusencia["edificio"], $tipobd);
+    $Ausencia["enuso"] = 'N';
+    if ($conexion) {
+        updateAusenciaAreas($Ausencia, $conexion, $EqAusencia["codigo_loc"],$EqAusencia["edificio_id"]);
+        $EqAusencia["enuso"] = 'N';
+        updateEqAusenciaControl($EqAusencia);
+    }
+}
+
+if ($actuacion == 'CREAR') {
+    $EqAusencia = selectEqAusenciaById($eqausencia_id);
+    $conexion = conexionEdificio($EqAusencia["edificio"], $tipobd);
+    $Ausencia["codigo"] = $EqAusencia["codigo_loc"];
+    if ($conexion) {
+        if (insertAusenciaAreas($AUSENCIA, $conexion, $EqAusencia["edificio_id"])) {
+            $EqAusencia["enuso"] = 'S';
+            updateEqAusenciaControl($EqAusencia);
+        }
     }
 }
 

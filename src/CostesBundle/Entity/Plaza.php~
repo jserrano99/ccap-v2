@@ -22,9 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                     @ORM\Index(name="idx002", columns={"pa_id"}),
  *                     @ORM\Index(name="idx003", columns={"catgen_id"}),
  *                     @ORM\Index(name="idx004", columns={"catfp_id"}),
- *                     @ORM\Index(name="idx005", columns={"modalidad_id"}),
- *                     @ORM\Index(name="idx006", columns={"ceco_id"})
- *                    }
+ *                     @ORM\Index(name="idx005", columns={"moa_id"})}
  *           )
  * @ORM\Entity(repositoryClass="CostesBundle\Repository\PlazaRepository")
  */
@@ -74,7 +72,7 @@ class Plaza {
      * @var MaestrosBundle\Entity\Modalidad|null
      *
      * @ORM\ManyToOne(targetEntity="MaestrosBundle\Entity\Modalidad") 
-     *   @ORM\JoinColumn(name="modalidad_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="moa_id", referencedColumnName="id")
      */
     private $modalidad;
 
@@ -141,18 +139,21 @@ class Plaza {
      * @ORM\Column(name="observaciones", type="string", length=255, nullable=true)
      */
     private $observaciones;
+
     /**
      * @var string
      *
      * @ORM\Column(name="cupequi", type="string", length=1, nullable=true)
      */
     private $cupequi;
+
     /**
      * @var string
      *
      * @ORM\Column(name="colaboradora", type="string", length=1, nullable=true)
      */
     private $colaboradora;
+
     /**
      * @var integer
      *
@@ -160,14 +161,6 @@ class Plaza {
      */
     private $orden;
 
-    /**
-     * @var Ceco|null
-     *
-     * @ORM\ManyToOne(targetEntity="Ceco")
-     *   @ORM\JoinColumn(name="ceco_id", referencedColumnName="id")
-     */
-    private $ceco;
-    
     /**
      * @var string
      *
@@ -183,21 +176,28 @@ class Plaza {
      *   @ORM\JoinColumn(name="sincro_log_id", referencedColumnName="id")
      * })
      */
-
     private $sincroLog;
-    
+
+    /**
+     * @var Ceco| null
+     *
+     * @ORM\ManyToOne(targetEntity="Ceco")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ceco_actual_id", referencedColumnName="id")
+     * })
+     */
+    private $cecoActual;
+
     public function __toString() {
         return $this->cias;
     }
-
 
     /**
      * Get id.
      *
      * @return int
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -208,8 +208,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setCias($cias = null)
-    {
+    public function setCias($cias = null) {
         $this->cias = $cias;
 
         return $this;
@@ -220,8 +219,7 @@ class Plaza {
      *
      * @return string|null
      */
-    public function getCias()
-    {
+    public function getCias() {
         return $this->cias;
     }
 
@@ -232,8 +230,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setPlantilla($plantilla = null)
-    {
+    public function setPlantilla($plantilla = null) {
         $this->plantilla = $plantilla;
 
         return $this;
@@ -244,8 +241,7 @@ class Plaza {
      *
      * @return string|null
      */
-    public function getPlantilla()
-    {
+    public function getPlantilla() {
         return $this->plantilla;
     }
 
@@ -256,8 +252,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setTurno($turno = null)
-    {
+    public function setTurno($turno = null) {
         $this->turno = $turno;
 
         return $this;
@@ -268,8 +263,7 @@ class Plaza {
      *
      * @return string|null
      */
-    public function getTurno()
-    {
+    public function getTurno() {
         return $this->turno;
     }
 
@@ -280,8 +274,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setHorNormal($horNormal = null)
-    {
+    public function setHorNormal($horNormal = null) {
         $this->horNormal = $horNormal;
 
         return $this;
@@ -292,8 +285,7 @@ class Plaza {
      *
      * @return string|null
      */
-    public function getHorNormal()
-    {
+    public function getHorNormal() {
         return $this->horNormal;
     }
 
@@ -304,8 +296,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setFicticia($ficticia = null)
-    {
+    public function setFicticia($ficticia = null) {
         $this->ficticia = $ficticia;
 
         return $this;
@@ -316,8 +307,7 @@ class Plaza {
      *
      * @return string|null
      */
-    public function getFicticia()
-    {
+    public function getFicticia() {
         return $this->ficticia;
     }
 
@@ -328,8 +318,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setRefuerzo($refuerzo = null)
-    {
+    public function setRefuerzo($refuerzo = null) {
         $this->refuerzo = $refuerzo;
 
         return $this;
@@ -340,8 +329,7 @@ class Plaza {
      *
      * @return string|null
      */
-    public function getRefuerzo()
-    {
+    public function getRefuerzo() {
         return $this->refuerzo;
     }
 
@@ -352,8 +340,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setFAmortiza($fAmortiza = null)
-    {
+    public function setFAmortiza($fAmortiza = null) {
         $this->fAmortiza = $fAmortiza;
 
         return $this;
@@ -364,8 +351,7 @@ class Plaza {
      *
      * @return \DateTime|null
      */
-    public function getFAmortiza()
-    {
+    public function getFAmortiza() {
         return $this->fAmortiza;
     }
 
@@ -376,8 +362,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setFCreacion($fCreacion = null)
-    {
+    public function setFCreacion($fCreacion = null) {
         $this->fCreacion = $fCreacion;
 
         return $this;
@@ -388,8 +373,7 @@ class Plaza {
      *
      * @return \DateTime|null
      */
-    public function getFCreacion()
-    {
+    public function getFCreacion() {
         return $this->fCreacion;
     }
 
@@ -400,8 +384,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setObservaciones($observaciones = null)
-    {
+    public function setObservaciones($observaciones = null) {
         $this->observaciones = $observaciones;
 
         return $this;
@@ -412,8 +395,7 @@ class Plaza {
      *
      * @return string|null
      */
-    public function getObservaciones()
-    {
+    public function getObservaciones() {
         return $this->observaciones;
     }
 
@@ -424,8 +406,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setCupequi($cupequi = null)
-    {
+    public function setCupequi($cupequi = null) {
         $this->cupequi = $cupequi;
 
         return $this;
@@ -436,8 +417,7 @@ class Plaza {
      *
      * @return string|null
      */
-    public function getCupequi()
-    {
+    public function getCupequi() {
         return $this->cupequi;
     }
 
@@ -448,8 +428,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setColaboradora($colaboradora = null)
-    {
+    public function setColaboradora($colaboradora = null) {
         $this->colaboradora = $colaboradora;
 
         return $this;
@@ -460,8 +439,7 @@ class Plaza {
      *
      * @return string|null
      */
-    public function getColaboradora()
-    {
+    public function getColaboradora() {
         return $this->colaboradora;
     }
 
@@ -472,8 +450,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setOrden($orden = null)
-    {
+    public function setOrden($orden = null) {
         $this->orden = $orden;
 
         return $this;
@@ -484,8 +461,7 @@ class Plaza {
      *
      * @return int|null
      */
-    public function getOrden()
-    {
+    public function getOrden() {
         return $this->orden;
     }
 
@@ -496,8 +472,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setAmortizada($amortizada = null)
-    {
+    public function setAmortizada($amortizada = null) {
         $this->amortizada = $amortizada;
 
         return $this;
@@ -508,8 +483,7 @@ class Plaza {
      *
      * @return string|null
      */
-    public function getAmortizada()
-    {
+    public function getAmortizada() {
         return $this->amortizada;
     }
 
@@ -520,8 +494,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setUf(\CostesBundle\Entity\Uf $uf = null)
-    {
+    public function setUf(\CostesBundle\Entity\Uf $uf = null) {
         $this->uf = $uf;
 
         return $this;
@@ -532,8 +505,7 @@ class Plaza {
      *
      * @return \CostesBundle\Entity\Uf|null
      */
-    public function getUf()
-    {
+    public function getUf() {
         return $this->uf;
     }
 
@@ -544,8 +516,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setPa(\CostesBundle\Entity\Pa $pa = null)
-    {
+    public function setPa(\CostesBundle\Entity\Pa $pa = null) {
         $this->pa = $pa;
 
         return $this;
@@ -556,8 +527,7 @@ class Plaza {
      *
      * @return \CostesBundle\Entity\Pa|null
      */
-    public function getPa()
-    {
+    public function getPa() {
         return $this->pa;
     }
 
@@ -568,8 +538,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setCatGen(\MaestrosBundle\Entity\CatGen $catGen = null)
-    {
+    public function setCatGen(\MaestrosBundle\Entity\CatGen $catGen = null) {
         $this->catGen = $catGen;
 
         return $this;
@@ -580,8 +549,7 @@ class Plaza {
      *
      * @return \MaestrosBundle\Entity\CatGen|null
      */
-    public function getCatGen()
-    {
+    public function getCatGen() {
         return $this->catGen;
     }
 
@@ -592,8 +560,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setModalidad(\MaestrosBundle\Entity\Modalidad $modalidad = null)
-    {
+    public function setModalidad(\MaestrosBundle\Entity\Modalidad $modalidad = null) {
         $this->modalidad = $modalidad;
 
         return $this;
@@ -604,8 +571,7 @@ class Plaza {
      *
      * @return \MaestrosBundle\Entity\Modalidad|null
      */
-    public function getModalidad()
-    {
+    public function getModalidad() {
         return $this->modalidad;
     }
 
@@ -616,8 +582,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setCatFp(\MaestrosBundle\Entity\CatFp $catFp = null)
-    {
+    public function setCatFp(\MaestrosBundle\Entity\CatFp $catFp = null) {
         $this->catFp = $catFp;
 
         return $this;
@@ -628,8 +593,7 @@ class Plaza {
      *
      * @return \MaestrosBundle\Entity\CatFp|null
      */
-    public function getCatFp()
-    {
+    public function getCatFp() {
         return $this->catFp;
     }
 
@@ -640,8 +604,7 @@ class Plaza {
      *
      * @return Plaza
      */
-    public function setCeco(\CostesBundle\Entity\Ceco $ceco = null)
-    {
+    public function setCeco(\CostesBundle\Entity\Ceco $ceco = null) {
         $this->ceco = $ceco;
 
         return $this;
@@ -652,8 +615,30 @@ class Plaza {
      *
      * @return \CostesBundle\Entity\Ceco|null
      */
-    public function getCeco()
-    {
+    public function getCeco() {
         return $this->ceco;
     }
+
+    /**
+     * Set sincroLog.
+     *
+     * @param \ComunBundle\Entity\SincroLog|null $sincroLog
+     *
+     * @return Plaza
+     */
+    public function setSincroLog(\ComunBundle\Entity\SincroLog $sincroLog = null) {
+        $this->sincroLog = $sincroLog;
+
+        return $this;
+    }
+
+    /**
+     * Get sincroLog.
+     *
+     * @return \ComunBundle\Entity\SincroLog|null
+     */
+    public function getSincroLog() {
+        return $this->sincroLog;
+    }
+
 }

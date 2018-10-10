@@ -60,7 +60,7 @@ class ModOcupaDatatable extends AbstractDatatable {
                             'route_parameters' => array(
                                 'id' => 'id'),
                             'label' => 'Equivalencias',
-                            'icon' => 'glyphicon glyphicon-list',
+                            'icon' => 'glyphicon glyphicon-th-list',
                             'attributes' => array(
                                 'rel' => 'tooltip',
                                 'title' => 'Equivalencias',

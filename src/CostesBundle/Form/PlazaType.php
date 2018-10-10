@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 class PlazaType extends AbstractType {
 
@@ -32,16 +33,6 @@ class PlazaType extends AbstractType {
                     'class' => 'MaestrosBundle:CatFp',
                     'placeholder' => 'Seleccione Categoría ....',
                     'query_builder' => function (\MaestrosBundle\Repository\CatFpRepository $er) {
-                        return $er->createAlphabeticalQueryBuilder();
-                    },
-                    'required' => false,
-                    'disabled' => false,
-                    "attr" => array("class" => "form-control")))
-                ->add('ceco', EntityType::class, array(
-                    "label" => 'Centro de Coste',
-                    'class' => 'CostesBundle:Ceco',
-                    'placeholder' => 'Seleccione Centro de Coste ....',
-                    'query_builder' => function (\CostesBundle\Repository\CecoRepository $er) {
                         return $er->createAlphabeticalQueryBuilder();
                     },
                     'required' => false,
@@ -82,7 +73,7 @@ class PlazaType extends AbstractType {
                         'data-class' => 'string',)))
                 ->add('fCreacion', DateType::class, array(
                     "label" => 'Fecha Creación',
-                    "required" => true,
+                    "required" => false,
                     'widget' => 'single_text',
                     'attr' => array(
                         'class' => 'form-control corto js-datepicker',
@@ -102,13 +93,13 @@ class PlazaType extends AbstractType {
                     "label" => 'Refuerzo',
                     'required' => true,
                     'disabled' => false,
-                    'choices' => array('No' => 'N','Si' => 'S'),
+                    'choices' => array('No' => 'N', 'Si' => 'S'),
                     "attr" => array("class" => "form-control muycorto")))
                 ->add('colaboradora', ChoiceType::class, array(
                     "label" => 'Colaboradora',
                     'required' => true,
                     'disabled' => false,
-                    'choices' => array('No' => 'N','Si' => 'S'),
+                    'choices' => array('No' => 'N', 'Si' => 'S'),
                     "attr" => array("class" => "form-control muycorto")))
                 ->add('plantilla', ChoiceType::class, array(
                     "label" => 'Plantilla',
@@ -127,13 +118,13 @@ class PlazaType extends AbstractType {
                     'required' => false,
                     'disabled' => false,
                     'placeholder' => 'Seleccione Turno ... ',
-                    'choices' => array('Mañana' => 'M', 'Tarde' => 'T','SAR' => 'P' ),
+                    'choices' => array('Mañana' => 'M', 'Tarde' => 'T', 'SAR' => 'P'),
                     "attr" => array("class" => "form-control corto")))
                 ->add('ficticia', ChoiceType::class, array(
                     "label" => 'Ficticia',
                     'required' => true,
                     'disabled' => false,
-                    'choices' => array('No' => 'N','Si' => 'S'),
+                    'choices' => array('No' => 'N', 'Si' => 'S'),
                     "attr" => array("class" => "form-control muycorto")))
                 ->add('cupequi', ChoiceType::class, array(
                     "label" => 'Tipo de Plaza',
@@ -141,6 +132,48 @@ class PlazaType extends AbstractType {
                     'disabled' => false,
                     'choices' => array('Equipo' => 'E', 'Cupo' => 'C', 'Otro' => 'O'),
                     "attr" => array("class" => "form-control muycorto")))
+                ->add('cecoActual', EntityType::class, array(
+                    "label" => 'Centro de Coste Actual',
+                    'class' => 'CostesBundle:Ceco',
+                    'placeholder' => 'Seleccione Centro de Coste ...',
+                    'query_builder' => function (\CostesBundle\Repository\CecoRepository $er) {
+                        return $er->createAlphabeticalQueryBuilder();
+                    },
+                    'required' => false,
+                    'disabled' => true,
+                    "attr" => array("class" => "medio form-control")))
+                ->add('fInicio', DateType::class, array(
+                    "label" => 'Fecha Inicio',
+                    "required" => false,
+                    'mapped' => false,
+                    'widget' => 'single_text',
+                    'attr' => array(
+                        'class' => 'form-control muycorto js-datepicker',
+                        'data-date-format' => 'dd-mm-yyyy',
+                        'data-class' => 'string',)))
+                ->add('nuevoCecoCodigo', TextType::class, array(
+                    "label" => 'Nuevo Ceco (Código)',
+                    'required' => false,
+                    'disabled' => false,
+                    'mapped' => false,
+                    "attr" => array("class" => "form-control muycorto")))
+                ->add('nuevoCecoDesc', TextType::class, array(
+                    "label" => 'Descripción',
+                    'required' => false,
+                    'disabled' => true,
+                    'mapped' => false,
+                    "attr" => array("class" => "form-control medio")))
+                ->add('nuevoCeco', EntityType::class, array(
+                    "label" => 'Selección de Centro de Coste',
+                    'class' => 'CostesBundle:Ceco',
+                    'placeholder' => 'Seleccione Centro de Coste ...',
+                    'query_builder' => function (\CostesBundle\Repository\CecoRepository $er) {
+                        return $er->createAlphabeticalQueryBuilder();
+                    },
+                    'required' => false,
+                    'disabled' => false,
+                    'mapped' => false,
+                    "attr" => array("class" => "corto form-control")))
                 ->add('Guardar', SubmitType::class, array(
                     "attr" => array("class" => "form-submit btn btn-t btn-success")))
                 ->addEventSubscriber(new EventListener\PlazaEventSuscribe())
@@ -151,6 +184,7 @@ class PlazaType extends AbstractType {
      * {@inheritdoc}
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver) {
+        
     }
 
     public function configureOptions(OptionsResolver $resolver) {
@@ -163,7 +197,7 @@ class PlazaType extends AbstractType {
      * {@inheritdoc}
      */
     public function getBlockPrefix() {
-        return 'appbundle_plaza';
+        return 'costesbundle_plaza';
     }
 
 }

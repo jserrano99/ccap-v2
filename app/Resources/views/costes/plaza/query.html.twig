@@ -1,12 +1,31 @@
 {% extends "layout.html.twig" %} 
 {% block titulo %}PLAZAS **CONSULTA**
+    <script>
+        function exportar() {
+            var recurso = Routing.generate("exportarPlaza", true);
+            
+            $('#procesando').modal('show');
+            $.ajax({
+                type: "POST",
+                url: recurso,
+                success: function (data, status, xhr) {
+                    $('.modal-backdrop').remove();
+                    $('#procesando').hide();
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('error en ajax=' + xhr.status);
+                }
+            });
+        }
+         
+    </script>
     <a href="{{path("addPlaza")}}" 
        class="btn btn-success">
-       <span class="glyphicon glyphicon-new-window"></span> Nueva Plaza</a>
-{% endblock %}
-     
+        <span class="glyphicon glyphicon-new-window"></span> Nueva Plaza</a>
+{% endblock %} 
+
 {% block contenido %}
-    <div class="container col-md-10 text-center" align="text-center">
-    {{ sg_datatables_render(datatable) }}
+    <div class="container-fluid" align="text-center">
+        {{sg_datatables_render(datatable)}}
     </div>
 {% endblock %}

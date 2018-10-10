@@ -25,7 +25,7 @@ class AusenciaDatatable extends AbstractDatatable {
             'stripe_classes' => ['strip1', 'strip2', 'strip3'],
             'individual_filtering' => true,
             'individual_filtering_position' => 'head',
-            'order' => array(array(0, 'asc')),
+            'order' => array(array(1, 'asc')),
             'order_cells_top' => true,
             'search_in_non_visible_columns' => true,
         ));
@@ -33,17 +33,23 @@ class AusenciaDatatable extends AbstractDatatable {
         $edificios = $this->em->getRepository('ComunBundle:Edificio')->findAll();
 
         $this->features->set(array(
-            'auto_width' => false,
+            'auto_width' => true,
             'ordering' => true,
-            'length_change' => true
+            'length_change' => true,
+            'state_save' => true
         ));
 
 
+
         $this->columnBuilder
-                ->add('id', Column::class, array('title' => 'Id', 'width' => '20px', 'searchable' => false))
-                ->add('codigo', Column::class, array('title' => 'Código Unif.', 'width' => '40px', 'searchable' => true))
-                ->add('descrip', Column::class, array('title' => 'Descripción', 'width' => '400px'))
-                ->add('janoCodigo', Column::class, array('title' => 'Código JANO', 'width' => '40px', 'searchable' => true))
+                ->add('id', Column::class, array('title' => 'Id', 'width'=>'20px',  'searchable' => false))
+                ->add('codigo', Column::class, array('title' => 'Código Unif.', 'width'=>'40px', 'searchable' => true))
+                ->add('descrip', Column::class, array('title' => 'Descripción'))
+                ->add('janoCodigo', Column::class, array('title' => 'Código JANO', 'searchable' => true))
+                ->add('sincroLog.estado.descripcion', Column::class, array(
+                    'title' => 'Estado Sincronización',
+                    'width' => '320px',
+                    'default_content' => ''))
                 ->add('enuso', Column::class, array(
                     'title' => 'Uso',
                     'filter' => array(SelectFilter::class,
@@ -100,8 +106,7 @@ class AusenciaDatatable extends AbstractDatatable {
                         ),
                     ),
                 ))
-                
-                ->add(null, ActionColumn::class, array('title' => 'Acciones', 'width'=>'400px',
+                ->add(null, ActionColumn::class, array('title' => 'Acciones',
                     'actions' => array(
                         array('route' => 'editAusencia',
                             'route_parameters' => array('id' => 'id'),
@@ -118,7 +123,20 @@ class AusenciaDatatable extends AbstractDatatable {
                             'attributes' => array('rel' => 'tooltip',
                                 'title' => 'Equivalencias',
                                 'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button'))) 
+                                'role' => 'button')),
+                        array('route' => 'descargaLogAusencia',
+                            'route_parameters' => array('id' => 'id'),
+                            'label' => 'Logs',
+                            'icon' => 'glyphicon glyphicon-download-alt',
+                            'render_if' => function ($row) {
+                                if ($row['sincroLog'] != null)
+                                    return true;
+                            },
+                            'attributes' => array('rel' => 'tooltip',
+                                'title' => 'Logs',
+                                'class' => 'btn btn-warning btn-xs',
+                                'role' => 'button'))
+                    )
                 ))
         ;
     }

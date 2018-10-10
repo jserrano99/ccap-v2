@@ -182,7 +182,8 @@ class PaController extends Controller {
 
         $root = $this->get('kernel')->getRootDir();
         $modo = $this->getParameter('modo');
-        $php_script = "php " . $root . "/scripts/costes/actualizacionPa.php " . $modo . "  " . $Pa->getId() . " " . $actuacion;
+        $php = $this->getParameter('php');
+        $php_script = $php." " . $root . "/scripts/costes/actualizacionPa.php " . $modo . "  " . $Pa->getId() . " " . $actuacion;
 
         $mensaje = exec($php_script, $SALIDA, $resultado);
         if ($resultado == 0) {

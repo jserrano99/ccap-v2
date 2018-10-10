@@ -42,7 +42,7 @@ class ModoPagoDatatable extends AbstractDatatable {
         $this->columnBuilder
                 ->add('id', Column::class, array('title' => 'Id', 'width' => '20px', 'searchable' => false))
                 ->add('codigo', Column::class, array('title' => 'Código', 'width' => '20px', 'searchable' => true))
-                ->add('descrip', Column::class, array('title' => 'Descripción', 'width' => '500px'))
+                ->add('descripcion', Column::class, array('title' => 'Descripción', 'width' => '500px'))
                 ->add('modoPagoMes', Column::class, array(
                     'title' => 'Modalidad de Pago',
                     'filter' => array(SelectFilter::class,
@@ -64,7 +64,7 @@ class ModoPagoDatatable extends AbstractDatatable {
                             'route_parameters' => array(
                                 'id' => 'id'),
                             'label' => 'Equivalencias',
-                            'icon' => 'glyphicon glyphicon-edit',
+                            'icon' => 'glyphicon glyphicon-th-list',
                             'attributes' => array(
                                 'rel' => 'tooltip',
                                 'title' => 'Equivalencias',

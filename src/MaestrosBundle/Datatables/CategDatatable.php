@@ -102,7 +102,7 @@ class CategDatatable extends AbstractDatatable {
                         array('route' => 'queryEqCateg',
                             'route_parameters' => array('categ_id' => 'id'),
                             'label' => 'Equivalencias',
-                            'icon' => 'glyphicon glyphicon-list',
+                            'icon' => 'glyphicon glyphicon-th-list',
                             'attributes' => array('rel' => 'tooltip',
                                 'title' => 'Ver Equivalencias Categoría',
                                 'class' => 'btn btn-primary btn-xs',
@@ -110,14 +110,14 @@ class CategDatatable extends AbstractDatatable {
                         array('route' => 'descargaLogCateg',
                             'route_parameters' => array('id' => 'id'),
                             'label' => 'Logs',
-                            'icon' => 'glyphicon glyphicon-edit',
+                            'icon' => 'glyphicon glyphicon-download-alt',
                             'render_if' => function ($row) {
                                 if ($row['sincroLog'] != null)
                                     return true;
                             },
                             'attributes' => array('rel' => 'tooltip',
                                 'title' => 'Logs',
-                                'class' => 'btn btn-primary btn-xs',
+                                'class' => 'btn btn-warning btn-xs',
                                 'role' => 'button'))
             )))
         ;

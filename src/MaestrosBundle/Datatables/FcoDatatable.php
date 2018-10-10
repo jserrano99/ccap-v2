@@ -51,7 +51,7 @@ class FcoDatatable extends AbstractDatatable {
                             'route_parameters' => array(
                                 'id' => 'id'),
                             'label' => 'Equivalencias',
-                            'icon' => 'glyphicon glyphicon-edit',
+                            'icon' => 'glyphicon glyphicon-th-list',
                             'attributes' => array(
                                 'rel' => 'tooltip',
                                 'title' => 'Equivalencias',

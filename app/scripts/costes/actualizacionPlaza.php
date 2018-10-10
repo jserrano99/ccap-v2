@@ -110,8 +110,8 @@ function procesoUpdate($Plaza) {
 function equivalenciasPlaza($Plaza) {
     $Equi["uf"] = selectEqCentro($Plaza["uf"], $Plaza["edificio"], "U");
     $Equi["p_asist"] = selectEqCentro($Plaza["pa"], $Plaza["edificio"], "P");
-    $Equi["catgen"] = selectEqCatGen($Plaza["catgen"], $Plaza["edificio"]);
-    $Equi["catfp"] = selectEqCatFp($Plaza["catfp"], $Plaza["edificio"]);
+    $Equi["catgen"] = selectEqCatGen($Plaza["catgen_id"], $Plaza["edificio_id"]);
+    $Equi["catfp"] = selectEqCatFp($Plaza["catfp_id"], $Plaza["edificio_id"]);
     //$Equi["turno"] = selectEqTurno($Plaza["turno"], $Plaza["edificio"]);
     
 //    $Equi["turno"] = $Plaza["turno"];
@@ -119,8 +119,8 @@ function equivalenciasPlaza($Plaza) {
     echo "**EQUIVALENCIAS**\n";
     echo "**-------------**\n";
     echo " UNIDAD FUNCIONAL= (" . $Plaza["uf"] . ") / (" . $Equi["uf"] . ")\n";
-    echo " PUNTO ASISTENCIAL= " . $Plaza["pa"] . ") / (" . $Equi["p_asist"] . ")\n";
-    echo " CATEGORIA GENERAL= " . $Plaza["catgen"] . ") / (" . $Equi["catgen"] . ")\n";
+    echo " PUNTO ASISTENCIAL= (" . $Plaza["pa"] . ") / (" . $Equi["p_asist"] . ")\n";
+    echo " CATEGORIA GENERAL= (" . $Plaza["catgen"] . ") / (" . $Equi["catgen"] . ")\n";
     echo " CATEGORIA FP= (" . $Plaza["catfp"] . ") / (" . $Equi["catfp"] . ")\n";
 
     return $Equi;

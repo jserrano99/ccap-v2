@@ -1,6 +1,0 @@
-[2018-10-02 12:30:17] gums_ausencia->codigo:JLS.INFO:  ++++++ COMIENZA PROCESO SINCRONIZACIÓN AUSENCIAS +++++++++++ [] []
-[2018-10-02 12:30:17] gums_ausencia->codigo:JLS.INFO: CONEXIÓN A CCAP CORRECTA= mysql:host=icmbdlds005.madrid.org; dbname=ccap ** [] []
-[2018-10-02 12:30:17] gums_ausencia->codigo:JLS.INFO:  ENTORNO = VALIDACIÓN [] []
-[2018-10-02 12:30:17] gums_ausencia->codigo:JLS.INFO: CONEXIÓN GENERADA CORRECTAMENTE: informix:host=icmbdava003.madrid.org; service=1528; database=jano_inte; server=ifxval; protocol=onsoctcp [] []
-[2018-10-02 12:30:17] gums_ausencia->codigo:JLS.INFO: CONEXIÓN GENERADA CORRECTAMENTE: informix:host=icmbdava003.madrid.org; service=1528; database=unif_01; server=ifxval; protocol=onsoctcp [] []
-[2018-10-02 12:30:17] gums_ausencia->codigo:JLS.INFO:  ==> SINCRONIZACIÓN AUSENCIA : ID= (550) CÓDIGO= (JLS) DESCRIPCIÓN= (PRUEBAS DE JOSE LUIS) ACTUACION= (INSERT) EQAUSENCIA_ID= (NULL) [] []

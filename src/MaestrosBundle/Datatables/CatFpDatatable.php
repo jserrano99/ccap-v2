@@ -90,7 +90,7 @@ class CatFpDatatable extends AbstractDatatable {
                         array('route' => 'queryEqCatFp',
                             'route_parameters' => array('catfp_id' => 'id'),
                             'label' => 'Equivalencias',
-                            'icon' => 'glyphicon glyphicon-list',
+                            'icon' => 'glyphicon glyphicon-th-list',
                             'attributes' => array('rel' => 'tooltip',
                                 'title' => 'Ver Equivalencias',
                                 'class' => 'btn btn-primary btn-xs',
@@ -98,14 +98,14 @@ class CatFpDatatable extends AbstractDatatable {
                         array('route' => 'descargaLogCatFp',
                             'route_parameters' => array('id' => 'id'),
                             'label' => 'Logs',
-                            'icon' => 'glyphicon glyphicon-edit',
+                            'icon' => 'glyphicon glyphicon-download-alt',
                             'render_if' => function ($row) {
                                 if ($row['sincroLog'] != null )
                                     return true;
                             },
                             'attributes' => array('rel' => 'tooltip',
                                 'title' => 'Logs',
-                                'class' => 'btn btn-primary btn-xs',
+                                'class' => 'btn btn-warning btn-xs',
                                 'role' => 'button'))
                         )))
         ;

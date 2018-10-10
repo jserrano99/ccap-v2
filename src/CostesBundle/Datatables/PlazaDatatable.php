@@ -32,7 +32,8 @@ class PlazaDatatable extends AbstractDatatable {
      */
     public function buildDatatable(array $options = array()) {
         $this->language->set(array(
-            'cdn_language_by_locale' => true
+            //'cdn_language_by_locale' => true
+            'language' => 'es'
         ));
 
         $this->ajax->set(array(
@@ -49,14 +50,48 @@ class PlazaDatatable extends AbstractDatatable {
             'stripe_classes' => ['strip1', 'strip2', 'strip3'],
             'individual_filtering' => true,
             'individual_filtering_position' => 'head',
-            'order' => array(array(0, 'asc')),
+            'order' => array(array(1, 'asc')),
             'order_cells_top' => true,
+            'order_classes' => true,
             'search_in_non_visible_columns' => true,
+//            'dom' => 'Bfrtip'
+            'dom' => 'lBfrtip',
+            'length_menu' => array('10', '25', '75', '100', '5000')
         ));
 
-        $this->extensions->set(array());
+        $this->extensions->set(array(
+            'buttons' => array(
+                'show_buttons' => array('copy'),
+                'create_buttons' => array(
+                    array(
+                        'extend' => 'excel',
+                        'text' => 'Exportar Excel',
+                        'button_options' => array(
+                            'exportOptions' => array(
+                                    'search' => 'none'
+                                )
+                            )
+                        ),
+                    array(
+                        'extend' => 'pdf',
+                        'text' => 'Pdf',
+                        'button_options' => array(
+                            'exportOptions' => array(
+                                'columns' => array('1', '2', '3', '4', '5', '6', '7', '8'),
+                            ),
+                            'orientation' => 'landscape'
+                        )
+                    )
+                )
+            )
+        ));
 
-        $this->features->set(array());
+        $this->features->set(array(
+            'auto_width' => true,
+            'ordering' => true,
+            'length_change' => true,
+            'state_save' => false
+        ));
 
         $UfAll = $this->getEntityManager()->getRepository('CostesBundle:Uf')->createQueryBuilder('u')
                         ->orderBy('u.descripcion', 'ASC')
@@ -67,6 +102,10 @@ class PlazaDatatable extends AbstractDatatable {
                         ->orderBy('u.descripcion', 'ASC')
                         ->where("u.enuso = 'S'")
                         ->getQuery()->getResult();
+        $CatGenAll = $this->getEntityManager()->getRepository('MaestrosBundle:CatGen')->createQueryBuilder('u')
+                        ->orderBy('u.descripcion', 'ASC')
+                        ->where("u.enuso = 'S'")
+                        ->getQuery()->getResult();
 
         $this->columnBuilder
                 ->add('id', Column::class, array(
@@ -74,10 +113,10 @@ class PlazaDatatable extends AbstractDatatable {
                     'width' => '25px'))
                 ->add('cias', Column::class, array(
                     'title' => 'CIAS',
-                    'width' => '25px'))
+                    'width' => '95px'))
                 ->add('uf.oficial', Column::class, array(
                     'title' => 'Código',
-                    'width' => '25px'))
+                    'width' => '65px'))
                 ->add('uf.descripcion', Column::class, array(
                     'title' => 'Unidad Funcional',
                     'width' => '220px',
@@ -88,7 +127,7 @@ class PlazaDatatable extends AbstractDatatable {
                             'search_type' => 'eq'))))
                 ->add('pa.oficial', Column::class, array(
                     'title' => 'Código',
-                    'width' => '25px'))
+                    'width' => '65px'))
                 ->add('pa.descripcion', Column::class, array(
                     'title' => 'Punto Asistencial',
                     'width' => '220px',
@@ -97,13 +136,21 @@ class PlazaDatatable extends AbstractDatatable {
                             'multiple' => false,
                             'select_options' => array('' => 'Todo') + $this->getOptionsArrayFromEntities($PaAll, 'descripcion', 'descripcion'),
                             'search_type' => 'eq'))))
-                ->add('ceco.codigo', Column::class, array(
-                    'title' => 'CECO',
-                    'width' => '25px',
+                ->add('cecoActual.codigo', Column::class, array(
+                    'title' => 'Ceco Actual',
+                    'width' => '65px',
                     'default_content' => ''))
+                ->add('catGen.descripcion', Column::class, array(
+                    'title' => 'Cat. General',
+                    'width' => '220px',
+                    'filter' => array(SelectFilter::class,
+                        array(
+                            'multiple' => false,
+                            'select_options' => array('' => 'Todo') + $this->getOptionsArrayFromEntities($CatGenAll, 'descripcion', 'descripcion'),
+                            'search_type' => 'eq'))))
                 ->add('amortizada', Column::class, array(
                     'title' => 'Amortizada',
-                    'width' => '20px',
+                    'width' => '45px',
                     'filter' => array(SelectFilter::class,
                         array(
                             'search_type' => 'eq',
@@ -119,8 +166,8 @@ class PlazaDatatable extends AbstractDatatable {
                     ),
                 ))
                 ->add('sincroLog.estado.descripcion', Column::class, array(
-                    'title' => 'Log',
-                    'width' => '120px',
+                    'title' => 'Estado Sincronización',
+                    'width' => '220px',
                     'default_content' => ''))
                 ->add(null, ActionColumn::class, array(
                     'title' => 'Acciones',
@@ -136,14 +183,14 @@ class PlazaDatatable extends AbstractDatatable {
                         array('route' => 'descargaLogPlaza',
                             'route_parameters' => array('id' => 'id'),
                             'label' => 'Logs',
-                            'icon' => 'glyphicon glyphicon-edit',
+                            'icon' => 'glyphicon glyphicon-download-alt',
                             'render_if' => function ($row) {
                                 if ($row['sincroLog'] != null)
                                     return true;
                             },
                             'attributes' => array('rel' => 'tooltip',
                                 'title' => 'Logs',
-                                'class' => 'btn btn-primary btn-xs',
+                                'class' => 'btn btn-warning btn-xs',
                                 'role' => 'button'))
             )))
         ;

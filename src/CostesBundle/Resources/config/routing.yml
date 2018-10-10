@@ -37,9 +37,9 @@ editPlaza:
 queryPlaza:
     path:   /plaza/query
     defaults: { _controller: CostesBundle:Plaza:query}
-verPlaza:
-    path:   /plaza/verPlaza/{plaza_id}
-    defaults: { _controller: CostesBundle:Plaza:verPlaza}
+queryCecos:
+    path:   /plaza/verCecos/{plaza_id}
+    defaults: { _controller: CostesBundle:Plaza:verCecos}
 verPlazaSinCeco:
     path:   /plaza/verPlazaSinCeco
     defaults: { _controller: CostesBundle:Plaza:verPlazaSinCeco}
@@ -50,12 +50,21 @@ sincroPlaza:
     defaults: { _controller: CostesBundle:Plaza:sincro}
     options:
         expose: true
+verCecos:
+    path:   /plaza/verceco/{plaza_id}
+    defaults: { _controller: CostesBundle:Plaza:verCecos}
+    options:
+        expose: true
+exportarPlaza:
+    path:   /plaza/exportar
+    defaults: { _controller: CostesBundle:Plaza:exportar}
+    options:
+        expose: true
 descargaLogPlaza:
     path:   /plaza/descargaLog/{id}
     defaults: { _controller: CostesBundle:Plaza:descargaLog}
     options:
         expose: true
-
 calcularCIAS:
     path:   /plaza/calcularCias/{uf_id}/{pa_id}/{catgen_id}
     defaults: { _controller: CostesBundle:Plaza:calcularCias}
@@ -79,6 +88,22 @@ importaCecoCias:
 verPlazasSinCeco:
     path:   /plaza/verplazassinceco
     defaults: { _controller: CostesBundle:Plaza:verPlazasSinCeco}
+    options:
+        expose: true
+cambiarAsignacion:
+    path:   /plaza/cambiarAsignacion/{cias}/{nuevoCeco}/{fInicio}/{cecoAnterior_id}
+    defaults: { _controller: CostesBundle:Plaza:cambiarAsignacion}
+    options:
+        expose: true
+    
+verCecoCias:
+    path:   /plaza/cecocias/query/{plaza_id}
+    defaults: { _controller: CostesBundle:Plaza:verCecoCias}
+    options:
+        expose: true
+addCecoCias:
+    path:   /plaza/cecocias/add/{plaza_id}
+    defaults: { _controller: CostesBundle:Plaza:addCecoCias}
     options:
         expose: true
 #
@@ -120,32 +145,6 @@ verCias:
 descargaLogCeco:
     path:   /ceco/descargaLog/{id}
     defaults: { _controller: CostesBundle:Ceco:descargaLog}
-    options:
-        expose: true
-#
-# CecoCias
-#
-queryCecoCias:
-    path:   /cecocias/query
-    defaults: { _controller: CostesBundle:CecoCias:query}
-    options:
-        expose: true
-addCecoCias:
-    path:   /cecocias/add
-    defaults: { _controller: CostesBundle:CecoCias:add}
-    options:
-        expose: true
-deleteCecoCias: 
-    path:   /cecocias/delete/{cecocias_id}
-    defaults: { _controller: CostesBundle:CecoCias:delete}
-    options:
-        expose: true
-asignarCeco:
-    path:   /cecocias/asignarCeco/{plaza_id}
-    defaults: { _controller: CostesBundle:CecoCias:asignarCeco}
-replicaCecoCias:
-    path:   /cecocias/replica/{cecocias_id}
-    defaults: { _controller: CostesBundle:CecoCias:replica}
     options:
         expose: true
 #

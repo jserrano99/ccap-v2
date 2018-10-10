@@ -1,8 +1,0 @@
-[2018-10-02 13:00:59] gums_ausencia->codigo:JJ2.INFO:  ++++++ COMIENZA PROCESO SINCRONIZACIÓN AUSENCIAS +++++++++++ [] []
-[2018-10-02 13:00:59] gums_ausencia->codigo:JJ2.INFO: CONEXIÓN A CCAP CORRECTA= mysql:host=icmbdlds005.madrid.org; dbname=ccap ** [] []
-[2018-10-02 13:00:59] gums_ausencia->codigo:JJ2.INFO:  ENTORNO = VALIDACIÓN [] []
-[2018-10-02 13:00:59] gums_ausencia->codigo:JJ2.INFO: CONEXIÓN GENERADA CORRECTAMENTE: informix:host=icmbdava003.madrid.org; service=1528; database=jano_inte; server=ifxval; protocol=onsoctcp [] []
-[2018-10-02 13:00:59] gums_ausencia->codigo:JJ2.INFO: CONEXIÓN GENERADA CORRECTAMENTE: informix:host=icmbdava003.madrid.org; service=1528; database=unif_01; server=ifxval; protocol=onsoctcp [] []
-[2018-10-02 13:00:59] gums_ausencia->codigo:JJ2.INFO:  ==> SINCRONIZACIÓN AUSENCIA : ID= (553) CÓDIGO= (JJ2) DESCRIPCIÓN= (OTRA PRUEBA) ACTUACION= (INSERT) EQAUSENCIA_ID= (NULL) [] []
-[2018-10-02 13:00:59] gums_ausencia->codigo:JJ2.INFO:  Parametros = 77 [] []
-[2018-10-02 13:00:59] gums_ausencia->codigo:JJ2.INFO: **PDOERROR EN INSERT AUSENCIAS CODIGO= JJ2 DESCRIPCION= OTRA PRUEBA  SQLSTATE[23000]: Integrity constraint violation: -391 [Informix][Informix ODBC Driver][Informix]Cannot insert a null into column (ausencias.redondeo). (SQLExecute[-391] at /usr/PRODUCTO/apache_jano/PDO_INFORMIX-1.3.3/informix_statement.c:885) ISAM: 264 [] []

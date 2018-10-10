@@ -18,7 +18,7 @@ function crearCentroUnif($PA) {
             ":f_creacion" => $PA["fecha_creacion"],
             ":oficial" => $PA["oficial"],
             ":da" => $PA["da"],
-            ":gerencia" => $PA["edificio"]);
+            ":gerencia" => $PA["gerencia"]);
         $insert = $query->execute($paramsCentros);
         if ($insert == 0) {
             echo "**ERROR EN INSERT CENTROS BD. UNIFICADA " . $PA["pa"] . "\n";
@@ -132,7 +132,7 @@ function updateCentroUnif($PA) {
             ":f_creacion" => $PA["fechaCreacion"],
             ":oficial" => $PA["oficial"],
             ":da" => $PA["da"],
-            ":gerencia" => $PA["edificio"]);
+            ":gerencia" => $PA["gerencia"]);
         $insert = $query->execute($paramsCentros);
         if ($insert == 0) {
             echo "**ERROR EN UPDATE CENTROS BD. UNIFICADA " . $PA["pa"] . "\n";

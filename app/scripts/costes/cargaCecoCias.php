@@ -78,14 +78,24 @@ foreach ($resultSet as $row) {
     }
 
     try {
+        $sentencia = " insert into ccap_cecocias (ceco_id, plaza_id, f_inicio) " 
+                ." values (:ceco_id, :plaza_id, :f_inicio) ";
+
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":plaza_id" => $plaza_id,
+            ":ceco_id" => $ceco["id"],
+            ":f_inicio" => '01/01/2001');
+        $insert = $query->execute($params);
+        
         $sentencia = " update ccap_plazas "
-                . "set ceco_id = :ceco_id "
+                . "set ceco_actual_id = :ceco_id "
                 . " where id = :plaza_id ";
 
         $query = $JanoControl->prepare($sentencia);
         $params = array(":plaza_id" => $plaza_id,
             ":ceco_id" => $ceco["id"]);
         $insert = $query->execute($params);
+        
         if ($insert == 0) {
             echo " error actualización ceco "
             . " CIAS=" . $row["CIAS"]

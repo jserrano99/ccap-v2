@@ -39,6 +39,8 @@ class SincroLogDatatable extends AbstractDatatable {
             'order' => array(array(0, 'desc')),
             'order_cells_top' => true,
             'search_in_non_visible_columns' => true,
+            'dom' => 'Bfrtip',
+            
         ));
 
         $EstadosAll = $this->em->getRepository('ComunBundle:EstadoCargaInicial')->findAll();
@@ -49,6 +51,36 @@ class SincroLogDatatable extends AbstractDatatable {
             'length_change' => true,
             'state_save' => true
         ));
+
+
+//        $this->extensions->set(array(
+//            //'buttons' => true,
+//            'buttons' => array(
+//                'show_buttons' => array('copy', 'print'), // built-in buttons
+//                'create_buttons' => array(// custom buttons 
+//                    array(
+//                        'action' => array(
+//                            'template' => 'comun/action.js.twig',
+//                        //'vars' => array('id' => '2', 'test' => 'new value'),
+//                        ),
+//                        'text' => 'alert',
+//                    ),
+//                    array(
+//                        'extend' => 'csv',
+//                        'text' => 'custom csv button',
+//                    ),
+//                    array(
+//                        'extend' => 'pdf',
+//                        'text' => 'my pdf',
+//                        'button_options' => array(
+//                            'exportOptions' => array(
+//                                'columns' => array('1', '2'),
+//                            ),
+//                        ),
+//                    ),
+//                ),
+//            ),
+//        ));
 
 
         $this->columnBuilder

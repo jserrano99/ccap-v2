@@ -99,7 +99,7 @@ class CatGenDatatable extends AbstractDatatable {
                         array('route' => 'queryEqCatGen',
                             'route_parameters' => array('catgen_id' => 'id'),
                             'label' => 'Equivalencias',
-                            'icon' => 'glyphicon glyphicon-list',
+                            'icon' => 'glyphicon glyphicon-th-list',
                             'attributes' => array('rel' => 'tooltip',
                                 'title' => 'Ver Equivalencias',
                                 'class' => 'btn btn-primary btn-xs',
@@ -107,7 +107,7 @@ class CatGenDatatable extends AbstractDatatable {
                         array('route' => 'descargaLogCatGen',
                             'route_parameters' => array('id' => 'id'),
                             'label' => 'Logs',
-                            'icon' => 'glyphicon glyphicon-edit',
+                            'icon' => 'glyphicon glyphicon-download-alt',
                             'render_if' => function ($row) {
                                 if ($row['sincroLog'] != null)
                                     return true;

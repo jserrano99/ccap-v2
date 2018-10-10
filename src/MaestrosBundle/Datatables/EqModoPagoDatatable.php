@@ -51,7 +51,7 @@ class EqModoPagoDatatable extends AbstractDatatable {
                             'search_type' => 'eq'))))
                 ->add('codigoLoc', Column::class, array('title' => 'Código Local', 'width' => '30px'))
                 ->add('modoPago.codigo', Column::class, array('title' => 'Codigo Unificado', 'width' => '30px'))
-                ->add('modoPago.descrip', Column::class, array(
+                ->add('modoPago.descripcion', Column::class, array(
                     'title' => 'Descripción',
                     'filter' => array(SelectFilter::class,
                         array(

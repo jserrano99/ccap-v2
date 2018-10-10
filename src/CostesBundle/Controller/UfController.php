@@ -182,7 +182,8 @@ class UfController extends Controller {
 
         $root = $this->get('kernel')->getRootDir();
         $modo = $this->getParameter('modo');
-        $php_script = "php " . $root . "/scripts/costes/actualizacionUf.php " . $modo . "  " . $Uf->getId() . " " . $actuacion;
+        $php = $this->getParameter('php');
+        $php_script = $php." " . $root . "/scripts/costes/actualizacionUf.php " . $modo . "  " . $Uf->getId() . " " . $actuacion;
 
         $mensaje = exec($php_script, $SALIDA, $resultado);
         if ($resultado == 0) {

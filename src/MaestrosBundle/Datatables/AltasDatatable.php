@@ -6,7 +6,7 @@ use Sg\DatatablesBundle\Datatable\AbstractDatatable;
 use Sg\DatatablesBundle\Datatable\Style;
 use Sg\DatatablesBundle\Datatable\Column\Column;
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
-use Sg\DatatablesBundle\Datatable\Filter\SelectFilter; 
+use Sg\DatatablesBundle\Datatable\Filter\SelectFilter;
 
 class AltasDatatable extends AbstractDatatable {
 
@@ -35,14 +35,18 @@ class AltasDatatable extends AbstractDatatable {
         $this->features->set(array(
             'auto_width' => false,
             'ordering' => true,
-            'length_change'=> true
+            'length_change' => true
         ));
 
 
         $this->columnBuilder
                 ->add('id', Column::class, array('title' => 'Id', 'width' => '20px', 'searchable' => false))
-                ->add('codigo', Column::class, array('title' => 'Código','width' => '20px', 'searchable' => true))
-                ->add('descripcion', Column::class, array( 'title' => 'Descripción', 'width' => '500px'))
+                ->add('codigo', Column::class, array('title' => 'Código', 'width' => '40px', 'searchable' => true))
+                ->add('descripcion', Column::class, array('title' => 'Descripción', 'width' => '500px'))
+                ->add('sincroLog.estado.descripcion', Column::class, array(
+                    'title' => 'Estado Sincronización',
+                    'width' => '320px',
+                    'default_content' => ''))
                 ->add('enuso', Column::class, array(
                     'title' => 'Uso',
                     'filter' => array(SelectFilter::class,
@@ -76,15 +80,29 @@ class AltasDatatable extends AbstractDatatable {
                             'route_parameters' => array(
                                 'altas_id' => 'id'),
                             'label' => 'Equivalencias',
-                            'icon' => 'glyphicon glyphicon-edit',
+                            'icon' => 'glyphicon glyphicon-th-list',
                             'attributes' => array(
                                 'rel' => 'tooltip',
                                 'title' => 'Equivalencias',
                                 'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button')
-                        )
+                                'role' => 'button'
+                            )
+                        ),
+                        array('route' => 'descargaLogAltas',
+                            'route_parameters' => array('id' => 'id'),
+                            'label' => 'Logs',
+                            'icon' => 'glyphicon glyphicon-download-alt',
+                            'render_if' => function ($row) {
+                                if ($row['sincroLog'] != null)
+                                    return true;
+                            },
+                            'attributes' => array('rel' => 'tooltip',
+                                'title' => 'Logs',
+                                'class' => 'btn btn-warning btn-xs',
+                                'role' => 'button'))
                     )
                 ))
+
         ;
     }
 

@@ -189,7 +189,8 @@ class CategController extends Controller {
 
         $root = $this->get('kernel')->getRootDir();
         $modo = $this->getParameter('modo');
-        $php_script = "php " . $root . "/scripts/maestros/actualizacionCateg.php " . $modo . " " . $Categ->getId() . " " . $actuacion . " " . $eqcateg_id;
+        $php = $this->getParameter('php');
+        $php_script = $php." " . $root . "/scripts/maestros/actualizacionCateg.php " . $modo . " " . $Categ->getId() . " " . $actuacion . " " . $eqcateg_id;
         $mensaje = exec($php_script, $SALIDA, $resultado);
 
         if ($resultado == 0) {

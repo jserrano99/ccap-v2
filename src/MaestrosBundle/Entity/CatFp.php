@@ -54,7 +54,7 @@ class CatFp {
      *
      * @ORM\ManyToOne(targetEntity="ComunBundle\Entity\SincroLog")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sincro_log_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sincro_log_id", referencedColumnName="id", onDelete="SET NULL")
      * })
      */
 

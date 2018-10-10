@@ -5,6 +5,41 @@ include_once __DIR__ . '../../../vendor/autoload.php';
 /* * ****************************************
  * CONEXIÓN Y DESCONXESIÓN A BASE DE DATOS *
  * ***************************************** */
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $id
+ * @return type
+ */
+function selectAltasById($id) {
+    global $JanoControl;
+    try {
+        $sentencia = " select t1.*, t2.codigo as movipat,t3.codigo as modocupa, t4.codigo as modopago from gums_altas as t1 "
+                . " right join gums_movipat as t2 on t2.id = t1.movipat_id "
+                . " right join gums_modocupa as t3 on t3.id = t1.modocupa_id"
+                . " right join gums_modopago as t4 on t4.id = t1.modopago_id"
+                . " where t1.id = :id ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":id" => $id);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        if ($res) {
+            return $res;
+        } else {
+            echo "**ERROR NO EXISTE GUMS_ALTAS PARA ID= " . $id . "\n";
+            return null;
+        }
+    } catch (PDOException $ex) {
+        echo " ***PDOERROR EN GUMS_ALTAS PARA ID=" . $id . " ERROR=" . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $id
+ * @return type
+ */
 
 function selectCatFpById($id) {
     global $JanoControl;
@@ -26,7 +61,12 @@ function selectCatFpById($id) {
         return null;
     }
 }
-
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $catfp
+ * @return type
+ */
 function selectCatFp($catfp) {
     global $JanoControl;
     if ($catfp == null)
@@ -49,7 +89,12 @@ function selectCatFp($catfp) {
         return null;
     }
 }
-
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $modalidad
+ * @return type
+ */
 function selectModalidad($modalidad) {
     global $JanoControl;
     try {
@@ -70,7 +115,13 @@ function selectModalidad($modalidad) {
         return null;
     }
 }
-
+/**
+ * 
+ * @global type $ERROR
+ * @global type $sdterr
+ * @param type $datosConexion
+ * @return \PDO
+ */
 function conexionPDO($datosConexion) {
     global $ERROR, $sdterr;
     $conexion = 0;
@@ -104,6 +155,10 @@ function conexionPDO($datosConexion) {
  * Función jano_ctrol() establece la conexión a la base de datos mysql de control 
  * ***************************************************************************** 
  */
+/**
+ * 
+ * @return \PDO
+ */
 function jano_ctrl() {
 
     $filename = __DIR__ . '/../config/parameters.yml';
@@ -129,7 +184,12 @@ function jano_ctrl() {
     }
     return $conn;
 }
-
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $tipo
+ * @return type
+ */
 function selectBaseDatosAreas($tipo) {
     global $JanoControl;
     try {
@@ -156,7 +216,13 @@ function selectBaseDatosAreas($tipo) {
     }
     return $resultSet;
 }
-
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $tipo
+ * @param type $areas
+ * @return type
+ */
 function selectBaseDatos($tipo, $areas) {
     global $JanoControl;
     try {
@@ -180,7 +246,13 @@ function selectBaseDatos($tipo, $areas) {
         return null;
     }
 }
-
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $tipo
+ * @param type $edificio
+ * @return type
+ */
 function selectBaseDatosEdificio($tipo, $edificio) {
     global $JanoControl;
     try {
@@ -206,7 +278,12 @@ function selectBaseDatosEdificio($tipo, $edificio) {
         return null;
     }
 }
-
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $edificio
+ * @return type
+ */
 function selectEdificioId($edificio) {
     global $JanoControl;
     try {
@@ -227,7 +304,12 @@ function selectEdificioId($edificio) {
         return null;
     }
 }
-
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $ceco_id
+ * @return type
+ */
 function selectCeco($ceco_id) {
     global $JanoControl;
     try {
@@ -249,7 +331,12 @@ function selectCeco($ceco_id) {
         return null;
     }
 }
-
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $codigo
+ * @return type
+ */
 function SelectCecobyCodigo($codigo) {
     global $JanoControl;
     try {
@@ -271,7 +358,12 @@ function SelectCecobyCodigo($codigo) {
         return null;
     }
 }
-
+/**
+ * 
+ * @global type $JanoInte
+ * @param type $codigo_uni
+ * @return boolean
+ */
 function insertEqCeco($codigo_uni) {
     global $JanoInte;
     try {
@@ -294,7 +386,12 @@ function insertEqCeco($codigo_uni) {
         return false;
     }
 }
-
+/**
+ * 
+ * @global type $JanoInte
+ * @param type $codigo_uni
+ * @return boolean
+ */
 function deleteEqCeco($codigo_uni) {
     global $JanoInte;
     try {
@@ -313,7 +410,12 @@ function deleteEqCeco($codigo_uni) {
         return false;
     }
 }
-
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $edificio
+ * @return type
+ */
 function selectEdificio($edificio) {
     global $JanoControl;
     try {
@@ -331,7 +433,12 @@ function selectEdificio($edificio) {
         return null;
     }
 }
-
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $da
+ * @return type
+ */
 function selectDa($da) {
     global $JanoControl;
     try {
@@ -355,7 +462,12 @@ function selectDa($da) {
  * Función para obtener los datos del puntos asistencial de la tabla 
  * centros de la base de datos unificada 
  */
-
+/**
+ * 
+ * @global type $JanoUnif
+ * @param type $codigo
+ * @return type
+ */
 function selectCentro($codigo) {
     global $JanoUnif;
     try {
@@ -374,7 +486,12 @@ function selectCentro($codigo) {
         return null;
     }
 }
-
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $codigoUni
+ * @return type
+ */
 function existeCentro($codigoUni) {
     global $JanoControl;
     try {
@@ -394,7 +511,12 @@ function existeCentro($codigoUni) {
         return null;
     }
 }
-
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $catgen
+ * @return type
+ */
 function selectCatGen($catgen) {
     global $JanoControl;
 
@@ -416,7 +538,12 @@ function selectCatGen($catgen) {
         return null;
     }
 }
-
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $catanexo
+ * @return type
+ */
 function selectCatAnexo($catanexo) {
     global $JanoControl;
 
@@ -438,7 +565,12 @@ function selectCatAnexo($catanexo) {
         return null;
     }
 }
-
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $codigo
+ * @return type
+ */
 function selectEpiAcc($codigo) {
     global $JanoControl;
     if ($codigo == null)
@@ -462,7 +594,12 @@ function selectEpiAcc($codigo) {
         return null;
     }
 }
-
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $codigo
+ * @return type
+ */
 function selectTipoIlt($codigo) {
     global $JanoControl;
     if ($codigo == null)
@@ -487,7 +624,12 @@ function selectTipoIlt($codigo) {
         return null;
     }
 }
-
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $codigo
+ * @return type
+ */
 function selectFco($codigo) {
     global $JanoControl;
     if ($codigo == null)
@@ -605,7 +747,7 @@ function selectGrupoCobro($grupoCobro) {
 function selectUf($uf) {
     global $JanoControl;
     try {
-        $sentencia = " select t1.*, t2.codigo as edificio, t3.codigo as da "
+        $sentencia = " select t1.*, t2.codigo as edificio, t3.codigo as da, t2.gerencia as gerencia "
                 . " from ccap_uf as t1  "
                 . " inner join comun_edificio as t2 on t2.id = t1.edificio_id "
                 . " inner join comun_da as t3 on t3.id = t1.da_id "
@@ -629,7 +771,7 @@ function selectUf($uf) {
 function selectUfById($id) {
     global $JanoControl;
     try {
-        $sentencia = " select t1.*, t2.codigo as edificio, t3.codigo as da "
+        $sentencia = " select t1.*, t2.codigo as edificio, t3.codigo as da, t2.gerencia as gerencia  "
                 . " from ccap_uf as t1  "
                 . " inner join comun_edificio as t2 on t2.id = t1.edificio_id "
                 . " inner join comun_da as t3 on t3.id = t1.da_id "
@@ -653,7 +795,7 @@ function selectUfById($id) {
 function selectPa($pa) {
     global $JanoControl;
     try {
-        $sentencia = " select t1.*, t2.codigo as edificio, t3.codigo as da "
+        $sentencia = " select t1.*, t2.codigo as edificio, t3.codigo as da, t2.gerencia as gerencia "
                 . " from ccap_pa as t1  "
                 . " inner join comun_edificio as t2 on t2.id = t1.edificio_id "
                 . " inner join comun_da as t3 on t3.id = t1.da_id "
@@ -677,7 +819,7 @@ function selectPa($pa) {
 function selectPaById($id) {
     global $JanoControl;
     try {
-        $sentencia = " select t1.*, t2.codigo as edificio, t3.codigo as da "
+        $sentencia = " select t1.*, t2.codigo as edificio, t3.codigo as da, t2.gerencia as gerencia  "
                 . " from ccap_pa as t1  "
                 . " inner join comun_edificio as t2 on t2.id = t1.edificio_id "
                 . " inner join comun_da as t3 on t3.id = t1.da_id "
@@ -754,7 +896,7 @@ function selectPlazaById($id) {
         $sentencia = " select t1.id, t1.cias, t2.uf, t4.codigo as modalidad,"
                 . " t3.pa, t5.codigo as catgen, t1.ficticia, t1.refuerzo, "
                 . " t6.codigo as catfp, t1.cupequi, t1.plantilla, t1.f_amortiza, t1.colaboradora, t1.f_creacion, t7.codigo as edificio, t1.observaciones,t1.horNormal "
-                . " ,t8.codigo as ceco, t1.turno"
+                . " ,t8.codigo as ceco, t1.turno, t2.edificio_id,t1.catgen_id, t1.catfp_id"
                 . " from ccap_plazas as t1 "
                 . " left join ccap_uf as t2 on t2.id = t1.uf_id "
                 . " left join ccap_pa as t3 on t3.id = t1.pa_id "
@@ -762,7 +904,7 @@ function selectPlazaById($id) {
                 . " left join gums_catgen as t5 on t5.id = t1.catgen_id"
                 . " left join gums_catfp as t6 on t6.id = t1.catfp_id"
                 . " left join comun_edificio as t7 on t7.id = t2.edificio_id"
-                . " left join ccap_cecos as t8 on t8.id = t1.ceco_id"
+                . " left join ccap_cecos as t8 on t8.id = t1.ceco_actual_id"
                 . " where t1.id = :id ";
         $query = $JanoControl->prepare($sentencia);
         $params = array(":id" => $id);
@@ -778,6 +920,38 @@ function selectPlazaById($id) {
         return null;
     }
 }
+
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $id
+ * @return type
+ */
+function selectAusenciaById($id) {
+    global $JanoControl;
+    try {
+        $sentencia = "select t1.*, t2.codigo as ocupacion, t3.codigo as epiacc, t4.codigo as tipo_ilt "
+                . " , t5.codigo as fco , t6.codigo as movipat, t7.codigo as modocupa, t8.codigo as ocupacion_new  "
+                . " from gums_ausencias as t1 "
+                . " left join gums_ocupacion as t2 on t1.ocupacion_id = t2.id "
+                . " left join gums_epiacc as t3 on t1.epiacc_id = t3.id "
+                . " left join gums_tipo_ilt as t4 on t1.tipo_ilt_id = t4.id "
+                . " left join gums_fco as t5 on t1.fco_id = t5.id "
+                . " left join gums_movipat as t6 on t1.movipat_id = t6.id "
+                . " left join gums_modocupa as t7 on t1.modocupa_id = t7.id "
+                . " left join gums_ocupacion as t8 on t1.ocupacion_new_id = t8.id "
+                . " where t1.id = :id";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":id" => $id);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        return $res;
+    } catch (PDOException $ex) {
+        echo "*** PDOERROR EN SELECT GUMS_AUSENCIA ID= (" . $id . ") ERROR= " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
 
 function conexionEdificio($codigo, $tipo) {
     $BasesDatos = selectBaseDatosEdificio($tipo, $codigo);
@@ -827,6 +1001,28 @@ function selectPlazabyCias($cias) {
     }
 }
 
+function selectEqAltas($altas_id, $edificio_id) {
+    global $JanoControl;
+    try {
+        $sentencia = " select codigo_loc from gums_eq_altas "
+                . " where edificio_id = :edificio_id and altas_id = :altas_id and enuso = 'S' ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":edificio_id" => $edificio_id,
+            ":altas_id" => $altas_id);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        if ($res) {
+            return $res['codigo_loc'];
+        } else {
+            echo "NO EXISTE EQUIVALENCIA(EQ_ALTAS) AUSENCIA_ID = " . $altas_id . " EDIFICIO_ID = " . $edificio_id . " NO SE TRATA \n";
+            return null;
+        }
+    } catch (PDOException $ex) {
+        echo "**PDOERROR EN EQUIVALENCIA(EQ_ALTAS) AUSENCIA_ID = " . $altas_id . " EDIFICIO_ID = " . $edificio_id . " " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
 function selectEqAusencia($ausencia_id, $edificio_id) {
     global $JanoControl;
     try {
@@ -870,7 +1066,75 @@ function selectEqCateg($categ_id, $edificio_id) {
         return null;
     }
 }
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $id
+ * @return type
+ */
+function selectEqAltasById($id) {
+    global $JanoControl;
+    try {
+        $sentencia = " select t1.id as id, t1.codigo_loc as codigo_loc , t3.codigo as codigo_uni "
+                . ", t1.edificio_id, t2.codigo as edificio "
+                . ", t1.altas_id as altas_id "
+                . " from gums_eq_altas as t1"
+                . " inner join gums_altas as t3 on t3.id = t1.altas_id "
+                . " inner join comun_edificio as t2 on t2.id = t1.edificio_id "
+                . " where t1.id = :id ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":id" => $id);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        if ($res) {
+            return $res;
+        } else {
+            echo "**ERROR NO EXISTE GUMS_EQ_ALTAS EQAUSENCIA_ID = " . $id . "\n";
+            return null;
+        }
+    } catch (PDOException $ex) {
+        echo "**PDOERROR EN GUMS_EQ_ALTAS EQAUSENCIA_ID = " . $id . " " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
 
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $id
+ * @return type
+ */
+function selectEqAusenciaById($id) {
+    global $JanoControl;
+    try {
+        $sentencia = " select t1.id as id, t1.codigo_loc as codigo_loc , t3.codigo as codigo_uni "
+                . ", t1.edificio_id, t2.codigo as edificio "
+                . ", t1.ausencia_id as ausencia_id "
+                . " from gums_eq_ausencias as t1"
+                . " inner join gums_ausencias as t3 on t3.id = t1.ausencia_id "
+                . " inner join comun_edificio as t2 on t2.id = t1.edificio_id "
+                . " where t1.id = :id ";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":id" => $id);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        if ($res) {
+            return $res;
+        } else {
+            echo "**ERROR NO EXISTE GUMS_EQ_AUSENCIAS EQAUSENCIA_ID = " . $id . "\n";
+            return null;
+        }
+    } catch (PDOException $ex) {
+        echo "**PDOERROR EN GUMS_EQ_AUSENCIAS EQAUSENCIA_ID = " . $id . " " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+/**
+ * 
+ * @global type $JanoControl
+ * @param type $id
+ * @return type
+ */
 function selectEqCategById($id) {
     global $JanoControl;
     try {
@@ -896,6 +1160,7 @@ function selectEqCategById($id) {
         return null;
     }
 }
+
 
 function selectEqCentro($codigo, $edificio, $vista) {
     global $JanoInte;
@@ -957,11 +1222,11 @@ function selectEqCatFp($catfp_id, $edificio_id) {
         if ($res) {
             return $res['codigo_loc'];
         } else {
-            echo "**ERROR NO EXISTE EQUIVALENCIA(EQ_CATFP) PARA CATFP_ID = " . $catfp_id . " EDIFICIO_ID = " . $edificio_id . "\n";
+            echo "**ERROR NO EXISTE EQUIVALENCIA(GUMS_EQ_CATFP) PARA CATFP_ID = " . $catfp_id . " EDIFICIO_ID = " . $edificio_id . "\n";
             return null;
         }
     } catch (PDOException $ex) {
-        echo "***PDOERROR EN EQUIVALENCIA(EQ_CATFP) CATFP_ID = " . $catfp_id . " EDIFICIO_ID = " . $edificio_id . " " . $ex->getMessage() . "\n";
+        echo "***PDOERROR EN EQUIVALENCIA(GUMS_EQ_CATFP) CATFP_ID = " . $catfp_id . " EDIFICIO_ID = " . $edificio_id . " " . $ex->getMessage() . "\n";
         return null;
     }
 }
@@ -1261,6 +1526,26 @@ function selectEqModoPago($modopago_id, $edificio_id) {
         }
     } catch (PDOException $ex) {
         echo "**PDOERROR EN SELECT EQUIVALENCIA(EQ_MODOPAGO) PARA MODOPAGO_ID= " . $modopago_id . " " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
+function selectCecoCiasById($id) {
+    global $JanoControl;
+    try {
+        $sentencia = " select * from ccap_cecocias where id = :id";
+        $query = $JanoControl->prepare($sentencia);
+        $params = array(":id" => $id);
+        $query->execute($params);
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+        if ($res) {
+            return $res;
+        } else {
+            echo "**ERROR NO EXISTE CCAP_CECOCIAS PARA ID= (".$id. ") \n";
+            return null;
+        }
+    } catch (PDOException $ex) {
+        echo "**PDOERROR CCAP_CECOCIAS PARA ID= (".$id. ") ERROR=". $ex->getMessage() . "\n";
         return null;
     }
 }

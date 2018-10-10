@@ -202,7 +202,8 @@ class CatGenController extends Controller {
 
         $root = $this->get('kernel')->getRootDir();
         $modo = $this->getParameter('modo');
-        $php_script = "php " . $root . "/scripts/maestros/actualizacionCatGen.php " . $modo . " " . $CatGen->getId() . " " . $actuacion . " " . $eqcatgen_id . " " . $edificio;
+        $php = $this->getParameter('php');
+        $php_script = $php." " . $root . "/scripts/maestros/actualizacionCatGen.php " . $modo . " " . $CatGen->getId() . " " . $actuacion . " " . $eqcatgen_id . " " . $edificio;
         $mensaje = exec($php_script, $SALIDA, $resultado);
 
         if ($resultado == 0) {

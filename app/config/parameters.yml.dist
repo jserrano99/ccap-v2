@@ -6,6 +6,7 @@ parameters:
     titulo_app_corto: TITULO CORTO
     entorno_alias: ENTORNO
     modo: PRUEBAS
+    php: /usr/PRODUCTO/apache_jano/php_7.1.1/bin/php
     database_host: 127.0.0.1
     database_port: ~
     database_name: symfony

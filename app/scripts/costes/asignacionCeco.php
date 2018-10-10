@@ -3,14 +3,15 @@
  * obtener todos los registros de movialta para un cias determinado
  */
 
-function selectMovialtabyCias($cias) {
+function selectMovialtabyCias($cias, $fInicio) {
     global $JanoUnif;
     try {
         $sentencia = " select t1.cip, t3.dni, t3.nombre, t3.ape12, t1.codigo, t1.cias, "
                 . " t2.fini, t2.uf, t2.p_asist, t2.cecos, t2.id as cca_id, t1.falta, t1.fbaja from movialta as t1 "
                 . " inner join cca  as t2 on t2.alta = t1.codigo "
                 . " inner join trab as t3 on t3.cip = t1.cip "
-                . " where t1.cias = :cias";
+                . " where t1.cias = :cias "
+                . " and t2.";
         $query = $JanoUnif->prepare($sentencia);
         $params = array(":cias" => $cias);
         $query->execute($params);
@@ -69,7 +70,7 @@ function asignacionCeco($Plaza) {
     /*
      * Tratamiento para la base de datos unificada
      */
-    $MovialtaAll = selectMovialtabyCias($Plaza["cias"]);
+    $MovialtaAll = selectMovialtabyCias($Plaza["cias"],$fInicio);
 
     foreach ($MovialtaAll as $movialta) {
         echo "==>Tratamiento DNI=" . $movialta["DNI"]

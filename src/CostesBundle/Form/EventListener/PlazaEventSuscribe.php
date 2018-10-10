@@ -47,21 +47,6 @@ class PlazaEventSuscribe implements EventSubscriberInterface
                     'disabled' => true,
                     "attr" => array("class" => "form-control ident")));
         }
-        if ($data->getCeco()== null ) {
-            $form->add('cecoInf', TextType::class, array(
-                    "label" => 'Centro de Coste',
-                    'required' => false,
-                    'disabled' => false,
-                    'mapped' => false,
-                    "attr" => array("class" => "form-control muycorto")));
-            $form->add('cecoDesc', TextType::class, array(
-                    "label" => 'Centro de Coste',
-                    'required' => false,
-                    'disabled' => true,
-                    'mapped' => false,
-                    "attr" => array("class" => "form-control corto")));
-        }
-        
         
         if (null === $data) {
             return;

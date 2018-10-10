@@ -30,7 +30,7 @@ class Edificio {
 
     
     /**
-     * @var codigo
+     * @var string
      *
      * @ORM\Column(name="codigo", type="string", length=2, nullable=false)
      */
@@ -44,10 +44,103 @@ class Edificio {
     private $descripcion;
 
     /**
-     * @var codigo
+     * @var string
      *
      * @ORM\Column(name="area", type="string", length=1, nullable=false)
      */
     private $area;
     
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="gerencia", type="string", length=2, nullable=false)
+     */
+    private $gerencia;
+    
+    
+    public function __toString() {
+        return $this->descripcion.' ('.$this->codigo.')';
+    }
+
+    /**
+     * Get id.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set codigo.
+     *
+     * @param string $codigo
+     *
+     * @return Edificio
+     */
+    public function setCodigo($codigo)
+    {
+        $this->codigo = $codigo;
+
+        return $this;
+    }
+
+    /**
+     * Get codigo.
+     *
+     * @return string
+     */
+    public function getCodigo()
+    {
+        return $this->codigo;
+    }
+
+    /**
+     * Set descripcion.
+     *
+     * @param string|null $descripcion
+     *
+     * @return Edificio
+     */
+    public function setDescripcion($descripcion = null)
+    {
+        $this->descripcion = $descripcion;
+
+        return $this;
+    }
+
+    /**
+     * Get descripcion.
+     *
+     * @return string|null
+     */
+    public function getDescripcion()
+    {
+        return $this->descripcion;
+    }
+
+    /**
+     * Set area.
+     *
+     * @param string $area
+     *
+     * @return Edificio
+     */
+    public function setArea($area)
+    {
+        $this->area = $area;
+
+        return $this;
+    }
+
+    /**
+     * Get area.
+     *
+     * @return string
+     */
+    public function getArea()
+    {
+        return $this->area;
+    }
 }

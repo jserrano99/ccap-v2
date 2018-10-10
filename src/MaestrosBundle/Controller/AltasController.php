@@ -82,7 +82,7 @@ class AltasController extends Controller {
             } catch (Doctrine\DBAL\DBALException $ex) {
                 $status = "ERROR GENERAL=" . $ex->getMessage();
                 $this->sesion->getFlashBag()->add("status", $status);
-                return $this->redirectToRoute("AltasAltas");
+                return $this->redirectToRoute("queryAltas");
             }
         }
 
@@ -165,7 +165,8 @@ class AltasController extends Controller {
 
         $root = $this->get('kernel')->getRootDir();
         $modo = $this->getParameter('modo');
-        $php_script = "php " . $root . "/scripts/maestros/actualizacionAltas.php " . $modo . " " . $Altas->getId() . " " . $actuacion . " " . $eqaltas_id;
+        $php = $this->getParameter('php');
+        $php_script = $php." " . $root . "/scripts/maestros/actualizacionAltas.php " . $modo . " " . $Altas->getId() . " " . $actuacion . " " . $eqaltas_id;
         $mensaje = exec($php_script, $SALIDA, $resultado);
 
         if ($resultado == 0) {
@@ -194,7 +195,7 @@ class AltasController extends Controller {
 
     public function descargaLogAction($id) {
         $em = $this->getDoctrine()->getManager();
-        $CatFp = $em->getRepository("MaestrosBundle:Altas")->find($id);
+        $Altas = $em->getRepository("MaestrosBundle:Altas")->find($id);
         $params = array("id" => $Altas->getSincroLog()->getId());
         return $this->redirectToRoute("descargaSincroLog", $params);
     }

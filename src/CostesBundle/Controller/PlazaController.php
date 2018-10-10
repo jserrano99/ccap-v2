@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use CostesBundle\Entity\CecoCias;
 
 class PlazaController extends Controller {
 
@@ -73,7 +75,7 @@ class PlazaController extends Controller {
             $responseService->setDatatable($datatable);
             $datatableQueryBuilder = $responseService->getDatatableQueryBuilder();
             $qb = $datatableQueryBuilder->getQb();
-            $qb->andWhere("ceco.codigo is null");
+            $qb->andWhere("cecoActual.codigo is null");
             return $responseService->getResponse();
         }
 
@@ -90,27 +92,27 @@ class PlazaController extends Controller {
         return $this->render("costes/plaza/verPlaza.html.twig", $params);
     }
 
-    public function verPlazaSinCecoAction() {
-        $em = $this->getDoctrine()->getManager();
-        $Plaza_repo = $em->getRepository("CostesBundle:Plaza");
-        $Plazas = $Plaza_repo->createQueryBuilder('u')
-                        ->where("u.ceco is null and u.amortizada != 'S' ")
-                        ->getQuery()->getResult();
-
-        $params = array("plazaAll" => $Plazas);
-        return $this->render("costes/plaza/plazaSinCeco.html.twig", $params);
-    }
-
     public function editAction(Request $request, $id) {
         $em = $this->getDoctrine()->getManager();
-        $Plaza_repo = $em->getRepository("CostesBundle:Plaza");
-        $Ceco_repo = $em->getRepository("CostesBundle:Ceco");
+        $Plaza = $em->getRepository("CostesBundle:Plaza")->find($id);
 
-        $Plaza = $Plaza_repo->find($id);
+        $isAjax = $request->isXmlHttpRequest();
+        $datatable = $this->get('sg_datatables.factory')->create(\CostesBundle\Datatables\CecoCiasDatatable::class);
+        $datatable->buildDatatable();
+
+        if ($isAjax) {
+            $responseService = $this->get('sg_datatables.response');
+            $responseService->setDatatable($datatable);
+            $datatableQueryBuilder = $responseService->getDatatableQueryBuilder();
+            $qb = $datatableQueryBuilder->getQb();
+            $qb->andWhere('plaza = :plaza');
+            $qb->setParameter('plaza', $Plaza);
+
+            return $responseService->getResponse();
+        }
 
         $form = $this->createForm(\CostesBundle\Form\PlazaType::class, $Plaza);
         $form->handleRequest($request);
-
         if ($form->isSubmitted()) {
             try {
                 if ($Plaza->getFAmortiza() == null) {
@@ -118,19 +120,12 @@ class PlazaController extends Controller {
                 } else {
                     $Plaza->setAmortizada('S');
                 }
-                if ($Plaza->getCeco() == null) {
-                    if ($form->get('cecoInf')->getData() != null) {
-                        $Ceco = $Ceco_repo->findCecoByCodigo($form->get('cecoInf')->getData());
-                        $Plaza->setCeco($Ceco);
-                    }
-                }
 
                 $em->persist($Plaza);
                 $em->flush();
                 $params = array("id" => $Plaza->getId(),
                     "actuacion" => "UPDATE");
                 return $this->redirectToRoute("sincroPlaza", $params);
-                ;
             } catch (UniqueConstraintViolationException $ex) {
                 $status = " YA EXISTE UNA PLAZA CON ESTE CIAS : " . $Plaza->getCias();
                 $this->sesion->getFlashBag()->add("status", $status);
@@ -143,15 +138,13 @@ class PlazaController extends Controller {
 
         $params = array("form" => $form->createView(),
             "plaza" => $Plaza,
-            "accion" => "MODIFICACIÓN");
+            "accion" => "MODIFICACIÓN",
+            "datatable" => $datatable);
         return $this->render("costes/plaza/edit.html.twig", $params);
     }
 
     public function addAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-        $Plaza_repo = $em->getRepository("CostesBundle:Plaza");
-        $Ceco_repo = $em->getRepository("CostesBundle:Ceco");
-
         $Plaza = new \CostesBundle\Entity\Plaza();
 
         $form = $this->createForm(\CostesBundle\Form\PlazaType::class, $Plaza);
@@ -163,10 +156,6 @@ class PlazaController extends Controller {
                     $Plaza->setAmortizada('N');
                 } else {
                     $Plaza->setAmortizada('S');
-                }
-                if ($form->get('cecoInf')->getData() != null) {
-                    $Ceco = $Ceco_repo->findCecoByCodigo($form->get('cecoInf')->getData());
-                    $Plaza->setCeco($Ceco);
                 }
                 $em->persist($Plaza);
                 $em->flush();
@@ -186,7 +175,8 @@ class PlazaController extends Controller {
 
         $params = array("form" => $form->createView(),
             "plaza" => $Plaza,
-            "accion" => "NUEVA");
+            "accion" => "NUEVA",
+            "datatable" => null);
         return $this->render("costes/plaza/edit.html.twig", $params);
     }
 
@@ -252,6 +242,7 @@ class PlazaController extends Controller {
         if ($Ceco) {
             $Ceco = $Ceco[0];
         } else {
+            $Ceco["id"] = null;
             $Ceco["codigo"] = $codigo;
             $Ceco["descripcion"] = "ERROR NO EXISTE CECO";
         }
@@ -303,9 +294,9 @@ class PlazaController extends Controller {
     }
 
     public function validarFichero($fichero) {
-        $Cabecera = array("A" => "CIAS",
-            "B" => "CECO",
-            "C" => "ACTUACION");
+        $Cabecera = array("A" => "CECO",
+            "B" => "CIAS",
+            "C" => "FECHA INICIO");
 
         $file = "upload/" . $fichero->getClientOriginalName();
         $PHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load($file);
@@ -332,10 +323,10 @@ class PlazaController extends Controller {
 
         $ficheroLog = 'cargaFichero-' . $CargaFichero->getId() . '.log';
         $ServicioLog = $this->get('app.escribelog');
-        $ServicioLog->setLogger('FICHERO: '.$ficheroLog);
+        $ServicioLog->setLogger('FICHERO: ' . $ficheroLog);
         $ServicioLog->setMensaje("==> COMIENZA TRATAMIENTO PARA EL FICHERO: ");
         $ServicioLog->escribeLog($ficheroLog);
-                
+
         $error = 0;
         for ($i = 2; $i <= $highestRow; $i++) {
             $em = $this->getDoctrine()->getManager();
@@ -346,59 +337,65 @@ class PlazaController extends Controller {
             $headingsArray = $objWorksheet->rangeToArray('A' . $i . ':E' . $i, null, true, true, true);
             $headingsArray = $headingsArray[$i];
 
-            $cias = $headingsArray["A"];
-            $ceco = $headingsArray["B"];
-            $actuacion = $headingsArray["C"];
+            $ceco = $headingsArray["A"];
+            $cias = $headingsArray["B"];
+            $fInicio = $headingsArray["C"];
             $Plaza = $Plaza_repo->findPlazaByCias($cias);
             $Ceco = $Ceco_repo->findCecoByCodigo($ceco);
 
-            $ServicioLog->setLogger('=>CIAS:' . $cias . " => CECO:". $ceco);
+            $ServicioLog->setLogger('=>CIAS:' . $cias . " => CECO:" . $ceco);
             if ($Plaza == null) {
-                $ServicioLog->setMensaje("**ERROR NO EXISTE PLAZA PARA EL CIAS: ".$cias);
+                $ServicioLog->setMensaje("**ERROR NO EXISTE PLAZA PARA EL CIAS: " . $cias);
                 $ServicioLog->escribeLog($ficheroLog);
                 $error = 1;
                 continue;
             }
             if ($Ceco == null) {
-                $ServicioLog->setMensaje("**ERROR NO EXISTE CECO : ".$ceco);
+                $ServicioLog->setMensaje("**ERROR NO EXISTE CECO : " . $ceco);
                 $ServicioLog->escribeLog($ficheroLog);
                 $error = 1;
                 continue;
             }
+            $fechaInicio = new \DateTime($fInicio);
+            $fechaFin = $fechaInicio > sub(new \DateInterval('P1D'));
 
-            switch ($actuacion) {
-                case "INSERT":
-                    $Plaza->setCeco($Ceco);
-                    break;
-                case "DELETE":
-                    $Plaza->setCeco(null);
-                    break;
-            }
-            try {
-                $em->persist($Plaza);
+            if ($Plaza->getCecoActual() != null) {
+                $ServicioLog->setMensaje("CERRADO CECOCIAS CIAS= (" . $Plaza->getCias() . ") CECO =(" . $Plaza->getCecoActual()->getCodigo() . ") FECHA= (" . $fechaFin . ")");
+                $ServicioLog->escribeLog($ficheroLog);
+                $CecoCias = $this->selectCecocias($Plaza);
+                $CecoCias->setFFin($fechaFin);
+                $em->persist($CecoCias);
                 $em->flush();
-                $ServicioLog->setMensaje('ASIGNADO CECO: ' . $ceco . " A PLAZA CIAS: " . $Plaza->getCias());
-                $ServicioLog->escribeLog($ficheroLog);
-            } catch (Doctrine\DBAL\DBALException $ex) {
-                $ServicioLog->setMensaje('**ERROR GENERAL CECO:' . $ceco . "CIAS:" . $cias . " ERROR: " . $ex->getmessage());
-                $ServicioLog->escribeLog($ficheroLog);
-                $error = 1;
-                continue;
             }
 
-            $resultado = $this->replicaAsignacion($Plaza->getId(), $actuacion);
-            foreach ($resultado["salida"] as $linea) {
+            $CecoCias = new CecoCias();
+            $CecoCias->setPlaza($Plaza);
+            $CecoCias->setCeco($Ceco);
+            $CecoCias->setFInicio($fechaInicio);
+            $ServicioLog->setMensaje("CREADO CECOCIAS CIAS= (" . $Plaza->getCias() . ") CECO =(" . $Ceco->getCodigo() . ") FECHA= (" . $fechaInicio . ")");
+            $ServicioLog->escribeLog($ficheroLog);
+            $em->persist($CecoCias);
+            $em->flush();
+
+            $ServicioLog->setMensaje('ASIGNADO CECO ACTUAL : ' . $Ceco->getCodigo() . " A PLAZA CIAS: " . $Plaza->getCias());
+            $ServicioLog->escribeLog($ficheroLog);
+            $Plaza->setCecoActual($Ceco);
+            $em->persist($Plaza);
+            $em->flush();
+
+            /** 
+             * SINCRONIZACIÓN CON SAINT-6
+             */
+//            $resultado = $this->sincroCecoCias($CecoCias->getId());
+            
+            foreach ($resultado as $linea) {
                 $ServicioLog->setMensaje($linea);
                 $ServicioLog->escribeLog($ficheroLog);
             }
-            if ($resultado["resultado"] != 0)
-                $error = 1;
         }
-        $ServicioLog->setLogger('FICHERO: '.$ficheroLog);
+        $ServicioLog->setLogger('FICHERO: ' . $ficheroLog);
         $ServicioLog->setMensaje("==> TERMINA TRATAMIENTO PARA EL FICHERO: ");
         $ServicioLog->escribeLog($ficheroLog);
-                
-        
 
         if ($error == 0) {
             $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(2);
@@ -418,19 +415,6 @@ class PlazaController extends Controller {
         $params = array("CargaFichero" => $CargaFichero,
             "resultado" => $error);
         return $this->render("finCarga.html.twig", $params);
-    }
-
-    public function replicaAsignacion($id, $actuacion) {
-        $root = $this->get('kernel')->getRootDir();
-        $modo = $this->getParameter('modo');
-        $php_script = "php " . $root . "/scripts/costes/actualizacionCecoCias.php " . $modo . " " . $id . " " . $actuacion;
-
-        $mensaje = exec($php_script, $salida, $valor);
-        
-        $resultado["resultado"] = $valor;
-        $resultado["salida"] = $salida;
-        
-        return $resultado;
     }
 
     public function sincroAction($id, $actuacion) {
@@ -456,7 +440,8 @@ class PlazaController extends Controller {
 
         $root = $this->get('kernel')->getRootDir();
         $modo = $this->getParameter('modo');
-        $php_script = "php " . $root . "/scripts/costes/actualizacionPlaza.php " . $modo . "  " . $Plaza->getId() . " " . $actuacion;
+        $php = $this->getParameter('php');
+        $php_script = $php . " " . $root . "/scripts/costes/actualizacionPlaza.php " . $modo . "  " . $Plaza->getId() . " " . $actuacion;
 
         $mensaje = exec($php_script, $SALIDA, $resultado);
         if ($resultado == 0) {
@@ -498,4 +483,146 @@ class PlazaController extends Controller {
         return $this->redirectToRoute("descargaSincroLog", $params);
     }
 
+    public function exportarAction($datatable) {
+        
+        $em = $this->getDoctrine()->getManager();
+        $PlazaAll = $em->getRepository("CostesBundle:Plaza")->findAll();
+
+        $PHPExcel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $PHPExcel->setActiveSheetIndex(0);
+        $sheet->setCellValueByColumnAndRow(1, 1, 'Total Registros :' . count($PlazaAll));
+        $row = 3;
+        $sheet->setCellValueByColumnAndRow(1, $row, 'CIAS');
+        $sheet->setCellValueByColumnAndRow(2, $row, 'CÓDIGO UNIDAD FUNCIONAL');
+        $sheet->setCellValueByColumnAndRow(3, $row, 'DESCRIPCIÓN UNIDAD FUNCIONAL');
+        $sheet->setCellValueByColumnAndRow(4, $row, 'CÓDIGO PUNTO ASISTENCIAL');
+        $sheet->setCellValueByColumnAndRow(5, $row, 'DESCRIPCIÓN PUNTO ASISTENCIAL');
+        $sheet->setCellValueByColumnAndRow(6, $row, 'CODIGO CATEGORIA GENERAL');
+        $sheet->setCellValueByColumnAndRow(7, $row, 'DESCRIPCIÓN CATEGORIA GENERAL');
+        $sheet->setCellValueByColumnAndRow(8, $row, 'CENTRO DE COSTE');
+        $sheet->setCellValueByColumnAndRow(9, $row, 'FECHA AMORTIZACIÓN');
+
+        $row++;
+        foreach ($PlazaAll as $Plaza) {
+            $sheet->setCellValueByColumnAndRow(1, $row, $Plaza->getCias());
+            $sheet->setCellValueByColumnAndRow(2, $row, $Plaza->getUf()->getUf());
+            $sheet->setCellValueByColumnAndRow(3, $row, $Plaza->getUf()->getDescripcion());
+            $sheet->setCellValueByColumnAndRow(4, $row, $Plaza->getPa()->getPa());
+            $sheet->setCellValueByColumnAndRow(5, $row, $Plaza->getPa()->getDescripcion());
+            $sheet->setCellValueByColumnAndRow(6, $row, $Plaza->getCatGen()->getCodigo());
+            $sheet->setCellValueByColumnAndRow(7, $row, $Plaza->getCatGen()->getDescripcion());
+            if ($Plaza->getCeco()) {
+                $sheet->setCellValueByColumnAndRow(8, $row, $Plaza->getCeco()->getCodigo());
+            } else {
+                $sheet->setCellValueByColumnAndRow(8, $row, '');
+            }
+            $sheet->setCellValueByColumnAndRow(9, $row, $Plaza->getFAmortiza());
+            $row++;
+        }
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($PHPExcel);
+        $filename = 'PLAZAS.xlsx';
+        $writer->save($filename);
+
+        $response = new Response();
+        $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename);
+        $response->headers->set('Content-Disposition', 'attachment;filename=' . $filename);
+        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->headers->set('Pragma', 'public');
+        $response->headers->set('Cache-Control', 'max-age=1');
+        $response->setContent(file_get_contents($filename));
+
+        return $response;
+    }
+
+    public function verCecoCiasAction(Request $request, $plaza_id) {
+        $isAjax = $request->isXmlHttpRequest();
+        $datatable = $this->get('sg_datatables.factory')->create(\CostesBundle\Datatables\CecoCiasDatatable::class);
+        $datatable->buildDatatable();
+        $Plaza = $this->getDoctrine()->getManager()->getRepository("CostesBundle:Plaza")->find($plaza_id);
+
+        if ($isAjax) {
+            $responseService = $this->get('sg_datatables.response');
+            $responseService->setDatatable($datatable);
+            $datatableQueryBuilder = $responseService->getDatatableQueryBuilder();
+            $qb = $datatableQueryBuilder->getQb();
+            $qb->andWhere('plaza = :plaza');
+            $qb->setParameter('plaza', $Plaza);
+
+            return $responseService->getResponse();
+        }
+
+        return $this->render('costes/cecocias/query.html.twig', array(
+                    'datatable' => $datatable,
+                    'plaza' => $Plaza
+        ));
+    }
+
+    public function cambiarAsignacionAction($cias, $nuevoCeco, $fInicio, $cecoAnterior_id) {
+
+        $fecha = new \DateTime($fInicio);
+        $fecha->sub(new \DateInterval('P1D'));/** restamos un día */
+        $fechaInicio = new \DateTime($fInicio);
+        $em = $this->getDoctrine()->getManager();
+        $PlazaAll = $em->getRepository("CostesBundle:Plaza")->createQueryBuilder('u')
+                        ->where("u.cias = :cias")
+                        ->setParameter('cias', $cias)
+                        ->getQuery()->getResult();
+        $Plaza = $PlazaAll[0];
+        $NuevoCecoAll = $em->getRepository("CostesBundle:Ceco")->createQueryBuilder('u')
+                        ->where("u.codigo = :codigo")
+                        ->setParameter('codigo', $nuevoCeco)
+                        ->getQuery()->getResult();
+        $NuevoCeco = $NuevoCecoAll[0];
+
+
+        if ($cecoAnterior_id != 0) {
+            $CecoAnterior = $em->getRepository("CostesBundle:Ceco")->find($cecoAnterior_id);
+            $CecoCias_repo = $em->getRepository("CostesBundle:CecoCias");
+            $CecoCiasAntAll = $CecoCias_repo->createQueryBuilder('u')
+                            ->where("u.plaza = :plaza and u.ceco = :ceco")
+                            ->setParameter('plaza', $Plaza)
+                            ->setParameter('ceco', $CecoAnterior)
+                            ->getQuery()->getResult();
+
+            $CecoCiasAnt = $CecoCiasAntAll[0];
+            $CecoCiasAnt->setFFin($fecha);
+            $em->persist($CecoCiasAnt);
+            $em->flush();
+        }
+        $CecoCiasNew = new CecoCias();
+        $CecoCiasNew->setPlaza($Plaza);
+        $CecoCiasNew->setCeco($NuevoCeco);
+        $CecoCiasNew->setFInicio($fechaInicio);
+        $em->persist($CecoCiasNew);
+        $em->flush();
+
+        $Plaza->setCecoActual($NuevoCeco);
+        $em->persist($Plaza);
+        $em->flush();
+
+        return $this->redirectToRoute("verCecoCias", array("plaza_id" => $Plaza->getId()));
+
+    }
+
+    public function selectCecoCias($Plaza) {
+        $em = $this->getDoctrine()->getManager();
+        $CecoCeciasAll = $em->getRepository("CostesBundle:CecoCias")->createQueryBuilder('u')
+                        ->where('u.plaza = :plaza and u.ceco = :ceco')
+                        ->addWhere('u.fFin is null')
+                        ->setParameter('ceco', $Plaza->getCecoActual())
+                        ->setParameter('plaza', $Plaza)
+                ->getQuery->getResult();
+        return ($CecoCeciasAll[0]);
+    }
+
+    public function sincroCecoCias($id) {
+        $root = $this->get('kernel')->getRootDir();
+        $modo = $this->getParameter('modo');
+        $php  = $this->getParameter('php');
+        $php_script = $php." " . $root . "/scripts/costes/actualizacionCecoCias.php " . $modo . "  " . $id;
+
+        $mensaje = exec($php_script, $SALIDA, $resultado);
+        return $SALIDA;
+
+    }
 }

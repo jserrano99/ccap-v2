@@ -187,7 +187,8 @@ class AusenciaController extends Controller {
 
         $root = $this->get('kernel')->getRootDir();
         $modo = $this->getParameter('modo');
-        $php_script = "php " . $root . "/scripts/maestros/actualizacionAusencia.php " . $modo . " " . $Ausencia->getId() . " " . $actuacion . " " . $eqausencia_id;
+        $php = $this->getParameter('php');
+        $php_script = $php." " . $root . "/scripts/maestros/actualizacionAusencia.php " . $modo . " " . $Ausencia->getId() . " " . $actuacion . " " . $eqausencia_id;
         $mensaje = exec($php_script, $SALIDA, $resultado);
 
         if ($resultado == 0) {
@@ -216,7 +217,7 @@ class AusenciaController extends Controller {
 
     public function descargaLogAction($id) {
         $em = $this->getDoctrine()->getManager();
-        $CatFp = $em->getRepository("MaestrosBundle:Ausencia")->find($id);
+        $Ausencia = $em->getRepository("MaestrosBundle:Ausencia")->find($id);
         $params = array("id" => $Ausencia->getSincroLog()->getId());
         return $this->redirectToRoute("descargaSincroLog", $params);
     }

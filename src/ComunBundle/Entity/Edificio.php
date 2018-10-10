@@ -30,7 +30,7 @@ class Edificio {
 
     
     /**
-     * @var codigo
+     * @var string
      *
      * @ORM\Column(name="codigo", type="string", length=2, nullable=false)
      */
@@ -44,11 +44,19 @@ class Edificio {
     private $descripcion;
 
     /**
-     * @var codigo
+     * @var string
      *
      * @ORM\Column(name="area", type="string", length=1, nullable=false)
      */
     private $area;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="gerencia", type="string", length=2, nullable=false)
+     */
+    private $gerencia;
+    
     
     public function __toString() {
         return $this->descripcion.' ('.$this->codigo.')';
@@ -134,5 +142,29 @@ class Edificio {
     public function getArea()
     {
         return $this->area;
+    }
+
+    /**
+     * Set gerencia.
+     *
+     * @param string $gerencia
+     *
+     * @return Edificio
+     */
+    public function setGerencia($gerencia)
+    {
+        $this->gerencia = $gerencia;
+
+        return $this;
+    }
+
+    /**
+     * Get gerencia.
+     *
+     * @return string
+     */
+    public function getGerencia()
+    {
+        return $this->gerencia;
     }
 }

@@ -134,7 +134,8 @@ class CargaInicialController extends Controller {
             if ($CargaInicial->getProceso() != 'manual') {
                 $root = $this->get('kernel')->getRootDir();
                 $modo = $this->getParameter('modo');
-                $php_script = "php " . $root . '/scripts/' . $CargaInicial->getProceso() . ' ' . $modo;
+                $php = $this->getParameter('php');
+                $php_script = $php." " . $root . '/scripts/' . $CargaInicial->getProceso() . ' ' . $modo;
                 $mensaje = exec($php_script, $SALIDA, $resultado);
 
                 $ficheroLog = $CargaInicial->getTabla() . '.log';

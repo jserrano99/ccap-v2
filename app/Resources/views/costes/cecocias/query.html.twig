@@ -1,0 +1,20 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %}ASIGNACION DE CENTROS DE COSTES **CONSULTA** 
+    <a href="{{path("editPlaza",{"id":plaza.id})}}" 
+       class="btn btn-success">
+        <span class="glyphicon glyphicon-edit"></span>  Volver</a>
+    <hr/>
+
+    Plaza: {{plaza.cias}}
+{% endblock %}
+{% block contenido %}
+    <div class="container">
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-success">
+                {{message}}
+                <hr/>
+            </div>
+        {% endfor %}
+        {{ sg_datatables_render(datatable) }}
+    </div>
+{% endblock %}

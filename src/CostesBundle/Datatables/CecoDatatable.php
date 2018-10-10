@@ -34,9 +34,11 @@ class CecoDatatable extends AbstractDatatable {
             'search_in_non_visible_columns' => true,
         ));
 
-        $this->features->set(array(
+             $this->features->set(array(
             'auto_width' => true,
-            'ordering' => true
+            'ordering' => true,
+            'length_change' => true,
+            'state_save' => true
         ));
 
         $this->columnBuilder
@@ -73,17 +75,17 @@ class CecoDatatable extends AbstractDatatable {
                                 'title' => 'Ver Cias',
                                 'class' => 'btn btn-primary btn-xs',
                                 'role' => 'button')),
-                        array('route' => 'deleteCeco',
-                            'route_parameters' => array(
-                                'ceco_id' => 'id'
-                            ),
-                            'label' => 'Eliminar',
-                            'icon' => 'glyphicon glyphicon-trash',
-                            'attributes' => array(
-                                'rel' => 'tooltip',
-                                'title' => 'Eliminar registro en las Base de Datos de las Areas',
-                                'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button')),
+//                        array('route' => 'deleteCeco',
+//                            'route_parameters' => array(
+//                                'ceco_id' => 'id'
+//                            ),
+//                            'label' => 'Eliminar',
+//                            'icon' => 'glyphicon glyphicon-trash',
+//                            'attributes' => array(
+//                                'rel' => 'tooltip',
+//                                'title' => 'Eliminar registro en las Base de Datos de las Areas',
+//                                'class' => 'btn btn-primary btn-xs',
+//                                'role' => 'button')),
                         array('route' => 'descargaLogCeco',
                             'route_parameters' => array('id' => 'id'),
                             'label' => 'Logs',

@@ -110,8 +110,8 @@ if (!$JanoControl) {
 }
 
 $modo = $argv[1];
-$plaza_id = $argv[2];
-$actuacion = $argv[3];
+$cecocias_id = $argv[2];
+
 
 if ($modo == 'REAL') {
     echo "==>ENTORNO: PRODUCCIÓN \n";
@@ -125,14 +125,15 @@ if ($modo == 'REAL') {
     $tipobd = 1;
 }
 
-$Plaza = selectPlazaById($plaza_id);
+$CecoCias = selectCecoCiasById($plaza_id);
+$Ceco = selectCeco($CecoCias["ceco_id"]);
+$Plaza = selectPlazaById($CecoCias["plaza_id"]);
 
 if ($Plaza == null) {
-    echo "***ERROR NO EXISTE CCAP_PLAZA PARA ID= " . $plaza_id;
-    echo " +++ TERMINA EN ERROR(1) +++ \n";
+    echo "***ERROR NO EXISTE CCAP_PLAZA PARA ID= " . $CecoCias["plaza_id"];
     exit(1);
 }
-echo "==> CECOCIAS A TRATAR CIAS= " . $Plaza["cias"] . " CECO=" . $Plaza["ceco"] . " EDIFICIO=" . $Plaza["edificio"] . "\n";
+echo "==> CECOCIAS A TRATAR CIAS= (" . $Plaza["cias"] . ") CECO= (" . $Plaza["ceco"] . ") FECHA INICIO= (" . $CecoCias["fInicio"] . ") EDIFICIO=" . $Plaza["edificio"] . "\n";
 
 $query = " select * from comun_edificio where area = 'S' ";
 $query = $JanoControl->prepare($query);
@@ -141,7 +142,8 @@ $EdificioAll = $query->fetchAll(PDO::FETCH_ASSOC);
 
 
 if ($Plaza["edificio"] == 0) {
-    $BasesDatos = SelectBaseDatosAreas($tipo);
+    $BasesDatos = SelectBaseDatosAreas($tipobd);
+    $BasesDatos[] = SelectBaseDatos($tipobd, 'U');
 } else {
     $BasesDatos = array();
     $BasesDatos[] = SelectBaseDatosEdificio($tipobd, $Plaza["edificio"]);
@@ -161,27 +163,18 @@ foreach ($BasesDatos as $baseDatos) {
     $conexion = conexionPDO($datosConexion);
     if ($conexion) {
         if (existePlaza($conexion, $Plaza["cias"])) {
-            switch ($actuacion) {
-                case "INSERT" :
-                    if (!existeCecoCias($conexion, $Plaza["cias"], $Plaza["ceco"])) {
-                        $error = insertCecoCias($conexion, $Plaza["cias"], $Plaza["ceco"]);
-                    }
-                    break;
-                case "DELETE":
-                    if (existeCecoCias($conexion, $Plaza["cias"], $Plaza["ceco"])) {
-                        $error = DeleteCecoCias($conexion, $Plaza["cias"], $Plaza["ceco"]);
-                    }
-                    break;
+            if (!existeCecoCias($conexion, $Plaza["cias"], $Plaza["ceco"])) {
+                $error = insertCecoCias($conexion, $Plaza["cias"], $Plaza["ceco"]);
             }
         }
     }
-}
 
-$asignacion = asignacionCeco($Plaza);
-if (!$asignacion) {
-    echo "**ERROR EN LA ASIGNACIÓN AL PROFESIONAL** \n";
-    exit(1);
+    $asignacion = asignacionCeco($Plaza,$CecoCias["fInicio"]);
+    if (!$asignacion) {
+        echo "**ERROR EN LA ASIGNACIÓN AL PROFESIONAL** \n";
+        exit(1);
+    }
 }
-
-echo "  +++++++++++ TERMINA PROCESO ACTUALIZACIÓN CECOCIAS +++++++++++++ \n";
-exit(0);
+    echo "  +++++++++++ TERMINA PROCESO ACTUALIZACIÓN CECOCIAS +++++++++++++ \n";
+    exit(0);
+    
