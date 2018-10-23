@@ -232,6 +232,10 @@ class AusenciaController extends Controller {
         return $this->redirectToRoute("sincroAusencia", $params);
     }
 
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function desactivarAction($id) {
         $em = $this->getDoctrine()->getManager();
         $EqAusencia = $em->getRepository("MaestrosBundle:EqAusencia")->find($id);

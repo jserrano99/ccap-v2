@@ -18,8 +18,11 @@ class SincroLogController extends Controller {
     }
 
     public function queryAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
         $isAjax = $request->isXmlHttpRequest();
 
+        $usuario_id = $this->sesion->get('usuario_id');
+        $Usuario = $em->getRepository("ComunBundle:Usuario")->find($usuario_id);
         $datatable = $this->get('sg_datatables.factory')->create(\ComunBundle\Datatables\SincroLogDatatable::class);
         $datatable->buildDatatable();
 
@@ -27,8 +30,13 @@ class SincroLogController extends Controller {
             $responseService = $this->get('sg_datatables.response');
             $responseService->setDatatable($datatable);
             $datatableQueryBuilder = $responseService->getDatatableQueryBuilder();
-            $datatableQueryBuilder->buildQuery();
-
+            if ($Usuario->getPerfil() == 'ROLE_ADMIN') {
+                $datatableQueryBuilder->buildQuery();
+            } else {
+                $qb = $datatableQueryBuilder->getQb();
+                $qb->andWhere('usuario = :usuario');
+                $qb->setParameter('usuario', $Usuario);
+            }
             return $responseService->getResponse();
         }
 
@@ -36,7 +44,7 @@ class SincroLogController extends Controller {
                     'datatable' => $datatable,
         ));
     }
-    
+
     public function descargaAction($id) {
 
         $SincroLog = $this->getDoctrine()->getManager()->getRepository("ComunBundle:SincroLog")->find($id);

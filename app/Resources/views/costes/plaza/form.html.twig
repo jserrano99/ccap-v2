@@ -32,8 +32,9 @@
         } else {
             var cias = $("#costesbundle_plaza_cias").val();
             var cecoAnterior = $("#costesbundle_plaza_cecoActual").val();
-            alert (cecoAnterior);
-            if (cecoAnterior == '' ) cecoAnterior = 0; 
+            alert(cecoAnterior);
+            if (cecoAnterior == '')
+                cecoAnterior = 0;
             var nuevoCeco = $("#costesbundle_plaza_nuevoCecoCodigo").val();
             var fInicio = $("#costesbundle_plaza_fInicio").val();
             var recurso = Routing.generate("cambiarAsignacion", {"cias": cias, "nuevoCeco": nuevoCeco, "fInicio": fInicio, "cecoAnterior_id": cecoAnterior}, true);
@@ -165,8 +166,10 @@
     <div id="tabs" class="pestana container" >
         <ul class="nav nav-tabs">
             <li><a id="tdatosGen" href="#datosGen">Datos Generales</a></li>
-            <li><a id="tdatosGen" href="#consulta">Histórico Centros de Coste</a></li>
-            <li><a id="tcostes" href="#costes">Cambio de Asignación</a></li>
+                {% if accion == 'MODIFICACIÓN' %}
+                <li><a id="tdatosGen" href="#consulta">Histórico Centros de Coste</a></li>
+                <li><a id="tcostes" href="#costes">Cambio de Asignación</a></li>
+                {% endif %}
         </ul>
         <div id="datosGen">
             <div class="form-row mismalinea">{{form_row(form.modalidad)}}</div>
@@ -186,38 +189,40 @@
             <div class="form-row mismalinea">{{form_row(form.cupequi)}}</div>
             <div class="clearfix"></div>
         </div>
-        <div id="consulta">
-            {% if (datatable != '' ) %}
-                {{ sg_datatables_render(datatable) }}
-            {% endif %}
-        </div>
-        <div id="costes">
-            <div class="form-row mismalinea">{{form_row(form.cecoActual)}}</div>
-            <div class="clearfix"></div>
-            <div class="form-row mismalinea">{{form_row(form.nuevoCecoCodigo)}}</div>
-            <div class="form-row mismalinea">{{form_row(form.nuevoCecoDesc)}}</div>
-            <div class="form-row mismalinea">{{form_row(form.nuevoCeco)}}</div>
-            <div class="form-row mismalinea">{{form_row(form.fInicio)}}</div>
-            <div class="form-row mismalinea">
-                <button type="button" 
-                        class="btn btn-default btn-warning btn-t"
-                        onclick="calcularCeco()"
-                        data-toggle="tooltip" 
-                        data-placement="bottom" 
-                        title="Calculo Automático de Centro de Coste"> Calcular Centro de Coste</button>
+        {% if accion == 'MODIFICACIÓN' %}
+            <div id="consulta">
+                {% if (datatable != '' ) %}
+                    {{ sg_datatables_render(datatable) }}
+                {% endif %}
             </div>
-            <div class="form-row mismalinea">
-                <button type="button" 
-                        id="btnAsignacion"
-                        class="btn btn-default btn-info btn-t"
-                        onclick="cambiarAsignacion()"
-                        data-toggle="tooltip" 
-                        data-placement="bottom" 
-                        title="Cambiar Asginación de Centro de Coste"> Cambiar Asignación</button>
+            <div id="costes">
+                <div class="form-row mismalinea">{{form_row(form.cecoActual)}}</div>
+                <div class="clearfix"></div>
+                <div class="form-row mismalinea">{{form_row(form.nuevoCecoCodigo)}}</div>
+                <div class="form-row mismalinea">{{form_row(form.nuevoCecoDesc)}}</div>
+                <div class="form-row mismalinea">{{form_row(form.nuevoCeco)}}</div>
+                <div class="form-row mismalinea">{{form_row(form.fInicio)}}</div>
+                <div class="form-row mismalinea">
+                    <button type="button" 
+                            class="btn btn-default btn-warning btn-t"
+                            onclick="calcularCeco()"
+                            data-toggle="tooltip" 
+                            data-placement="bottom" 
+                            title="Calculo Automático de Centro de Coste"> Calcular Centro de Coste</button>
+                </div>
+                <div class="form-row mismalinea">
+                    <button type="button" 
+                            id="btnAsignacion"
+                            class="btn btn-default btn-info btn-t"
+                            onclick="cambiarAsignacion()"
+                            data-toggle="tooltip" 
+                            data-placement="bottom" 
+                            title="Cambiar Asginación de Centro de Coste"> Cambiar Asignación</button>
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
     <div class="form_row " >
-        {{ form_end(form) }}
+        {{ form_row(form.Guardar) }}
     </div>
 </div>

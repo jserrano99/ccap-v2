@@ -1,0 +1,12 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} CONCEPTOS RETRIBUTIVOS  **{{accion}}**
+   <a href="{{path("queryConcepto")}}" class="btn btn-success">
+       <span class="glyphicon glyphicon-th-list"></span> Volver</a>
+{% endblock %}
+    
+{% block contenido %}
+    <div class="container">
+        {% include 'maestros/concepto/form.html.twig' %}
+    </div>
+    <div class="clearfix"> </div>
+{% endblock %}  

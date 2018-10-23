@@ -66,6 +66,7 @@ class PlazaType extends AbstractType {
                 ->add('fAmortiza', DateType::class, array(
                     "label" => 'Fecha Amortización',
                     "required" => false,
+                    "disabled" => true,
                     'widget' => 'single_text',
                     'attr' => array(
                         'class' => 'form-control corto js-datepicker',

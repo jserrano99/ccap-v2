@@ -76,7 +76,7 @@ foreach ($resultSet as $row) {
         }
         $CATGEN = selectCatGen($row["CATGEN"]);
         $CATFP = selectCatFp($row["CATFP"]);
-        $orden = substr($row["cias"], 9, 2);
+        $orden = substr($row["CIAS"], 9, 2);
         if ($row["F_AMORTIZA"] == null) {
             $amortizada = 'N';
         } else {

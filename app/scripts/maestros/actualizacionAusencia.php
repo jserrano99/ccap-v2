@@ -734,6 +734,56 @@ function updateJanoMaePer($Ausencia) {
     }
 }
 
+function main () {
+    if ($actuacion == 'INSERT') {
+    if (!procesoInsert($Ausencia)) {
+        exit(1);
+    }
+}
+
+if ($actuacion == 'UPDATE') {
+    if (!procesoUpdate($Ausencia)) {
+        exit(1);
+    }
+}
+
+if ($actuacion == 'ACTIVAR') {
+    $EqAusencia = selectEqAusenciaById($eqausencia_id);
+    $conexion = conexionEdificio($EqAusencia["edificio"], $tipobd);
+    $Ausencia["enuso"] = 'S';
+    if ($conexion) {
+        updateAusenciaAreas($Ausencia, $conexion, $EqAusencia["codigo_loc"],$EqAusencia["edificio_id"]);
+        $EqAusencia["enuso"] = 'S';
+        updateEqAusenciaControl($EqAusencia);
+    }
+}
+
+if ($actuacion == 'DESACTIVAR') {
+    $EqAusencia = selectEqAusenciaById($eqausencia_id);
+    $conexion = conexionEdificio($EqAusencia["edificio"], $tipobd);
+    $Ausencia["enuso"] = 'N';
+    if ($conexion) {
+        updateAusenciaAreas($Ausencia, $conexion, $EqAusencia["codigo_loc"],$EqAusencia["edificio_id"]);
+        $EqAusencia["enuso"] = 'N';
+        updateEqAusenciaControl($EqAusencia);
+    }
+}
+
+if ($actuacion == 'CREAR') {
+    $EqAusencia = selectEqAusenciaById($eqausencia_id);
+    $conexion = conexionEdificio($EqAusencia["edificio"], $tipobd);
+    $Ausencia["codigo"] = $EqAusencia["codigo_loc"];
+    if ($conexion) {
+        if (insertAusenciaAreas($AUSENCIA, $conexion, $EqAusencia["edificio_id"])) {
+            $EqAusencia["enuso"] = 'S';
+            updateEqAusenciaControl($EqAusencia);
+        }
+    }
+}
+
+}
+
+
 /**
  * COMIEZO PROCESO
  */
@@ -889,50 +939,8 @@ echo " ==> SINCRONIZACIÓN AUSENCIA : ID= (" . $Ausencia["id"] . ")"
  . " EQAUSENCIA_ID= (" . $eqausencia_id . ")"
  . "\n";
 
-if ($actuacion == 'INSERT') {
-    if (!procesoInsert($Ausencia)) {
-        exit(1);
-    }
-}
+main();
 
-if ($actuacion == 'UPDATE') {
-    if (!procesoUpdate($Ausencia)) {
-        exit(1);
-    }
-}
-if ($actuacion == 'ACTIVAR') {
-    $EqAusencia = selectEqAusenciaById($eqausencia_id);
-    $conexion = conexionEdificio($EqAusencia["edificio"], $tipobd);
-    $Ausencia["enuso"] = 'S';
-    if ($conexion) {
-        updateAusenciaAreas($Ausencia, $conexion, $EqAusencia["codigo_loc"],$EqAusencia["edificio_id"]);
-        $EqAusencia["enuso"] = 'S';
-        updateEqAusenciaControl($EqAusencia);
-    }
-}
-
-if ($actuacion == 'DESACTIVAR') {
-    $EqAusencia = selectEqAusenciaById($eqausencia_id);
-    $conexion = conexionEdificio($EqAusencia["edificio"], $tipobd);
-    $Ausencia["enuso"] = 'N';
-    if ($conexion) {
-        updateAusenciaAreas($Ausencia, $conexion, $EqAusencia["codigo_loc"],$EqAusencia["edificio_id"]);
-        $EqAusencia["enuso"] = 'N';
-        updateEqAusenciaControl($EqAusencia);
-    }
-}
-
-if ($actuacion == 'CREAR') {
-    $EqAusencia = selectEqAusenciaById($eqausencia_id);
-    $conexion = conexionEdificio($EqAusencia["edificio"], $tipobd);
-    $Ausencia["codigo"] = $EqAusencia["codigo_loc"];
-    if ($conexion) {
-        if (insertAusenciaAreas($AUSENCIA, $conexion, $EqAusencia["edificio_id"])) {
-            $EqAusencia["enuso"] = 'S';
-            updateEqAusenciaControl($EqAusencia);
-        }
-    }
-}
 
 echo " FIN SINCRONIZACIÓN AUSENCIA" . "\n";
 exit(0);

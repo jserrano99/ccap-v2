@@ -383,11 +383,11 @@ class PlazaController extends Controller {
             $em->persist($Plaza);
             $em->flush();
 
-            /** 
+            /**
              * SINCRONIZACIÓN CON SAINT-6
              */
 //            $resultado = $this->sincroCecoCias($CecoCias->getId());
-            
+
             foreach ($resultado as $linea) {
                 $ServicioLog->setMensaje($linea);
                 $ServicioLog->escribeLog($ficheroLog);
@@ -484,7 +484,7 @@ class PlazaController extends Controller {
     }
 
     public function exportarAction($datatable) {
-        
+
         $em = $this->getDoctrine()->getManager();
         $PlazaAll = $em->getRepository("CostesBundle:Plaza")->findAll();
 
@@ -600,8 +600,11 @@ class PlazaController extends Controller {
         $em->persist($Plaza);
         $em->flush();
 
-        return $this->redirectToRoute("verCecoCias", array("plaza_id" => $Plaza->getId()));
+        $params = array('id' => $CecoCiasNew->getId());
+        return $this->redirectToRoute("sincroCecoCias", $params);
 
+
+        //return $this->redirectToRoute("verCecoCias", array("plaza_id" => $Plaza->getId()));
     }
 
     public function selectCecoCias($Plaza) {
@@ -615,14 +618,152 @@ class PlazaController extends Controller {
         return ($CecoCeciasAll[0]);
     }
 
-    public function sincroCecoCias($id) {
+    public function sincroCecoCiasAction($id) {
+        $em = $this->getDoctrine()->getManager();
+        $CecoCias = $em->getRepository("CostesBundle:CecoCias")->find($id);
+        $Plaza = $CecoCias->getPlaza();
+
+        $usuario_id = $this->sesion->get('usuario_id');
+        $Usuario = $em->getRepository("ComunBundle:Usuario")->find($usuario_id);
+        $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(1);
+
+        $SincroLog = new \ComunBundle\Entity\SincroLog();
+        $fechaProceso = new \DateTime();
+
+        $SincroLog->setUsuario($Usuario);
+        $SincroLog->setTabla("ccap_plaza");
+        $SincroLog->setIdElemento($id);
+        $SincroLog->setFechaProceso($fechaProceso);
+        $SincroLog->setEstado($Estado);
+
+
         $root = $this->get('kernel')->getRootDir();
         $modo = $this->getParameter('modo');
-        $php  = $this->getParameter('php');
-        $php_script = $php." " . $root . "/scripts/costes/actualizacionCecoCias.php " . $modo . "  " . $id;
+        $php = $this->getParameter('php');
+        $php_script = $php . " " . $root . "/scripts/costes/actualizacionCecoCias.php " . $modo . "  " . $id;
 
         $mensaje = exec($php_script, $SALIDA, $resultado);
-        return $SALIDA;
+        if ($resultado == 0) {
+            $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(2);
+        } else {
+            $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(3);
+        }
 
+        $ficheroLog = 'sincroCecoCias-' . $CecoCias->getPlaza()->getCias() . '.log';
+        $ServicioLog = $this->get('app.escribelog');
+        $ServicioLog->setLogger('ccap_plaza->Ceco:' . $CecoCias->getCeco()->getCodigo() . 'Cias: ' . $CecoCias->getPlaza()->getCias() . " Fecha :" . $CecoCias->getFInicio()->format('d/m/Y'));
+        foreach ($SALIDA as $linea) {
+            $ServicioLog->setMensaje($linea);
+            $ServicioLog->escribeLog($ficheroLog);
+        }
+        $SincroLog->setScript($php_script);
+        $SincroLog->setFicheroLog($ServicioLog->getFilename());
+        $SincroLog->setEstado($Estado);
+
+        $em->persist($SincroLog);
+        $em->flush();
+
+        $Plaza->setSincroLog($SincroLog);
+        $em->persist($Plaza);
+        $em->flush();
+
+        $params = array("SincroLog" => $SincroLog,
+            "resultado" => $resultado);
+        $view = $this->renderView("finSincro.html.twig", $params);
+
+        $response = new Response($view);
+
+        $response->headers->set('Content-Disposition', 'inline');
+        $response->headers->set('Content-Type', 'text/html');
+        $response->headers->set('target', '_blank');
+
+        return $response;
     }
+
+    public function amortizacionPlazaAction(Request $request, $id) {
+        $em = $this->getDoctrine()->getManager();
+        $Plaza = $em->getRepository("CostesBundle:Plaza")->find($id);
+
+        $form = $this->createForm(\CostesBundle\Form\AmortizacionPlazaType::class, $Plaza);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $ok = $this->compruebaAmortizacion($Plaza);
+            if ($ok == 0) {
+                try {
+                    $Plaza->setAmortizada('S');
+                    $em->persist($Plaza);
+                    $em->flush();
+                    $params = array("id" => $Plaza->getId(),
+                        "actuacion" => "UPDATE");
+                    return $this->redirectToRoute("sincroPlaza", $params);
+                } catch (Doctrine\DBAL\DBALException $ex) {
+                    $status = "ERROR GENERAL=" . $ex->getMessage();
+                    $this->sesion->getFlashBag()->add("status", $status);
+                    return $this->redirectToRoute("queryPlaza");
+                }
+            } else {
+                $Plaza->setFAmortiza(null);
+            }
+        }
+
+        $params = array("form" => $form->createView(),
+            "plaza" => $Plaza,
+            "accion" => "AMORTIZACION");
+        return $this->render("costes/plaza/amortiza.html.twig", $params);
+    }
+
+    public function compruebaAmortizacion($Plaza) {
+        $em = $this->getDoctrine()->getManager();
+        $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(3);
+        $usuario_id = $this->sesion->get('usuario_id');
+        $Usuario = $em->getRepository("ComunBundle:Usuario")->find($usuario_id);
+
+        $SincroLog = new \ComunBundle\Entity\SincroLog();
+        $fechaProceso = new \DateTime();
+
+
+        $root = $this->get('kernel')->getRootDir();
+        $modo = $this->getParameter('modo');
+        $php = $this->getParameter('php');
+        $php_script = $php . " " . $root . "/scripts/costes/compruebaAmortizacionPlaza.php " . $modo . " " . $Plaza->getCias() . " " . $Plaza->getFAmortiza()->format('Y-m-d');
+
+        $mensaje = exec($php_script, $SALIDA, $resultado);
+//        dump($mensaje);
+//        dump($resultado);
+//        dump($SALIDA);
+//        die();
+//        
+        if ($resultado != 0) {
+            $ficheroLog = 'compruebaAmortizacion-' . $Plaza->getCias() . '.log';
+            $ServicioLog = $this->get('app.escribelog');
+            $ServicioLog->setLogger('ccap_plaza->cias:' . $Plaza->getCias());
+            foreach ($SALIDA as $linea) {
+                $ServicioLog->setMensaje($linea);
+                $ServicioLog->escribeLog($ficheroLog);
+            }
+            $SincroLog->setUsuario($Usuario);
+            $SincroLog->setTabla("ccap_plaza");
+            $SincroLog->setIdElemento($Plaza->getId());
+            $SincroLog->setFechaProceso($fechaProceso);
+            $SincroLog->setEstado($Estado);
+            $em->persist($SincroLog);
+
+            $SincroLog->setScript($php_script);
+            $SincroLog->setFicheroLog($ServicioLog->getFilename());
+            $SincroLog->setEstado($Estado);
+            $em->persist($SincroLog);
+            $em->flush();
+
+            $Plaza->setSincroLog($SincroLog);
+            $Plaza->setFAmortiza(null);
+            $em->persist($Plaza);
+            $em->flush();
+
+            $linea = " ERROR EXISTEN ALTAS O PUESTOS ABIERTOS PARA ESTA FECHA DE AMORTIZACION VER LOG DE MODIFICACION ";
+            $this->sesion->getFlashBag()->add("status", $linea);
+        }
+
+        return $resultado;
+    }
+
 }

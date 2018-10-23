@@ -34,6 +34,7 @@ class BaseDatosDatatable extends AbstractDatatable {
             'order' => array(array(0, 'asc')),
             'order_cells_top' => true,
             'search_in_non_visible_columns' => true,
+            'dom' => 'lBtrip'
         ));
 
 

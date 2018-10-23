@@ -28,6 +28,7 @@ class AusenciaDatatable extends AbstractDatatable {
             'order' => array(array(1, 'asc')),
             'order_cells_top' => true,
             'search_in_non_visible_columns' => true,
+            'dom' => 'lBtrip'
         ));
 
         $edificios = $this->em->getRepository('ComunBundle:Edificio')->findAll();
@@ -40,10 +41,9 @@ class AusenciaDatatable extends AbstractDatatable {
         ));
 
 
-
         $this->columnBuilder
-                ->add('id', Column::class, array('title' => 'Id', 'width'=>'20px',  'searchable' => false))
-                ->add('codigo', Column::class, array('title' => 'Código Unif.', 'width'=>'40px', 'searchable' => true))
+                ->add('id', Column::class, array('title' => 'Id', 'width' => '20px', 'searchable' => false))
+                ->add('codigo', Column::class, array('title' => 'Código Unif.', 'width' => '40px', 'searchable' => true))
                 ->add('descrip', Column::class, array('title' => 'Descripción'))
                 ->add('janoCodigo', Column::class, array('title' => 'Código JANO', 'searchable' => true))
                 ->add('sincroLog.estado.descripcion', Column::class, array(

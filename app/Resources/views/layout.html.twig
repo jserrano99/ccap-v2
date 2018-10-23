@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8"/>
         <title>
-            {% block title %} {{titulo_app_corto}} {% endblock %}
+            {% block title %} PHPSTORM {{titulo_app_corto}} {% endblock %}
         </title>
         <link rel="icon" type="image/png" href="{{asset('img/logoSalud.png')}}" />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
@@ -57,6 +57,10 @@
         .btn-t {
             margin-top: 15px;
         }
+        .btn-b {
+            margin-bottom: 25px;
+        }
+        
         .btn-group {
             margin-bottom: 15px;
         }
@@ -86,6 +90,9 @@
         }
         .mismalinea {
             display: inline-block;
+        }
+        .sino {
+            width: 80px;
         }
     </style>
 
@@ -167,7 +174,7 @@
                 <div class="container">
                     <h3>{% block titulo %}{% endblock %}</h3>
                 </div>
-                {% block contenido %} Contenido por Defecto de la Plantilla  {% endblock %}
+                {% block contenido %} Contenido por Defecto de la Plantilla {% endblock %}
             {% else %}
                 {% block login %} 
                     {% include 'comun/login/login.form.html.twig' %}
@@ -176,7 +183,7 @@
         </section>
         <footer>
             <br/>
-            <span class="label label-info">&copy; AGENCIA PARA LA ADMINISTRACIÓN DIGITAL DE LA COMUNIDAD DE MADRID </span>
+            <span class="label label-info">&copy; AGENCIA PARA LA ADMINISTRACIÓN DIGITAL DE LA COMUNIDAD DE MADRID   </span>
         </footer>
     </body>
 </html> 

@@ -2,9 +2,24 @@
 
 include_once __DIR__ . '../../../vendor/autoload.php';
 
+function selectEdificioAll() {
+    global $JanoControl;
+    try {
+        $query = " select * from comun_edificio where area = 'S' ";
+        $query = $JanoControl->prepare($query);
+        $query->execute();
+        $EdificioAll = $query->fetchAll(PDO::FETCH_ASSOC);
+        return $EdificioAll;
+    } catch (PDOException $ex) {
+        echo "*** PDOERROR EN SELECT COMUN_EDIFICIO " . $ex->getMessage() . "\n";
+        return null;
+    }
+}
+
 /* * ****************************************
  * CONEXIÓN Y DESCONXESIÓN A BASE DE DATOS *
  * ***************************************** */
+
 /**
  * 
  * @global type $JanoControl
@@ -34,13 +49,13 @@ function selectAltasById($id) {
         return null;
     }
 }
+
 /**
  * 
  * @global type $JanoControl
  * @param type $id
  * @return type
  */
-
 function selectCatFpById($id) {
     global $JanoControl;
     try {
@@ -61,6 +76,7 @@ function selectCatFpById($id) {
         return null;
     }
 }
+
 /**
  * 
  * @global type $JanoControl
@@ -89,6 +105,7 @@ function selectCatFp($catfp) {
         return null;
     }
 }
+
 /**
  * 
  * @global type $JanoControl
@@ -115,6 +132,7 @@ function selectModalidad($modalidad) {
         return null;
     }
 }
+
 /**
  * 
  * @global type $ERROR
@@ -155,6 +173,7 @@ function conexionPDO($datosConexion) {
  * Función jano_ctrol() establece la conexión a la base de datos mysql de control 
  * ***************************************************************************** 
  */
+
 /**
  * 
  * @return \PDO
@@ -184,6 +203,7 @@ function jano_ctrl() {
     }
     return $conn;
 }
+
 /**
  * 
  * @global type $JanoControl
@@ -216,6 +236,7 @@ function selectBaseDatosAreas($tipo) {
     }
     return $resultSet;
 }
+
 /**
  * 
  * @global type $JanoControl
@@ -246,6 +267,7 @@ function selectBaseDatos($tipo, $areas) {
         return null;
     }
 }
+
 /**
  * 
  * @global type $JanoControl
@@ -278,6 +300,7 @@ function selectBaseDatosEdificio($tipo, $edificio) {
         return null;
     }
 }
+
 /**
  * 
  * @global type $JanoControl
@@ -304,6 +327,7 @@ function selectEdificioId($edificio) {
         return null;
     }
 }
+
 /**
  * 
  * @global type $JanoControl
@@ -331,6 +355,7 @@ function selectCeco($ceco_id) {
         return null;
     }
 }
+
 /**
  * 
  * @global type $JanoControl
@@ -358,6 +383,7 @@ function SelectCecobyCodigo($codigo) {
         return null;
     }
 }
+
 /**
  * 
  * @global type $JanoInte
@@ -386,6 +412,7 @@ function insertEqCeco($codigo_uni) {
         return false;
     }
 }
+
 /**
  * 
  * @global type $JanoInte
@@ -410,6 +437,7 @@ function deleteEqCeco($codigo_uni) {
         return false;
     }
 }
+
 /**
  * 
  * @global type $JanoControl
@@ -433,6 +461,7 @@ function selectEdificio($edificio) {
         return null;
     }
 }
+
 /**
  * 
  * @global type $JanoControl
@@ -462,6 +491,7 @@ function selectDa($da) {
  * Función para obtener los datos del puntos asistencial de la tabla 
  * centros de la base de datos unificada 
  */
+
 /**
  * 
  * @global type $JanoUnif
@@ -486,6 +516,7 @@ function selectCentro($codigo) {
         return null;
     }
 }
+
 /**
  * 
  * @global type $JanoControl
@@ -511,6 +542,7 @@ function existeCentro($codigoUni) {
         return null;
     }
 }
+
 /**
  * 
  * @global type $JanoControl
@@ -538,6 +570,7 @@ function selectCatGen($catgen) {
         return null;
     }
 }
+
 /**
  * 
  * @global type $JanoControl
@@ -565,6 +598,7 @@ function selectCatAnexo($catanexo) {
         return null;
     }
 }
+
 /**
  * 
  * @global type $JanoControl
@@ -594,6 +628,7 @@ function selectEpiAcc($codigo) {
         return null;
     }
 }
+
 /**
  * 
  * @global type $JanoControl
@@ -624,6 +659,7 @@ function selectTipoIlt($codigo) {
         return null;
     }
 }
+
 /**
  * 
  * @global type $JanoControl
@@ -952,7 +988,6 @@ function selectAusenciaById($id) {
     }
 }
 
-
 function conexionEdificio($codigo, $tipo) {
     $BasesDatos = selectBaseDatosEdificio($tipo, $codigo);
     if ($BasesDatos) {
@@ -1066,6 +1101,7 @@ function selectEqCateg($categ_id, $edificio_id) {
         return null;
     }
 }
+
 /**
  * 
  * @global type $JanoControl
@@ -1129,6 +1165,7 @@ function selectEqAusenciaById($id) {
         return null;
     }
 }
+
 /**
  * 
  * @global type $JanoControl
@@ -1160,7 +1197,6 @@ function selectEqCategById($id) {
         return null;
     }
 }
-
 
 function selectEqCentro($codigo, $edificio, $vista) {
     global $JanoInte;
@@ -1209,8 +1245,9 @@ function selectEqCatGen($catgen_id, $edificio_id) {
 
 function selectEqCatFp($catfp_id, $edificio_id) {
     global $JanoControl;
-    if ($catfp_id == null ) return null;
-    
+    if ($catfp_id == null)
+        return null;
+
     try {
         $sentencia = " select codigo_loc from gums_eq_catfp "
                 . " where edificio_id = :edificio_id and catfp_id = :catfp_id and enuso = 'S' ";
@@ -1277,7 +1314,7 @@ function selectEqGrupoCot($grupocot_id, $edificio_id) {
 
 function selectEqGrupoCobro($grupocobro_id, $edificio_id) {
     global $JanoControl;
-    
+
     try {
         $sentencia = " select codigo_loc from gums_eq_grc "
                 . " where edificio_id = :edificio_id and grupocobro_id = :grupocobro_id and enuso = 'S'";
@@ -1322,7 +1359,8 @@ function selectEqGrupoProf($grupoprof_id, $edificio) {
 
 function selectEqOcupacion($ocupacion_id, $edificio_id) {
     global $JanoControl;
-    if ($ocupacion_id == null) return null;
+    if ($ocupacion_id == null)
+        return null;
     try {
         $sentencia = " select codigo_loc from gums_eq_ocupacion "
                 . " where edificio_id = :edificio_id and ocupacion_id = :ocupacion_id ";
@@ -1345,7 +1383,8 @@ function selectEqOcupacion($ocupacion_id, $edificio_id) {
 
 function selectEqTipoIlt($tipo_ilt_id, $edificio_id) {
     global $JanoControl;
-    if ($tipo_ilt_id == null ) return null;
+    if ($tipo_ilt_id == null)
+        return null;
     try {
         $sentencia = " select codigo_loc from gums_eq_tipo_ilt "
                 . " where edificio_id = :edificio_id and tipo_ilt_id = :tipo_ilt_id ";
@@ -1368,7 +1407,8 @@ function selectEqTipoIlt($tipo_ilt_id, $edificio_id) {
 
 function selectEqEpiAcc($epiacc_id, $edificio_id) {
     global $JanoControl;
-    if ($epiacc_id == null) return null;
+    if ($epiacc_id == null)
+        return null;
     try {
         $sentencia = " select codigo_loc from gums_eq_epiacc "
                 . " where edificio_id = :edificio_id and epiacc_id = :epiacc_id ";
@@ -1441,7 +1481,8 @@ function selectModoPago($codigo) {
 
 function selectEqModOcupa($modocupa_id, $edificio_id) {
     global $JanoControl;
-    if ($modocupa_id == null ) return null;
+    if ($modocupa_id == null)
+        return null;
     try {
         $sentencia = " select codigo_loc from gums_eq_modocupa "
                 . " where edificio_id = :edificio_id and modocupa_id = :modocupa_id";
@@ -1464,7 +1505,8 @@ function selectEqModOcupa($modocupa_id, $edificio_id) {
 
 function selectEqFco($fco_id, $edificio_id) {
     global $JanoControl;
-    if ($fco_id == null) return null;
+    if ($fco_id == null)
+        return null;
     try {
         $sentencia = " select codigo_loc from gums_eq_fco "
                 . " where edificio_id = :edificio_id and fco_id = :fco_id";
@@ -1487,7 +1529,8 @@ function selectEqFco($fco_id, $edificio_id) {
 
 function selectEqMoviPat($movipat_id, $edificio_id) {
     global $JanoControl;
-    if ($movipat_id == null) return null;
+    if ($movipat_id == null)
+        return null;
     try {
         $sentencia = " select codigo_loc from gums_eq_movipat "
                 . " where edificio_id = :edificio_id and movipat_id = :movipat_id and enuso = 'S' ";
@@ -1541,11 +1584,11 @@ function selectCecoCiasById($id) {
         if ($res) {
             return $res;
         } else {
-            echo "**ERROR NO EXISTE CCAP_CECOCIAS PARA ID= (".$id. ") \n";
+            echo "**ERROR NO EXISTE CCAP_CECOCIAS PARA ID= (" . $id . ") \n";
             return null;
         }
     } catch (PDOException $ex) {
-        echo "**PDOERROR CCAP_CECOCIAS PARA ID= (".$id. ") ERROR=". $ex->getMessage() . "\n";
+        echo "**PDOERROR CCAP_CECOCIAS PARA ID= (" . $id . ") ERROR=" . $ex->getMessage() . "\n";
         return null;
     }
 }

@@ -80,6 +80,17 @@ verPlazasByCeco:
     defaults: { _controller: CostesBundle:Plaza:verPlazasByCeco}
     options:
         expose: true
+amortizacionPlaza:
+    path:   /plaza/amortizacion/{id}
+    defaults: { _controller: CostesBundle:Plaza:amortizacionPlaza}
+    options:
+        expose: true
+ajaxCompruebaAmortizacionPlaza:
+    path:   /plaza/compruebaAmortizacion/{cias}/{fecha}
+    defaults: { _controller: CostesBundle:Plaza:ajaxCompruebaAmortizacion}
+    options:
+        expose: true
+        
 importaCecoCias:
     path:   /plaza/importaCeco
     defaults: { _controller: CostesBundle:Plaza:importarCeco}
@@ -106,6 +117,12 @@ addCecoCias:
     defaults: { _controller: CostesBundle:Plaza:addCecoCias}
     options:
         expose: true
+sincroCecoCias:
+    path:   /plaza/cecocias/sincro/{id}
+    defaults: { _controller: CostesBundle:Plaza:sincroCecoCias}
+    options:
+        expose: true
+
 #
 # CECO CENTROS DE COSTE
 #

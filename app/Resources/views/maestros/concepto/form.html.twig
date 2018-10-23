@@ -1,0 +1,92 @@
+<script>
+    $(document).ready(function () {
+        $("#tabs").tabs();
+    });
+
+</script>
+<div id="divConcepto" class="container">
+    <div class="container">
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-danger">
+                {{message}}
+            </div>
+            <hr/>
+        {% endfor %}
+    </div>
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Identificación</div>
+
+        <div class="panel-body">
+            <div class="form_row mismalinea" >{{form_row(form.codigo)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.descripcion)}}</div>
+
+        </div>
+    </div>
+    <div id="tabs" class="pestana container" >
+        <ul class="nav nav-tabs">
+            <li><a id="tdatosGen" href="#datosGen">Datos Generales</a></li>
+            <li><a id="totros" href="#otros">Otros Datos</a></li>
+        </ul>
+        <div id="datosGen">
+            <div class="form_row mismalinea" >{{form_row(form.irpf)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.segsoc)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.extra)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.vacac)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.tipo)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.acum)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.incre)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.huelga)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.devengo)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.clave190)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.tipoConcepto)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.cupoAcu)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.cupoCd)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.retJudicial)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.trienioCupo)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.recuperaIt)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.mayorCarga)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.mayorCargagrc)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.sabados)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.variableIrpf)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.mejoraIt)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.cobraEnExtra)}}</div>
+            <div class="clearfix"></div>
+            <div class="form_row mismalinea" >{{form_row(form.conceptoRptCodigo)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.conRptDescripcion)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.conceptoRptId)}}</div>
+            <div class="clearfix"></div>
+            <div class="form_row mismalinea" >{{form_row(form.excRetencion)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.variableDecre)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.integroMit)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.salario)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.gasto173)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.complemento)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.atContinuada)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.turnicidad)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.descuentaIt)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.codigocre)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.enEspecie)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.it190)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.rbmuface)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.rbmuface2)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.descanso)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.cecoConcepto)}}</div>
+            <div class="clearfix"></div>
+            <div class="form_row mismalinea" >{{form_row(form.Importe)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.porcentajExtra)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.porcenExtraAnt)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.reduccion)}}</div>
+        </div>
+        <div id="otros">
+        </div>
+    </div>
+               <div class="clearfix"></div>
+    <div class="form_row " >
+        {{form_row(form.Guardar)}}
+        {{form_end(form)}}
+    </div>
+
+</div>

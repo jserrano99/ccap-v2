@@ -522,3 +522,51 @@ addEqCateg:
         expose: true
 
  
+ #
+# CONCEPTOS  (CONCEPTO)
+#
+queryConcepto:
+    path: /concepto/query/
+    defaults: { _controller: MaestrosBundle:Concepto:query}    
+    options:
+        expose: true
+editConcepto:
+    path: /concepto/edit/{id}
+    defaults: { _controller: MaestrosBundle:Concepto:edit}    
+    options:
+        expose: true
+addConcepto:
+    path: /concepto/add
+    defaults: { _controller: MaestrosBundle:Concepto:add}    
+    options:
+        expose: true
+descargaLogConcepto:
+    path: /concepto/descargaLog/{id}
+    defaults: { _controller: MaestrosBundle:Concepto:descargaLog}    
+    options:
+        expose: true
+sincroConcepto:
+    path: /concepto/sincro/{id}/{actuacion}/{eqconcepto_id}/{edificio}
+    defaults: { _controller: MaestrosBundle:Concepto:sincro}    
+    options:
+        expose: true
+queryEqConcepto:
+    path: /eqconcepto/query/{concepto_id}
+    defaults: { _controller: MaestrosBundle:Concepto:queryEqConcepto}    
+    options:
+        expose: true
+activaEqConcepto:
+    path: /eqconcepto/activa/{eqconcepto_id}
+    defaults: { _controller: MaestrosBundle:Concepto:activar}    
+    options:
+        expose: true
+desactivaEqConcepto:
+    path: /eqconcepto/desactiva/{eqconcepto_id}
+    defaults: { _controller: MaestrosBundle:Concepto:desActivar}    
+    options:
+        expose: true
+addEqConcepto:
+    path: /eqconcepto/add/{eqconcepto_id}
+    defaults: { _controller: MaestrosBundle:Concepto:crear}    
+    options:
+        expose: true

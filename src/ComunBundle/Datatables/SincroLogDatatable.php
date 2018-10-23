@@ -39,7 +39,7 @@ class SincroLogDatatable extends AbstractDatatable {
             'order' => array(array(0, 'desc')),
             'order_cells_top' => true,
             'search_in_non_visible_columns' => true,
-            'dom' => 'Bfrtip',
+            'dom' => 'lBfrtip',
             
         ));
 

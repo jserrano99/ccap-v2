@@ -159,7 +159,7 @@ class Altas {
     private $destino;
     
 
-     /**
+    /**
      * @var ComunBundle\Entity\SincroLog|null
      *
      * @ORM\ManyToOne(targetEntity="ComunBundle\Entity\SincroLog")
@@ -167,8 +167,8 @@ class Altas {
      *   @ORM\JoinColumn(name="sincro_log_id", referencedColumnName="id", onDelete="SET NULL")
      * })
      */
-
     private $sincroLog;
+
     /**
      * Get id.
      *

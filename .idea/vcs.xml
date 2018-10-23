@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/friendsofsymfony/jsrouting-bundle" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/phpoffice/phpspreadsheet" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/setasign/fpdi" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/sg/datatablesbundle" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/symfony/maker-bundle" vcs="Git" />
+  </component>
+</project>

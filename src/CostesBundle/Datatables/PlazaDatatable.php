@@ -68,10 +68,10 @@ class PlazaDatatable extends AbstractDatatable {
                         'text' => 'Exportar Excel',
                         'button_options' => array(
                             'exportOptions' => array(
-                                    'search' => 'none'
-                                )
+                                'search' => 'none'
                             )
-                        ),
+                        )
+                    ),
                     array(
                         'extend' => 'pdf',
                         'text' => 'Pdf',
@@ -90,7 +90,7 @@ class PlazaDatatable extends AbstractDatatable {
             'auto_width' => true,
             'ordering' => true,
             'length_change' => true,
-            'state_save' => false
+            'state_save' => true
         ));
 
         $UfAll = $this->getEntityManager()->getRepository('CostesBundle:Uf')->createQueryBuilder('u')
@@ -179,6 +179,18 @@ class PlazaDatatable extends AbstractDatatable {
                             'attributes' => array('rel' => 'tooltip',
                                 'title' => 'Editar Plaza',
                                 'class' => 'btn btn-primary btn-xs',
+                                'role' => 'button')),
+                        array('route' => 'amortizacionPlaza',
+                            'route_parameters' => array('id' => 'id'),
+                            'label' => 'Amortizar',
+                            'icon' => 'glyphicon glyphicon-erase',
+                            'render_if' => function ($row) {
+                                if ($row['amortizada'] == 'N')
+                                    return true;
+                            },
+                            'attributes' => array('rel' => 'tooltip',
+                                'title' => 'Amortizar Plaza',
+                                'class' => 'btn btn-danger btn-xs',
                                 'role' => 'button')),
                         array('route' => 'descargaLogPlaza',
                             'route_parameters' => array('id' => 'id'),

@@ -1,0 +1,22 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %}PLAZAS **{{accion}}** 
+    <a href="{{path("queryPlaza")}}"
+       class="btn btn-success">
+        <span class="glyphicon glyphicon-th-list"></span> Volver </a>
+{% endblock %}
+{% block contenido %}
+    <div class="container">
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-success">
+                {{message}}
+            </div>
+            <a href="{{path("descargaSincroLog",{'id':plaza.SincroLog.id})}}" 
+           class="btn btn-success btn-b">
+            <span class="glyphicon glyphicon-download"></span> Descargar </a>
+            
+        {% endfor %}
+
+        {% include 'costes/plaza/form.amortizacion.html.twig' %}
+    </div>
+
+{% endblock %}

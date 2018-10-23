@@ -9,6 +9,8 @@
 
     {% if app.session.get('usuario_perfil') == 'ROLE_COSTES' %}
         {% include 'menu.costes.html.twig' %}
+        {% include 'menu.maestros.html.twig' %}
+        {% include 'menu.catalogos.html.twig' %}
     {% endif %}
 
     {% if app.session.get('usuario_perfil') == 'ROLE_MAESTROS' %}

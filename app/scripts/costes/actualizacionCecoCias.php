@@ -17,13 +17,13 @@ function insertCecoCias($conexion, $cias, $ceco) {
             ":ceco" => $ceco];
         $ins = $query->execute($params);
         if ($ins == 0) {
-            echo "ERROR EN LA INSERCIÓN DE CECOCIAS CIAS=" . $cias, "  CECO=" . $ceco . "\n";
+            echo "****ERROR EN LA INSERCIÓN DE CECOCIAS CIAS=" . $cias, "  CECO=" . $ceco . "\n";
             return null;
         }
-        echo "INSERCIÓN CORRECTA DE CECOCIAS CIAS=" . $cias, "  CECO=" . $ceco . "\n";
+        echo "==> INSERCIÓN CORRECTA DE CECOCIAS CIAS =(" . $cias, ")  CECO= (" . $ceco . ") \n";
         return true;
     } catch (PDOException $ex) {
-        echo "PDOERROR EN LA INSERCIÓN DE CECOCIAS CIAS=" . $cias, "  CECO=" . $ceco . " ERROR= " . $ex->getMessage() . " \n";
+        echo "***PDOERROR EN LA INSERCIÓN DE CECOCIAS CIAS=" . $cias, "  CECO=" . $ceco . " ERROR= " . $ex->getMessage() . " \n";
         return null;
     }
 }
@@ -64,7 +64,7 @@ function existePlaza($conexion, $cias) {
             return null;
         }
     } catch (PDOException $ex) {
-        echo " ERROR PDO EN SELECT PLAZA=" . $cias . " " . $ex->getMessage() . "\n";
+        echo "**PDOERROR EN SELECT PLAZA=" . $cias . " " . $ex->getMessage() . "\n";
         return null;
     }
 }
@@ -80,7 +80,7 @@ function existeCecoCias($conexion, $cias, $ceco) {
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
         if ($res) {
-            echo "--YA EXISTE CECOCIAS PARA CECO =" . $ceco . "  CIAS=" . $cias . " ** NO SE TRATA\n";
+            echo "-->YA EXISTE CECOCIAS PARA CECO =" . $ceco . "  CIAS=" . $cias . " ** NO SE TRATA\n";
             return true;
         } else {
             return false;
@@ -112,6 +112,7 @@ if (!$JanoControl) {
 $modo = $argv[1];
 $cecocias_id = $argv[2];
 
+echo "==> CECOCIAS A TRATAR id =(" . $cecocias_id . ") \n";
 
 if ($modo == 'REAL') {
     echo "==>ENTORNO: PRODUCCIÓN \n";
@@ -125,7 +126,8 @@ if ($modo == 'REAL') {
     $tipobd = 1;
 }
 
-$CecoCias = selectCecoCiasById($plaza_id);
+
+$CecoCias = selectCecoCiasById($cecocias_id);
 $Ceco = selectCeco($CecoCias["ceco_id"]);
 $Plaza = selectPlazaById($CecoCias["plaza_id"]);
 
@@ -133,24 +135,11 @@ if ($Plaza == null) {
     echo "***ERROR NO EXISTE CCAP_PLAZA PARA ID= " . $CecoCias["plaza_id"];
     exit(1);
 }
-echo "==> CECOCIAS A TRATAR CIAS= (" . $Plaza["cias"] . ") CECO= (" . $Plaza["ceco"] . ") FECHA INICIO= (" . $CecoCias["fInicio"] . ") EDIFICIO=" . $Plaza["edificio"] . "\n";
+echo "==> CECOCIAS CIAS= (" . $Plaza["cias"] . ") CECO= (" . $Plaza["ceco"] . ") FECHA INICIO= (" . $CecoCias["f_inicio"] . ") EDIFICIO=" . $Plaza["edificio"] . "\n";
 
-$query = " select * from comun_edificio where area = 'S' ";
-$query = $JanoControl->prepare($query);
-$query->execute();
-$EdificioAll = $query->fetchAll(PDO::FETCH_ASSOC);
-
-
-if ($Plaza["edificio"] == 0) {
-    $BasesDatos = SelectBaseDatosAreas($tipobd);
-    $BasesDatos[] = SelectBaseDatos($tipobd, 'U');
-} else {
-    $BasesDatos = array();
-    $BasesDatos[] = SelectBaseDatosEdificio($tipobd, $Plaza["edificio"]);
-    $BasesDatos[] = SelectBaseDatos($tipobd, 'U');
-}
-
-
+$BasesDatos = array();
+$BasesDatos[] = SelectBaseDatosEdificio($tipobd, $Plaza["edificio"]);
+$BasesDatos[] = SelectBaseDatos($tipobd, 'U');
 
 foreach ($BasesDatos as $baseDatos) {
     $alias = $baseDatos["alias"];
@@ -169,12 +158,12 @@ foreach ($BasesDatos as $baseDatos) {
         }
     }
 
-    $asignacion = asignacionCeco($Plaza,$CecoCias["fInicio"]);
-    if (!$asignacion) {
-        echo "**ERROR EN LA ASIGNACIÓN AL PROFESIONAL** \n";
-        exit(1);
-    }
-}
-    echo "  +++++++++++ TERMINA PROCESO ACTUALIZACIÓN CECOCIAS +++++++++++++ \n";
-    exit(0);
+//    $asignacion = asignacionCeco($Plaza,$CecoCias["f_inicio"]);
+//    if (!$asignacion) {
+//        echo "**ERROR EN LA ASIGNACIÓN AL PROFESIONAL** \n";
+//        exit(1);
+//    }
     
+}
+echo "  +++++++++++ TERMINA PROCESO ACTUALIZACIÓN CECOCIAS +++++++++++++ \n";
+exit(0);

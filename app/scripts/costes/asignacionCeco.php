@@ -11,7 +11,7 @@ function selectMovialtabyCias($cias, $fInicio) {
                 . " inner join cca  as t2 on t2.alta = t1.codigo "
                 . " inner join trab as t3 on t3.cip = t1.cip "
                 . " where t1.cias = :cias "
-                . " and t2.";
+                . " and t1.";
         $query = $JanoUnif->prepare($sentencia);
         $params = array(":cias" => $cias);
         $query->execute($params);
@@ -65,7 +65,7 @@ function actualizaCcaUnif($ceco, $cca_id) {
     }
 }
 
-function asignacionCeco($Plaza) {
+function asignacionCeco($Plaza,$fInicio) {
 
     /*
      * Tratamiento para la base de datos unificada

@@ -113,9 +113,8 @@ function equivalenciasPlaza($Plaza) {
     $Equi["catgen"] = selectEqCatGen($Plaza["catgen_id"], $Plaza["edificio_id"]);
     $Equi["catfp"] = selectEqCatFp($Plaza["catfp_id"], $Plaza["edificio_id"]);
     //$Equi["turno"] = selectEqTurno($Plaza["turno"], $Plaza["edificio"]);
-    
-//    $Equi["turno"] = $Plaza["turno"];
-    
+    $Equi["turno"] = $Plaza["turno"];
+
     echo "**EQUIVALENCIAS**\n";
     echo "**-------------**\n";
     echo " UNIDAD FUNCIONAL= (" . $Plaza["uf"] . ") / (" . $Equi["uf"] . ")\n";
@@ -244,6 +243,9 @@ function insertPlazaArea($Plaza) {
 //            echo "***ERROR EN INSERCION CIAS=" . $Plaza["cias"] . "\n";
 //            return false;
 //        }
+
+        echo "==> PLAZA " . $Plaza["cias"] . " CREADA EN AREA \n";
+
         if ($Plaza["ceco"] != null) {
             procesoCecoCias($conexionArea, $Plaza["cias"], $Plaza["ceco"]);
         }
@@ -369,8 +371,8 @@ function updatePlazaArea($Plaza) {
 
         return true;
     } catch (PDOException $ex) {
-        echo "***PDOERROR EN UPDATE PLAZAS CIAS= (".$Plaza["cias"] .") \n". $ex->getMessage() . "\n";
-        $gblError=1;
+        echo "***PDOERROR EN UPDATE PLAZAS CIAS= (" . $Plaza["cias"] . ") \n" . $ex->getMessage() . "\n";
+        $gblError = 1;
         return false;
     }
 }
@@ -389,9 +391,9 @@ if (!$JanoControl) {
 $modo = $argv[1];
 $id = $argv[2];
 $actuacion = $argv[3];
-$gblError=0;
+$gblError = 0;
 
-if ($modo  == 'REAL') {
+if ($modo == 'REAL') {
     echo " ENTORNO : PRODUCCIÓN \n";
     $tipobd = 2;
     $JanoInte = conexionPDO(selectBaseDatos(2, 'I'));

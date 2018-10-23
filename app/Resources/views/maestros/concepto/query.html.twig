@@ -1,0 +1,13 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} CONCEPTOS RETRIBUTIVOS **CONSULTA**
+    <a href="{{path("addConcepto")}}" 
+       class="btn btn-success" >
+        <span class="glyphicon glyphicon-new-window"></span>  Nuevo Concepto</a>
+    <hr/>
+{% endblock %} 
+
+{% block contenido %}
+    <div class="container-fluid">
+        {{ sg_datatables_render(datatable) }}
+    </div>
+{% endblock %}
