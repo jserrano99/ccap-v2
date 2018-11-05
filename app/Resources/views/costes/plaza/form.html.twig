@@ -26,18 +26,25 @@
 
     function cambiarAsignacion() {
         if ($("#costesbundle_plaza_nuevoCecoInf").val() == '' ||
-                $("#costesbundle_plaza_fInicio").val() == '') {
+            $("#costesbundle_plaza_fInicio").val() == '') {
             bootbox.alert("OBLIGATORIO INFORMAR NUEVO CECO  Y FECHA DE INICIO",
-                    function () {});
+                function () {
+                });
         } else {
             var cias = $("#costesbundle_plaza_cias").val();
             var cecoAnterior = $("#costesbundle_plaza_cecoActual").val();
             alert(cecoAnterior);
-            if (cecoAnterior == '')
+            if (cecoAnterior == '') {
                 cecoAnterior = 0;
+            }
             var nuevoCeco = $("#costesbundle_plaza_nuevoCecoCodigo").val();
             var fInicio = $("#costesbundle_plaza_fInicio").val();
-            var recurso = Routing.generate("cambiarAsignacion", {"cias": cias, "nuevoCeco": nuevoCeco, "fInicio": fInicio, "cecoAnterior_id": cecoAnterior}, true);
+            var recurso = Routing.generate("cambiarAsignacion", {
+                "cias": cias,
+                "nuevoCeco": nuevoCeco,
+                "fInicio": fInicio,
+                "cecoAnterior_id": cecoAnterior
+            }, true);
             window.location = recurso;
         }
     }
@@ -77,26 +84,42 @@
     }
 
     function calcularLetra() {
-        var cias = $("#costesbundle_plaza_cias").val();
-        if (cias == '') {
-            bootbox.alert(' ERROR NO EXISTE CIAS');
-        } else {
-            var cadena = 'TRWAGMYFPDXBNJZSQVHLCKE'
-            var resto = cias % 23;
-            var letra = cadena.substr(resto, 1)
+        let cadena, letra, resto;
+        let cias = $("#costesbundle_plaza_cias").val();
+        if (cias != '') {
+            cadena = 'TRWAGMYFPDXBNJZSQVHLCKE';
+            resto = cias % 23;
+            letra = cadena.substr(resto, 1);
             $("#costesbundle_plaza_cias").val(cias + letra);
+        } else {
+            bootbox.alert(' ERROR NO EXISTE CIAS');
         }
     }
 
+    /**
+     *
+     */
+    function desAmortizar() {
+        let recurso;
+        let cias = $("#costesbundle_plaza_cias").val();
+        alert(cias);
+        recurso = Routing.generate("desAmortizacion", {
+            "cias": cias
+        }, true);
+        window.location = recurso;
+
+    }
+
     function calcularCeco() {
-        var uf = $("#costesbundle_plaza_uf").val();
-        var pa = $("#costesbundle_plaza_pa").val();
-        var cias = $("#costesbundle_plaza_cias").val();
+        let recurso;
+        let uf = $("#costesbundle_plaza_uf").val();
+        let pa = $("#costesbundle_plaza_pa").val();
+        let cias = $("#costesbundle_plaza_cias").val();
         if (uf == '' || pa == '' || cias == '') {
             bootbox.alert("Unidad Funcional, Punto Asistencia y Cias Obligatorios");
         } else {
             $("#procesando").modal('show');
-            var recurso = Routing.generate("ajaxCalcularCeco", {"cias": cias, "uf_id": uf, "pa_id": pa}, true);
+            recurso = Routing.generate("ajaxCalcularCeco", {"cias": cias, "uf_id": uf, "pa_id": pa}, true);
             $.ajax({
                 type: "POST",
                 url: recurso,
@@ -120,7 +143,7 @@
         }
     }
 
-</script> 
+</script>
 
 
 <div class="container">
@@ -129,64 +152,78 @@
     <div class="panel panel-default">
         <div class="panel-heading">Identificación</div>
         <div class="panel-body">
-            <div class="form_row mismalinea">{{form_row(form.uf)}}</div>
-            <div class="form-row  mismalinea">{{form_row(form.pa)}}</div>
+            <div class="form_row mismalinea">{{ form_row(form.uf) }}</div>
+            <div class="form-row  mismalinea">{{ form_row(form.pa) }}</div>
             <div class="clearfix"></div>
-            <div class="form-row mismalinea">{{form_row(form.catGen)}}</div>
-            <div class="form-row  mismalinea">{{form_row(form.cias)}}</div>
-            <div class="form-row  mismalinea">{{form_row(form.orden)}}</div>
+            <div class="form-row mismalinea">{{ form_row(form.catGen) }}</div>
+            <div class="form-row  mismalinea">{{ form_row(form.cias) }}</div>
+            <div class="form-row  mismalinea">{{ form_row(form.orden) }}</div>
             {% if accion == 'NUEVA' %}
                 <div class="form-row  mismalinea">
-                    <button type="button" 
+                    <button type="button"
                             class="btn btn-default btn-info"
                             onclick="calcularCias()"
-                            data-toggle="tooltip" 
-                            data-placement="bottom" 
-                            title="Calcular Identificación de Plaza">Calcular CIAS</button>
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            title="Calcular Identificación de Plaza">Calcular CIAS
+                    </button>
                 </div>
                 <div class="form-row  mismalinea">
-                    <button type="button" 
+                    <button type="button"
                             class="btn btn-default btn-info"
                             onclick="reCalcularCias()"
-                            data-toggle="tooltip" 
-                            data-placement="bottom" 
-                            title="Recalcular CIAS según nuevo orden">Recalcular CIAS</button>
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            title="Recalcular CIAS según nuevo orden">Recalcular CIAS
+                    </button>
                 </div>
                 <div class="form-row  mismalinea">
-                    <button type="button" 
+                    <button type="button"
                             class="btn btn-default btn-info"
                             onclick="calcularLetra()"
-                            data-toggle="tooltip" 
-                            data-placement="bottom" 
-                            title="Calcular letra de Control de Plaza">Calcular Letra</button>
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            title="Calcular letra de Control de Plaza">Calcular Letra
+                    </button>
                 </div>
             {% endif %}
         </div>
     </div>
-    <div id="tabs" class="pestana container" >
+    <div id="tabs" class="pestana container">
         <ul class="nav nav-tabs">
             <li><a id="tdatosGen" href="#datosGen">Datos Generales</a></li>
-                {% if accion == 'MODIFICACIÓN' %}
+            {% if accion == 'MODIFICACIÓN' %}
                 <li><a id="tdatosGen" href="#consulta">Histórico Centros de Coste</a></li>
                 <li><a id="tcostes" href="#costes">Cambio de Asignación</a></li>
-                {% endif %}
+            {% endif %}
         </ul>
         <div id="datosGen">
-            <div class="form-row mismalinea">{{form_row(form.modalidad)}}</div>
-            <div class="form-row mismalinea">{{form_row(form.catFp)}}</div>
-            <div class="form-row mismalinea">{{form_row(form.turno)}}</div>
+            <div class="form-row mismalinea">{{ form_row(form.modalidad) }}</div>
+            <div class="form-row mismalinea">{{ form_row(form.catFp) }}</div>
+            <div class="form-row mismalinea">{{ form_row(form.turno) }}</div>
             <div class="clearfix"></div>
-            <div class="form-row ">{{form_row(form.observaciones)}}</div>
+            <div class="form-row ">{{ form_row(form.observaciones) }}</div>
             <div class="clearfix"></div>
-            <div class="form-row mismalinea">{{form_row(form.fCreacion)}}</div>
-            <div class="form-row mismalinea">{{form_row(form.fAmortiza)}}</div>
+            <div class="form-row mismalinea">{{ form_row(form.fCreacion) }}</div>
+            <div class="form-row mismalinea">{{ form_row(form.fAmortiza) }}</div>
+            {% if (plaza.fAmortiza != '' ) %}
+                <div class="form-row  mismalinea">
+                    <button type="button"
+                            class="btn btn-default btn-warning"
+                            onclick="desAmortizar()"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            title="Desamortizar la Plaza"> Quitar Amortización
+                    </button>
+                </div>
+            {% endif %}
             <div class="clearfix"></div>
-            <div class="form-row mismalinea" style="display: none">{{form_row(form.refuerzo)}}</div>
-            <div class="form-row mismalinea">{{form_row(form.plantilla)}}</div>
-            <div class="form-row mismalinea">{{form_row(form.ficticia)}}</div>
-            <div class="form-row mismalinea" style="display: none">>{{form_row(form.colaboradora)}}</div>
-            <div class="form-row mismalinea">{{form_row(form.horNormal)}}</div>
-            <div class="form-row mismalinea">{{form_row(form.cupequi)}}</div>
+            <div class="form-row mismalinea" style="display: none">{{ form_row(form.refuerzo) }}</div>
+            <div class="form-row mismalinea">{{ form_row(form.plantilla) }}</div>
+            <div class="form-row mismalinea">{{ form_row(form.ficticia) }}</div>
+            <div class="form-row mismalinea" style="display: none">>{{ form_row(form.colaboradora) }}</div>
+            <div class="form-row mismalinea">{{ form_row(form.horNormal) }}</div>
+            <div class="form-row mismalinea">{{ form_row(form.cupequi) }}</div>
             <div class="clearfix"></div>
         </div>
         {% if accion == 'MODIFICACIÓN' %}
@@ -196,33 +233,35 @@
                 {% endif %}
             </div>
             <div id="costes">
-                <div class="form-row mismalinea">{{form_row(form.cecoActual)}}</div>
+                <div class="form-row mismalinea">{{ form_row(form.cecoActual) }}</div>
                 <div class="clearfix"></div>
-                <div class="form-row mismalinea">{{form_row(form.nuevoCecoCodigo)}}</div>
-                <div class="form-row mismalinea">{{form_row(form.nuevoCecoDesc)}}</div>
-                <div class="form-row mismalinea">{{form_row(form.nuevoCeco)}}</div>
-                <div class="form-row mismalinea">{{form_row(form.fInicio)}}</div>
+                <div class="form-row mismalinea">{{ form_row(form.nuevoCecoCodigo) }}</div>
+                <div class="form-row mismalinea">{{ form_row(form.nuevoCecoDesc) }}</div>
+                <div class="form-row mismalinea">{{ form_row(form.nuevoCeco) }}</div>
+                <div class="form-row mismalinea">{{ form_row(form.fInicio) }}</div>
                 <div class="form-row mismalinea">
-                    <button type="button" 
+                    <button type="button"
                             class="btn btn-default btn-warning btn-t"
                             onclick="calcularCeco()"
-                            data-toggle="tooltip" 
-                            data-placement="bottom" 
-                            title="Calculo Automático de Centro de Coste"> Calcular Centro de Coste</button>
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            title="Calculo Automático de Centro de Coste"> Calcular Centro de Coste
+                    </button>
                 </div>
                 <div class="form-row mismalinea">
-                    <button type="button" 
+                    <button type="button"
                             id="btnAsignacion"
                             class="btn btn-default btn-info btn-t"
                             onclick="cambiarAsignacion()"
-                            data-toggle="tooltip" 
-                            data-placement="bottom" 
-                            title="Cambiar Asginación de Centro de Coste"> Cambiar Asignación</button>
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            title="Cambiar Asginación de Centro de Coste"> Cambiar Asignación
+                    </button>
                 </div>
             </div>
         {% endif %}
     </div>
-    <div class="form_row " >
+    <div class="form_row ">
         {{ form_row(form.Guardar) }}
     </div>
 </div>

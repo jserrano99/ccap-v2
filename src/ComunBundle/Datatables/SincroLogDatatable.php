@@ -53,35 +53,6 @@ class SincroLogDatatable extends AbstractDatatable {
         ));
 
 
-//        $this->extensions->set(array(
-//            //'buttons' => true,
-//            'buttons' => array(
-//                'show_buttons' => array('copy', 'print'), // built-in buttons
-//                'create_buttons' => array(// custom buttons 
-//                    array(
-//                        'action' => array(
-//                            'template' => 'comun/action.js.twig',
-//                        //'vars' => array('id' => '2', 'test' => 'new value'),
-//                        ),
-//                        'text' => 'alert',
-//                    ),
-//                    array(
-//                        'extend' => 'csv',
-//                        'text' => 'custom csv button',
-//                    ),
-//                    array(
-//                        'extend' => 'pdf',
-//                        'text' => 'my pdf',
-//                        'button_options' => array(
-//                            'exportOptions' => array(
-//                                'columns' => array('1', '2'),
-//                            ),
-//                        ),
-//                    ),
-//                ),
-//            ),
-//        ));
-
 
         $this->columnBuilder
                 ->add('id', Column::class, array(

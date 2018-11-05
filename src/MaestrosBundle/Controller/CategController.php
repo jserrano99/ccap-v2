@@ -2,25 +2,41 @@
 
 namespace MaestrosBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Response;
 use UniqueConstraintViolationException;
+use ComunBundle\Entity\SincroLog;
+use MaestrosBundle\Form\CategType;
+use MaestrosBundle\Datatables\EqCategDatatable;
+use MaestrosBundle\Datatables\CategDatatable;
+use Doctrine\DBAL\DBALException;
 
+/**
+ * Class CategController
+ * @package MaestrosBundle\Controller
+ */
 class CategController extends Controller {
 
     private $sesion;
 
+    /**
+     * CategController constructor.
+     */
     public function __construct() {
         $this->sesion = new Session();
     }
 
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
+     * @throws \Exception
+     */
     public function queryAction(Request $request) {
         $isAjax = $request->isXmlHttpRequest();
 
-        $datatable = $this->get('sg_datatables.factory')->create(\MaestrosBundle\Datatables\CategDatatable::class);
+        $datatable = $this->get('sg_datatables.factory')->create(CategDatatable::class);
         $datatable->buildDatatable();
 
         if ($isAjax) {
@@ -37,6 +53,12 @@ class CategController extends Controller {
         ));
     }
 
+    /**
+     * @param Request $request
+     * @param $categ_id
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
+     * @throws \Exception
+     */
     public function queryEqCategAction(Request $request, $categ_id) {
         $em = $this->getDoctrine()->getManager();
         $Categ_repo = $em->getRepository("MaestrosBundle:Categ");
@@ -44,7 +66,7 @@ class CategController extends Controller {
 
         $isAjax = $request->isXmlHttpRequest();
 
-        $datatable = $this->get('sg_datatables.factory')->create(\MaestrosBundle\Datatables\EqCategDatatable::class);
+        $datatable = $this->get('sg_datatables.factory')->create(EqCategDatatable::class);
         $datatable->buildDatatable();
 
         if ($isAjax) {
@@ -58,37 +80,41 @@ class CategController extends Controller {
             return $responseService->getResponse();
         }
 
-        return $this->render('maestros/categ/query.eq.html.twig', array(
-                    'datatable' => $datatable,
-        ));
+        $params = ['datatable' => $datatable];
+        return $this->render('maestros/categ/query.eq.html.twig', $params);
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
     public function editAction(Request $request, $id) {
         $entityManager = $this->getDoctrine()->getManager();
         $Categ_repo = $entityManager->getRepository("MaestrosBundle:Categ");
         $Categ = $Categ_repo->find($id);
 
-        $form = $this->createForm(\MaestrosBundle\Form\CategType::class, $Categ);
+        $form = $this->createForm(CategType::class, $Categ);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             try {
                 $entityManager->persist($Categ);
                 $entityManager->flush();
-                $params = array("id" => $Categ->getId(),
+                $params = ["id" => $Categ->getId(),
                     "actuacion" => "UPDATE",
-                    "eqcateg_id" => "TT");
+                    "eqcateg_id" => "TT"];
                 return $this->redirectToRoute("sincroCateg", $params);
-            } catch (Doctrine\DBAL\DBALException $ex) {
+            } catch (DBALException $ex) {
                 $status = "ERROR GENERAL=" . $ex->getMessage();
                 $this->sesion->getFlashBag()->add("status", $status);
                 return $this->redirectToRoute("queryCateg");
             }
         }
 
-        $params = array("categ" => $Categ,
+        $params = ["categ" => $Categ,
             "accion" => "MODIFICACIÓN",
-            "form" => $form->createView());
+            "form" => $form->createView()];
         return $this->render("maestros/categ/edit.html.twig", $params);
     }
 
@@ -97,7 +123,7 @@ class CategController extends Controller {
         $entityManager = $this->getDoctrine()->getManager();
         $Categ = new \MaestrosBundle\Entity\Categ();
 
-        $form = $this->createForm(\MaestrosBundle\Form\CategType::class, $Categ);
+        $form = $this->createForm(CategType::class, $Categ);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -120,12 +146,16 @@ class CategController extends Controller {
             }
         }
 
-        $params = array("categ" => $Categ,
+        $params = ["categ" => $Categ,
             "accion" => "CREACIÓN",
-            "form" => $form->createView());
+            "form" => $form->createView()];
         return $this->render("maestros/categ/edit.html.twig", $params);
     }
 
+    /**
+     * @param $Categ
+     * @return bool
+     */
     public function crearEquivalencias($Categ) {
         $entityManager = $this->getDoctrine()->getManager();
         $Edificio_repo = $entityManager->getRepository("ComunBundle:Edificio");
@@ -142,6 +172,10 @@ class CategController extends Controller {
         return true;
     }
 
+    /**
+     * @param $catgen_id
+     * @return Response
+     */
     public function ajaxCalculaCodigoAction($catgen_id) {
 
         $em = $this->getDoctrine()->getManager();
@@ -166,6 +200,12 @@ class CategController extends Controller {
         return $response;
     }
 
+    /**
+     * @param $id
+     * @param $actuacion
+     * @param $eqcateg_id
+     * @return Response
+     */
     public function sincroAction($id, $actuacion, $eqcateg_id) {
         $em = $this->getDoctrine()->getManager();
         $Categ = $em->getRepository("MaestrosBundle:Categ")->find($id);
@@ -173,7 +213,7 @@ class CategController extends Controller {
         $Usuario = $em->getRepository("ComunBundle:Usuario")->find($usuario_id);
         $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(1);
 
-        $SincroLog = new \ComunBundle\Entity\SincroLog();
+        $SincroLog = new SincroLog();
         $fechaProceso = new \DateTime();
 
         $SincroLog->setUsuario($Usuario);
@@ -191,7 +231,7 @@ class CategController extends Controller {
         $modo = $this->getParameter('modo');
         $php = $this->getParameter('php');
         $php_script = $php." " . $root . "/scripts/maestros/actualizacionCateg.php " . $modo . " " . $Categ->getId() . " " . $actuacion . " " . $eqcateg_id;
-        $mensaje = exec($php_script, $SALIDA, $resultado);
+        exec($php_script, $SALIDA, $resultado);
 
         if ($resultado == 0) {
             $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(2);
@@ -212,11 +252,15 @@ class CategController extends Controller {
         $em->persist($SincroLog);
         $em->flush();
 
-        $params = array("SincroLog" => $SincroLog,
-            "resultado" => $resultado);
+        $params = ["SincroLog" => $SincroLog,
+            "resultado" => $resultado];
         return $this->render("maestros/finSincro.html.twig", $params);
     }
 
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function descargaLogAction($id) {
         $em = $this->getDoctrine()->getManager();
         $CatFp = $em->getRepository("MaestrosBundle:Categ")->find($id);
@@ -224,38 +268,50 @@ class CategController extends Controller {
         return $this->redirectToRoute("descargaSincroLog", $params);
     }
 
+    /**
+     * @param $eqcateg_id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function activarAction($eqcateg_id) {
         $em = $this->getDoctrine()->getManager();
         $EqCateg = $em->getRepository("MaestrosBundle:EqCateg")->find($eqcateg_id);
-        $params = array("id" => $EqCateg->getCateg()->getId(),
+        $params = ["id" => $EqCateg->getCateg()->getId(),
             "actuacion" => 'ACTIVAR',
             "edificio" => $EqCateg->getEdificio()->getCodigo(),
-            "eqcateg_id" => $EqCateg->getId());
+            "eqcateg_id" => $EqCateg->getId()];
         return $this->redirectToRoute("sincroCateg", $params);
     }
 
+    /**
+     * @param $eqcateg_id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function desactivarAction($eqcateg_id) {
         $em = $this->getDoctrine()->getManager();
         $EqCateg = $em->getRepository("MaestrosBundle:EqCateg")->find($eqcateg_id);
-        $params = array("id" => $EqCateg->getCateg()->getId(),
+        $params = ["id" => $EqCateg->getCateg()->getId(),
             "actuacion" => 'DESACTIVAR',
             "edificio" => $EqCateg->getEdificio()->getCodigo(),
-            "eqcateg_id" => $EqCateg->getId());
+            "eqcateg_id" => $EqCateg->getId()];
         return $this->redirectToRoute("sincroCateg", $params);
     }
 
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function crearAction($id) {
         $em = $this->getDoctrine()->getManager();
         $EqCateg = $em->getRepository("MaestrosBundle:EqCateg")->find($id);
         if ($EqCateg->getCodigoLoc() == 'XXXX') {
             $status = "ERROR EN EL CODIGO NO PUEDE SER (XXXX) ";
             $this->sesion->getFlashBag()->add("status", $status);
-            $params = array("cateq_id" => $EqCateg->getCateg()->getId());
+            $params = ["cateq_id" => $EqCateg->getCateg()->getId()];
             return $this->redirectToRoute("queryEqCateg", $params);
         }
-        $params = array("id" => $EqCateg->getCateg()->getId(),
+        $params = ["id" => $EqCateg->getCateg()->getId(),
             "actuacion" => 'CREAR',
-            "eqcateg_id" => $EqCateg->getId());
+            "eqcateg_id" => $EqCateg->getId()];
         return $this->redirectToRoute("sincroCateg", $params);
     }
 

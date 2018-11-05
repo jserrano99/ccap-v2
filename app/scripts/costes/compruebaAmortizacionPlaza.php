@@ -107,7 +107,6 @@ if ($resMovialta != null) {
  * CUERPO PRINCIPAL DEL SCRIPT
  * ** */
 $resultado = 0;
-echo " +++++++++++ COMIENZA PROCESO COMPROBACION AMORTTIZACIÓN DE PLAZA +++++++++++ \n";
 $JanoControl = jano_ctrl();
 
 if (!$JanoControl) {

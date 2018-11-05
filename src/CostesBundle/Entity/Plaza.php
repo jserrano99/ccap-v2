@@ -188,6 +188,9 @@ class Plaza {
      */
     private $cecoActual;
 
+    /**
+     * @return string
+     */
     public function __toString() {
         return $this->cias;
     }
@@ -349,7 +352,7 @@ class Plaza {
     /**
      * Get fAmortiza.
      *
-     * @return \DateTime|null
+     * @return date|\DateTime|null
      */
     public function getFAmortiza() {
         return $this->fAmortiza;
@@ -589,9 +592,9 @@ class Plaza {
     }
 
     /**
-     * Get catFp.
+     * Get catFp
      *
-     * @return \MaestrosBundle\Entity\CatFp|null
+     * @return MaestrosBundle\Entity\CatFp|\MaestrosBundle\Entity\CatFp|null
      */
     public function getCatFp() {
         return $this->catFp;

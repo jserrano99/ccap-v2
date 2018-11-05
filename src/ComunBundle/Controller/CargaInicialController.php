@@ -5,23 +5,40 @@ namespace ComunBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Session\Session;
+use ComunBundle\Entity\Dependencia;
+use ComunBundle\Entity\CargaInicial;
+use ComunBundle\Form\CargaInicialType;
+use ComunBundle\Form\DependenciaType;
+use ComunBundle\Datatables\DependenciaDatatable;
 
+
+/**
+ * Class CargaInicialController
+ * @package ComunBundle\Controller
+ */
 class CargaInicialController extends Controller {
 
     private $sesion;
 
+    /**
+     * CargaInicialController constructor.
+     */
     public function __construct() {
         $this->sesion = new Session();
     }
 
+    /**
+     * @param Request $request
+     * @param $cargaInicial_id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
     public function addDependenciaAction(Request $request, $cargaInicial_id) {
         $CargaInicial = $this->getDoctrine()->getManager()->getRepository("ComunBundle:CargaInicial")->find($cargaInicial_id);
-        $Dependencia = new \ComunBundle\Entity\Dependencia();
+        $Dependencia = new Dependencia();
         $Dependencia->setCargaInicialDep($CargaInicial);
 
-        $form = $this->createForm(\ComunBundle\Form\DependenciaType::class, $Dependencia);
+        $form = $this->createForm(DependenciaType::class, $Dependencia);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -29,18 +46,25 @@ class CargaInicialController extends Controller {
             $CargaInicial->setNumDep($CargaInicial->getNumDep() + 1);
             $this->getDoctrine()->getManager()->persist($CargaInicial);
             $this->getDoctrine()->getManager()->flush();
-            return $this->redirectToRoute("queryDependencia", array("cargaInicial_id" => $cargaInicial_id));
+            $params=["cargaInicial_id" => $cargaInicial_id];
+            return $this->redirectToRoute("queryDependencia", $params);
         }
 
-        $params = array("cargaInicial" => $CargaInicial,
-            "form" => $form->createView());
+        $params = ["cargaInicial" => $CargaInicial,
+            "form" => $form->createView()];
         return $this->render("comun/cargaInicial/add.dependencia.html.twig", $params);
     }
 
+    /**
+     * @param Request $request
+     * @param $cargaInicial_id
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
+     * @throws \Exception
+     */
     public function queryDependenciaAction(Request $request, $cargaInicial_id) {
         $isAjax = $request->isXmlHttpRequest();
 
-        $datatable = $this->get('sg_datatables.factory')->create(\ComunBundle\Datatables\DependenciaDatatable::class);
+        $datatable = $this->get('sg_datatables.factory')->create(DependenciaDatatable::class);
         $datatable->buildDatatable();
 
         $CargaInicial = $this->getDoctrine()->getManager()->getRepository("ComunBundle:CargaInicial")->find($cargaInicial_id);
@@ -56,43 +80,45 @@ class CargaInicialController extends Controller {
             return $responseService->getResponse();
         }
 
-        return $this->render('comun/cargaInicial/query.dependencia.html.twig', array(
-                    'cargaInicial' => $CargaInicial,
-                    'datatable' => $datatable,
-        ));
+        $params = ['cargaInicial' => $CargaInicial,
+            'datatable' => $datatable];
+        return $this->render('comun/cargaInicial/query.dependencia.html.twig', $params);
     }
 
+    /**
+     * @return Response
+     */
     public function queryAction() {
         $CargaInicialAll = $this->getDoctrine()->getManager()->getRepository("ComunBundle:CargaInicial")->findAll();
 
-        return $this->render('comun/cargaInicial/query.html.twig', array(
-                    'CargaInicialAll' => $CargaInicialAll,
-        ));
+        $params =['CargaInicialAll' => $CargaInicialAll];
+        return $this->render('comun/cargaInicial/query.html.twig', $params);
     }
 
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function deleteDependenciaAction($id) {
         $Dependencia = $this->getDoctrine()->getManager()->getRepository("ComunBundle:Dependencia")->find($id);
         $cargaInicial_id = $Dependencia->getCargaInicialDep()->getId();
         $status = 'Dependencia: ' . $Dependencia->getCargaInicial()->getTabla() . ' Eliminada Correctamente';
-
         $this->getDoctrine()->getManager()->remove($Dependencia);
         $this->getDoctrine()->getManager()->flush();
 
         $this->sesion->getFlashBag()->add("status", $status);
-        return $this->redirectToRoute("queryDependencia", array("cargaInicial_id" => $cargaInicial_id));
+        return $this->redirectToRoute("queryDependencia", ["cargaInicial_id" => $cargaInicial_id]);
     }
 
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function limpiaAction($id) {
         $em = $this->getDoctrine()->getManager();
         $CargaInicial_repo = $em->getRepository("ComunBundle:CargaInicial");
         $CargaInicial = $CargaInicial_repo->find($id);
         $EstadoCargaInicial = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(1);
-
-        $db = $em->getConnection();
- 
-        //$query = "delete from ".$CargaInicial->getTabla();
-        //$stmt = $db->prepare($query);
-        //$stmt->execute();
 
         $CargaInicial->setEstadoCargaInicial($EstadoCargaInicial);
         $CargaInicial->setFechaCarga(null);
@@ -105,12 +131,16 @@ class CargaInicialController extends Controller {
         return $this->redirectToRoute("queryCargaInicial");
     }
 
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+
     public function addAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-        $CargaInicial_repo = $em->getRepository("ComunBundle:CargaInicial");
-        $CargaInicial = new \ComunBundle\Entity\CargaInicial();
+        $CargaInicial = new CargaInicial();
 
-        $form = $this->createForm(\ComunBundle\Form\CargaInicialType::class, $CargaInicial);
+        $form = $this->createForm(CargaInicialType::class, $CargaInicial);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -121,12 +151,16 @@ class CargaInicialController extends Controller {
             return $this->redirectToRoute("queryCargaInicial");
         }
 
-        $params = array("CargaInicial" => $CargaInicial,
+        $params = ["CargaInicial" => $CargaInicial,
             "accion" => "CREACIÓN",
-            "form" => $form->createView());
+            "form" => $form->createView()];
         return $this->render("comun/cargaInicial/edit.html.twig", $params);
     }
 
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
     public function lanzaAction($id) {
         $CargaInicial = $this->getDoctrine()->getManager()->getRepository("ComunBundle:CargaInicial")->find($id);
 
@@ -136,7 +170,7 @@ class CargaInicialController extends Controller {
                 $modo = $this->getParameter('modo');
                 $php = $this->getParameter('php');
                 $php_script = $php." " . $root . '/scripts/' . $CargaInicial->getProceso() . ' ' . $modo;
-                $mensaje = exec($php_script, $SALIDA, $resultado);
+                exec($php_script, $SALIDA, $resultado);
 
                 $ficheroLog = $CargaInicial->getTabla() . '.log';
                 $ServicioLog = $this->get('app.escribelog');
@@ -147,20 +181,15 @@ class CargaInicialController extends Controller {
                 }
                 $CargaInicial->setFicheroLog($ServicioLog->getFilename());
                 $fecha = new \DateTime();
-                if ($resultado == 0) {
-                    $EstadoCargaInicial = $this->getDoctrine()->getManager()->getRepository("ComunBundle:EstadoCargaInicial")->find(2);
-                } else {
-                    $EstadoCargaInicial = $this->getDoctrine()->getManager()->getRepository("ComunBundle:EstadoCargaInicial")->find(3);
-                }
+                $EstadoCargaInicial = $resultado == 0 ? $this->getDoctrine()->getManager()->getRepository("ComunBundle:EstadoCargaInicial")->find(2) : $this->getDoctrine()->getManager()->getRepository("ComunBundle:EstadoCargaInicial")->find(3);
                 $CargaInicial->setEstadoCargaInicial($EstadoCargaInicial);
                 $CargaInicial->setFechaCarga($fecha);
                 $this->getDoctrine()->getManager()->persist($CargaInicial);
                 $this->getDoctrine()->getManager()->flush();
-                $params = array("CargaInicial" => $CargaInicial, "resultado" => $resultado);
+                $params = ["CargaInicial" => $CargaInicial, "resultado" => $resultado];
 
                 return $this->render("comun/cargaInicial/finProceso.html.twig", $params);
             } else {
-                $resultado = 0;
                 $fecha = new \DateTime();
                 $EstadoCargaInicial = $this->getDoctrine()->getManager()->getRepository("ComunBundle:EstadoCargaInicial")->find(2);
                 $CargaInicial->setEstadoCargaInicial($EstadoCargaInicial);
@@ -171,10 +200,14 @@ class CargaInicialController extends Controller {
                 return $this->redirectToRoute("queryCargaInicial");
             }
         }
-        $params = array("CargaInicial" => $CargaInicial);
+        $params = ["CargaInicial" => $CargaInicial];
         return $this->render("comun/cargaInicial/error.html.twig", $params);
     }
 
+    /**
+     * @param $id
+     * @return Response
+     */
     public function descargaLogAction($id) {
 
         $CargaInicial = $this->getDoctrine()->getManager()->getRepository("ComunBundle:CargaInicial")->find($id);
@@ -191,6 +224,10 @@ class CargaInicialController extends Controller {
         return $response;
     }
 
+    /**
+     * @param $CargaInicial
+     * @return bool
+     */
     function verDependencias($CargaInicial) {
         $Dependencias_repo = $this->getDoctrine()->getManager()->getRepository("ComunBundle:Dependencia");
         $DependenciasAll = $Dependencias_repo->createQueryBuilder('u')
@@ -215,5 +252,4 @@ class CargaInicialController extends Controller {
             return true;
         }
     }
-
 }

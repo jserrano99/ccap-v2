@@ -11,12 +11,13 @@ namespace ComunBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class Dependencia 
+ * Class Dependencia
  *
  * @ORM\Table(name="comun_dependencias")
  * @ORM\Entity
  */
-class Dependencia {
+class Dependencia
+{
 
     /**
      * @var integer
@@ -35,9 +36,9 @@ class Dependencia {
      *   @ORM\JoinColumn(name="carga_inicial_dep_id", referencedColumnName="id")
      * })
      */
-    
+
     private $cargaInicialDep;
-    
+
     /**
      * @var CargaInicial
      *
@@ -84,11 +85,8 @@ class Dependencia {
     }
 
     /**
-     * Set cargaInicial.
-     *
-     * @param \ComunBundle\Entity\CargaInicial|null $cargaInicial
-     *
-     * @return Dependencia
+     * @param CargaInicial|null $cargaInicial
+     * @return $this
      */
     public function setCargaInicial(\ComunBundle\Entity\CargaInicial $cargaInicial = null)
     {

@@ -59,10 +59,10 @@ foreach ($resultSet as $row) {
     try {
         $sentencia = " insert into ccap_plazas "
                 . " (cias, uf_id, pa_id, catgen_id, catfp_id, plantilla,f_creacion, f_amortiza, moa_id"
-                . " ,ficticia, refuerzo, colaboradora, observaciones,amortizada,orden, turno )"
+                . " ,ficticia, refuerzo, colaboradora, observaciones,amortizada,orden, turno, horNormal, cupequi )"
                 . " values "
                 . "(:cias, :uf_id, :pa_id, :catgen_id, :catfp_id, :plantilla, :f_creacion, :f_amortiza, :moa_id"
-                . " ,:ficticia, :refuerzo, :colaboradora, :observaciones, :amortizada, :orden, :turno )";
+                . " ,:ficticia, :refuerzo, :colaboradora, :observaciones, :amortizada, :orden, :turno, :horNormal, :cupequi )";
         $query = $JanoControl->prepare($sentencia);
         $UF = selectUf($row["UF"]);
         if ($UF == null) {
@@ -97,7 +97,11 @@ foreach ($resultSet as $row) {
             ":observaciones" => $row["OBSERVACIONES"],
             ":amortizada" => $amortizada,
             ":orden" => $orden,
-            ":turno" => $row["TURNO"]);
+            ":turno" => $row["TURNO"],
+            ":horNormal" => $row["HOR_NORMAL"],
+            ":cupequi" => $row["CUPEQUI"]);
+       // var_dump($params);
+
         $insert = $query->execute($params);
 
         if ($insert == 0) {
@@ -107,6 +111,7 @@ foreach ($resultSet as $row) {
             echo "==>GENERADA PLAZA=" . $row["CIAS"] . " UF=" . $row["UF"] . " PA=" . $row["P_ASIST"] . "\n";
         }
     } catch (PDOException $ex) {
+
         echo "**PDOERROR EN INSERT PLAZA CIAS=" . $row["CIAS"] . " \n" . " ERROR = " . $ex->getMessage() . "\n";
         $gblError = 1;
     }

@@ -160,7 +160,7 @@ function conexionPDO($datosConexion) {
         $conexion = new \PDO($cadena, $user, $pass);
         $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         //$conexion->setAttribute(PDO);
-        echo 'CONEXIÓN GENERADA CORRECTAMENTE: ' . $cadena . "\n";
+        //echo 'CONEXIÓN GENERADA CORRECTAMENTE: ' . $cadena . "\n";
     } catch (PDOException $e) {
         echo "**PDOERROR EN CONEXION: " . $cadena . " MENSAJE ERROR: " . $e->getMessage() . " \n";
         return null;
@@ -195,7 +195,7 @@ function jano_ctrl() {
         $conn->setAttribute(PDO::ATTR_PERSISTENT, PDO::ERRMODE_EXCEPTION);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        echo "CONEXIÓN A CCAP CORRECTA= " . $cadena . " ** \n";
+        //echo "CONEXIÓN A CCAP CORRECTA= " . $cadena . " ** \n";
     } catch (PDOException $e) {
         $error = $e->getMessage();
         echo $error . " \n";

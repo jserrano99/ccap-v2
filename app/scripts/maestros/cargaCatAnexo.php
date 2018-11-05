@@ -2,6 +2,9 @@
 
 include_once __DIR__ . '/../funcionesDAO.php';
 
+/**
+ * @param $EqCatAnexo
+ */
 function insertEqCatAnexo($EqCatAnexo) {
     global $JanoControl, $gblError;
     try {
@@ -32,6 +35,11 @@ function insertEqCatAnexo($EqCatAnexo) {
     }
 }
 
+/**
+ * @param $conexion
+ * @param $codigo
+ * @return null
+ */
 function selectCatAnexoEnuso($conexion, $codigo) {
     global $gblError;
     try {
@@ -41,11 +49,7 @@ function selectCatAnexoEnuso($conexion, $codigo) {
         $params = array(":codigo" => $codigo);
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
-        if ($res) {
-            return $res["ENUSO"];
-        } else {
-            return null;
-        }
+        return $res ? $res["ENUSO"] : null;
     } catch (PDOException $ex) {
         echo "**PDOERROR NO EN SELECT CATANEXO=" . $codigo . " " . $ex->getMessage() . "\n";
         $gblError = 1;
@@ -53,6 +57,10 @@ function selectCatAnexoEnuso($conexion, $codigo) {
     }
 }
 
+/**
+ * @param $row
+ * @return null|string
+ */
 function insertCatAnexo($row) {
     global $JanoControl, $gblError;
     try {
@@ -101,6 +109,7 @@ echo " +++++++++++ COMIENZA PROCESO CARGA INICIAL GUMS_CATANEXO +++++++++++ \n";
  */
 $JanoControl = jano_ctrl();
 
+/** @var TYPE_NAME $JanoControl */
 if (!$JanoControl) {
     exit(1);
 }

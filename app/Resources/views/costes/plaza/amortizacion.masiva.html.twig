@@ -1,0 +1,31 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} PLAZAS **AMORTIZACIÓN MASIVA**
+{% endblock %}
+
+{% block contenido %}
+    <script>
+        $(document).ready(function () {
+            $("#importar_Guardar").click(function () {
+                $("#procesando").modal('show');
+                var recurso = Routing.generate("amortizacionMasiva", true);
+                window.location = recurso;
+            });
+        });
+    </script> 
+
+    <div class="container">
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-success">
+                {{message}}
+            </div>
+        {% endfor %}
+        <h3>FORMATO DEL FICHERO </h3>
+        <br/>
+        <img src= "{{asset('img/amort.masiva.format.JPG')}}"></img>
+
+        {{form_start (form,{'action':'','method':'POST'})}}
+        {{form_end (form)}}
+        <br/>
+
+    </div>
+{% endblock %}

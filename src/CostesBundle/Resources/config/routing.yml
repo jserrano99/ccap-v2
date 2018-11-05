@@ -85,12 +85,16 @@ amortizacionPlaza:
     defaults: { _controller: CostesBundle:Plaza:amortizacionPlaza}
     options:
         expose: true
+amortizacionMasiva:
+    path:   /plaza/amortiza/masiva
+    defaults: { _controller: CostesBundle:Plaza:amortizacionMasiva}
+    options:
+        expose: true
 ajaxCompruebaAmortizacionPlaza:
     path:   /plaza/compruebaAmortizacion/{cias}/{fecha}
     defaults: { _controller: CostesBundle:Plaza:ajaxCompruebaAmortizacion}
     options:
         expose: true
-        
 importaCecoCias:
     path:   /plaza/importaCeco
     defaults: { _controller: CostesBundle:Plaza:importarCeco}
@@ -106,7 +110,12 @@ cambiarAsignacion:
     defaults: { _controller: CostesBundle:Plaza:cambiarAsignacion}
     options:
         expose: true
-    
+desAmortizacion:
+    path:   /plaza/desAmortizacion/{cias}
+    defaults: { _controller: CostesBundle:Plaza:desAmortizacion}
+    options:
+        expose: true
+
 verCecoCias:
     path:   /plaza/cecocias/query/{plaza_id}
     defaults: { _controller: CostesBundle:Plaza:verCecoCias}

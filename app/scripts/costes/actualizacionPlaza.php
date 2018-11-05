@@ -2,7 +2,8 @@
 
 include_once __DIR__ . '/../funcionesDAO.php';
 
-function selectCecoCias($conexion, $cias) {
+function selectCecoCias($conexion, $cias)
+{
     try {
         $sentencia = "select * from cecocias where cias =  :cias";
         $query = $conexion->prepare($sentencia);
@@ -21,7 +22,8 @@ function selectCecoCias($conexion, $cias) {
     }
 }
 
-function procesoCecoCias($conexion, $cias, $ceco) {
+function procesoCecoCias($conexion, $cias, $ceco)
+{
     if (selectCecoCias($conexion, $cias)) {
         updateCecoCias($conexion, $cias, $ceco);
     } else {
@@ -29,16 +31,17 @@ function procesoCecoCias($conexion, $cias, $ceco) {
     }
 }
 
-function insertCecoCias($conexion, $cias, $ceco) {
+function insertCecoCias($conexion, $cias, $ceco)
+{
     global $gblError;
     try {
         $sentencia = "insert into cecocias ( "
-                . "  cias "
-                . " ,ceco "
-                . " ) values ("
-                . "  :cias "
-                . " ,:ceco "
-                . " )";
+            . "  cias "
+            . " ,ceco "
+            . " ) values ("
+            . "  :cias "
+            . " ,:ceco "
+            . " )";
         $query = $conexion->prepare($sentencia);
         $params = [":cias" => $cias,
             ":ceco" => $ceco];
@@ -58,12 +61,13 @@ function insertCecoCias($conexion, $cias, $ceco) {
     }
 }
 
-function updateCecoCias($conexion, $cias, $ceco) {
+function updateCecoCias($conexion, $cias, $ceco)
+{
     global $gblError;
     try {
         $sentencia = "update cecocias set "
-                . " ceco  = :ceco "
-                . " where cias =  :cias ";
+            . " ceco  = :ceco "
+            . " where cias =  :cias ";
         $query = $conexion->prepare($sentencia);
         $params = [":cias" => $cias,
             ":ceco" => $ceco];
@@ -82,7 +86,8 @@ function updateCecoCias($conexion, $cias, $ceco) {
     }
 }
 
-function procesoInsert($Plaza) {
+function procesoInsert($Plaza)
+{
     global $JanoUnif, $JanoControl, $tipo;
     if (!insertPlazaUnif($Plaza)) {
         return false;
@@ -93,7 +98,8 @@ function procesoInsert($Plaza) {
     }
 }
 
-function procesoUpdate($Plaza) {
+function procesoUpdate($Plaza)
+{
     global $tipo;
 
     if (!updatePlazaUnif($Plaza)) {
@@ -107,7 +113,8 @@ function procesoUpdate($Plaza) {
     return true;
 }
 
-function equivalenciasPlaza($Plaza) {
+function equivalenciasPlaza($Plaza)
+{
     $Equi["uf"] = selectEqCentro($Plaza["uf"], $Plaza["edificio"], "U");
     $Equi["p_asist"] = selectEqCentro($Plaza["pa"], $Plaza["edificio"], "P");
     $Equi["catgen"] = selectEqCatGen($Plaza["catgen_id"], $Plaza["edificio_id"]);
@@ -125,7 +132,8 @@ function equivalenciasPlaza($Plaza) {
     return $Equi;
 }
 
-function insertPlazaUnif($Plaza) {
+function insertPlazaUnif($Plaza)
+{
     global $JanoUnif;
     try {
         $sentencia = " delete from plazas where cias = :cias";
@@ -134,11 +142,11 @@ function insertPlazaUnif($Plaza) {
         $query->execute($params);
 
         $sentencia = "insert into plazas ( cias, uf, modalidad, p_asist, catgen"
-                . "  ,ficticia, refuerzo, catfp, cupequi, plantilla, f_amortiza, colaboradora, observaciones,turno"
-                . "  ,fcreacion, hor_normal ) values ( "
-                . "  :cias, :uf, :modalidad, :p_asist, :catgen"
-                . "  ,:ficticia, :refuerzo, :catfp, :cupequi, :plantilla, :f_amortiza, :colaboradora,:observaciones,:turno "
-                . "  ,:f_creacion, :hor_normal )";
+            . "  ,ficticia, refuerzo, catfp, cupequi, plantilla, f_amortiza, colaboradora, observaciones,turno"
+            . "  ,fcreacion, hor_normal ) values ( "
+            . "  :cias, :uf, :modalidad, :p_asist, :catgen"
+            . "  ,:ficticia, :refuerzo, :catfp, :cupequi, :plantilla, :f_amortiza, :colaboradora,:observaciones,:turno "
+            . "  ,:f_creacion, :hor_normal )";
 
         $query = $JanoUnif->prepare($sentencia);
         $params = array(":cias" => $Plaza["cias"],
@@ -156,7 +164,7 @@ function insertPlazaUnif($Plaza) {
             ":f_creacion" => $Plaza["f_creacion"],
             ":observaciones" => $Plaza["observaciones"],
             ":turno" => $Plaza["turno"],
-            ":hor_normal" => $Plaza["horNormal"]);
+            ":hor_normal" => $Plaza["horNormal"] == "" ?: 'N');
 
         $ins = $query->execute($params);
         if ($ins == 0) {
@@ -179,7 +187,8 @@ function insertPlazaUnif($Plaza) {
     return true;
 }
 
-function insertPlazaArea($Plaza) {
+function insertPlazaArea($Plaza)
+{
     global $tipobd, $gblError;
     $baseDatos = SelectBaseDatosEdificio($tipobd, $Plaza["edificio"]);
     if ($baseDatos == null) {
@@ -205,11 +214,11 @@ function insertPlazaArea($Plaza) {
         $query->execute($params);
 
         $sentencia = "insert into plazas ( cias, uf, modalidad, p_asist, catgen"
-                . "  ,ficticia, refuerzo, catfp, cupequi, plantilla, f_amortiza, colaboradora, observaciones, turno"
-                . "  ,fcreacion, hor_normal, tarj1, tarj2, tarj3, tarj4, tarj5 ) values ( "
-                . "  :cias, :uf, :modalidad, :p_asist, :catgen"
-                . "  ,:ficticia, :refuerzo, :catfp, :cupequi, :plantilla, :f_amortiza, :colaboradora,:observaciones,:turno "
-                . "  ,:f_creacion, :hor_normal, :tarj1, :tarj2, :tarj3, :tarj4, :tarj5 )";
+            . "  ,ficticia, refuerzo, catfp, cupequi, plantilla, f_amortiza, colaboradora, observaciones, turno"
+            . "  ,fcreacion, hor_normal, tarj1, tarj2, tarj3, tarj4, tarj5 ) values ( "
+            . "  :cias, :uf, :modalidad, :p_asist, :catgen"
+            . "  ,:ficticia, :refuerzo, :catfp, :cupequi, :plantilla, :f_amortiza, :colaboradora,:observaciones,:turno "
+            . "  ,:f_creacion, :hor_normal, :tarj1, :tarj2, :tarj3, :tarj4, :tarj5 )";
 
         $query = $conexionArea->prepare($sentencia);
 //        var_dump($query);
@@ -257,27 +266,28 @@ function insertPlazaArea($Plaza) {
     }
 }
 
-function updatePlazaUnif($Plaza) {
+function updatePlazaUnif($Plaza)
+{
     global $JanoUnif;
 
     try {
         $sentencia = "update plazas set  "
-                . "  uf = :uf"
-                . " ,modalidad= :modalidad"
-                . ", p_asist= :p_asist"
-                . ", catgen= :catgen"
-                . "  ,ficticia= :ficticia"
-                . ", refuerzo= :refuerzo"
-                . ", catfp= :catfp"
-                . ", cupequi= :cupequi"
-                . ", plantilla= :plantilla"
-                . ", f_amortiza= :f_amortiza"
-                . ", colaboradora= :colaboradora"
-                . ", fcreacion= :f_creacion"
-                . ", observaciones = :observaciones"
-                . ", turno = :turno"
-                . ", hor_normal = :hor_normal"
-                . " where cias = :cias ";
+            . "  uf = :uf"
+            . " ,modalidad= :modalidad"
+            . ", p_asist= :p_asist"
+            . ", catgen= :catgen"
+            . "  ,ficticia= :ficticia"
+            . ", refuerzo= :refuerzo"
+            . ", catfp= :catfp"
+            . ", plantilla= :plantilla"
+            . ", f_amortiza= :f_amortiza"
+            . ", colaboradora= :colaboradora"
+            . ", fcreacion= :f_creacion"
+            . ", observaciones = :observaciones"
+            . ", turno = :turno"
+            . ", cupequi = :cupequi"
+            . ", hor_normal = :hor_normal"
+            . " where cias = :cias ";
         $query = $JanoUnif->prepare($sentencia);
         $params = array(":cias" => $Plaza["cias"],
             ":uf" => $Plaza["uf"],
@@ -293,8 +303,10 @@ function updatePlazaUnif($Plaza) {
             ":colaboradora" => $Plaza["colaboradora"],
             ":f_creacion" => $Plaza["f_creacion"],
             ":observaciones" => $Plaza["observaciones"],
-            ":turno" => $Plaza["turno"],
+            ":turno" => $Equi["turno"],
             ":hor_normal" => $Plaza["horNormal"]);
+
+
         $ins = $query->execute($params);
         if ($ins == 0) {
             echo "***Error en actualización base de datos unificada cias= " . $Plaza["cias"] . "\n";
@@ -313,7 +325,8 @@ function updatePlazaUnif($Plaza) {
     }
 }
 
-function updatePlazaArea($Plaza) {
+function updatePlazaArea($Plaza)
+{
     global $tipobd, $gblError;
     $conexionArea = conexionEdificio($Plaza["edificio"], $tipobd);
     if ($conexionArea == null) {
@@ -321,22 +334,22 @@ function updatePlazaArea($Plaza) {
     }
     try {
         $sentencia = "update plazas set  "
-                . "  uf = :uf"
-                . " ,modalidad= :modalidad"
-                . ", p_asist= :p_asist"
-                . ", catgen= :catgen"
-                . "  ,ficticia= :ficticia"
-                . ", refuerzo= :refuerzo"
-                . ", catfp= :catfp"
-                . ", cupequi= :cupequi"
-                . ", plantilla= :plantilla"
-                . ", f_amortiza= :f_amortiza"
-                . ", colaboradora= :colaboradora"
-                . ", fcreacion= :f_creacion"
-                . ", observaciones = :observaciones"
-                . ", turno = :turno"
-                . ", hor_normal = :hor_normal"
-                . " where cias = :cias ";
+            . "  uf = :uf"
+            . " ,modalidad= :modalidad"
+            . ", p_asist= :p_asist"
+            . ", catgen= :catgen"
+            . "  ,ficticia= :ficticia"
+            . ", refuerzo= :refuerzo"
+            . ", catfp= :catfp"
+            . ", plantilla= :plantilla"
+            . ", f_amortiza= :f_amortiza"
+            . ", colaboradora= :colaboradora"
+            . ", fcreacion= :f_creacion"
+            . ", observaciones = :observaciones"
+            . ", turno = :turno"
+            . ", cupequi = :cupequi"
+            . ", hor_normal = :hor_normal"
+            . " where cias = :cias ";
         $query = $conexionArea->prepare($sentencia);
         $Equi = equivalenciasPlaza($Plaza);
 
@@ -381,7 +394,6 @@ function updatePlazaArea($Plaza) {
  * CUERPO PRINCIPAL DEL SCRIPT
  * ** */
 $resultado = 1;
-echo " +++++++++++ COMIENZA PROCESO ACTUALIZACIÓN PLAZA +++++++++++ \n";
 $JanoControl = jano_ctrl();
 
 if (!$JanoControl) {
@@ -408,6 +420,7 @@ if ($modo == 'REAL') {
 
 $Plaza = selectPlazaById($id);
 
+
 if ($Plaza == null) {
     echo " No existe plaza id=" . $id . "\n";
     echo " +++ TERMINA EN ERROR(1) +++ \n";
@@ -415,24 +428,23 @@ if ($Plaza == null) {
 }
 
 echo " ==> PLAZA: ID = " . $Plaza["id"]
- . " CIAS = " . $Plaza["cias"]
- . " UF =" . $Plaza["uf"]
- . " modalidad =" . $Plaza["modalidad"]
- . " p_asist=" . $Plaza["pa"]
- . " catgen=" . $Plaza["catgen"]
- . " ficticia=" . $Plaza["ficticia"] . "\n"
- . " refuerzo=" . $Plaza["refuerzo"]
- . " catfp=" . $Plaza["catfp"]
- . " cupequi=" . $Plaza["cupequi"]
- . " plantilla=" . $Plaza["plantilla"]
- . " f_amortiza=" . $Plaza["f_amortiza"]
- . " colaboradora=" . $Plaza["colaboradora"]
- . " fcreacion=" . $Plaza["f_creacion"]
- . " edificion=" . $Plaza["edificio"]
- . " turno= " . $Plaza["turno"]
- . " ceco= " . $Plaza["ceco"] . "\n\n";
-
-echo "==> ACTUACIÓN = " . $actuacion . " **\n";
+    . " CIAS = " . $Plaza["cias"]
+    . " UF =" . $Plaza["uf"]
+    . " modalidad =" . $Plaza["modalidad"]
+    . " p_asist=" . $Plaza["pa"]
+    . " catgen=" . $Plaza["catgen"]
+    . " ficticia=" . $Plaza["ficticia"] . "\n"
+    . " refuerzo=" . $Plaza["refuerzo"]
+    . " catfp=" . $Plaza["catfp"]
+    . " cupequi=" . $Plaza["cupequi"]
+    . " plantilla=" . $Plaza["plantilla"]
+    . " f_amortiza=" . $Plaza["f_amortiza"]
+    . " colaboradora=" . $Plaza["colaboradora"]
+    . " fcreacion=" . $Plaza["f_creacion"]
+    . " edificion=" . $Plaza["edificio"]
+    . " turno= " . $Plaza["turno"]
+    . " ceco= " . $Plaza["ceco"]
+    . "== ACTUACIÓN = (" . $actuacion . ") \n\n";
 
 if ($actuacion == 'INSERT') {
     procesoInsert($Plaza);

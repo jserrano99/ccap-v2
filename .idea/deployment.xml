@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="DESARROLLO" autoUploadExternalChanges="true">
+  <component name="PublishConfigData" autoUpload="Always" serverName="PRODUCCION" autoUploadExternalChanges="true">
     <serverData>
       <paths name="DESARROLLO">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/usr/aplic_ICM/prod/web/ccap" local="$PROJECT_DIR$" web="/ccap/web" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="PASOPROD">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="PRODUCCION">
         <serverdata>
           <mappings>
             <mapping deploy="/usr/aplic_ICM/prod/web/ccap" local="$PROJECT_DIR$" web="/ccap/web" />

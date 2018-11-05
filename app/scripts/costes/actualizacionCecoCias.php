@@ -3,15 +3,22 @@
 include_once __DIR__ . '/../funcionesDAO.php';
 include_once __DIR__ . '/asignacionCeco.php';
 
-function insertCecoCias($conexion, $cias, $ceco) {
+/**
+ * @param $conexion
+ * @param $cias
+ * @param $ceco
+ * @return bool|null
+ */
+function insertCecoCias($conexion, $cias, $ceco)
+{
     try {
         $sentencia = "insert into cecocias ( "
-                . "  cias "
-                . " ,ceco "
-                . " ) values ("
-                . "  :cias "
-                . " ,:ceco "
-                . " )";
+            . "  cias "
+            . " ,ceco "
+            . " ) values ("
+            . "  :cias "
+            . " ,:ceco "
+            . " )";
         $query = $conexion->prepare($sentencia);
         $params = [":cias" => $cias,
             ":ceco" => $ceco];
@@ -28,29 +35,43 @@ function insertCecoCias($conexion, $cias, $ceco) {
     }
 }
 
-function DeleteCecoCias($conexion, $CecoCias) {
+/**
+ * @param $conexion
+ * @param $cias
+ * @param $ceco
+ * @return bool|null
+ */
+function updateCecoCias($conexion, $cias, $ceco)
+{
     try {
-        $sentencia = "delete from cecocias  "
-                . "  where cias =  :cias "
-                . "   and  ceco =  :ceco ";
+        $sentencia = "update cecocias"
+            . " set  ceco = :ceco "
+            . " where cias = :cias ";
         $query = $conexion->prepare($sentencia);
-        $params = [":cias" => $CecoCias["cias"],
-            ":ceco" => $CecoCias["ceco"]];
+        $params = [":cias" => $cias,
+            ":ceco" => $ceco];
         $ins = $query->execute($params);
-        echo " Borrado Correcto: " . $ins . " \n";
+        if ($ins == 0) {
+            echo "****ERROR  UPDATE  DE CECOCIAS CIAS=" . $cias, "  CECO=" . $ceco . "\n";
+            return null;
+        }
+        echo "==> ACTUALIZACION CORRECTA DE CECOCIAS CIAS =(" . $cias, ")  CECO= (" . $ceco . ") \n";
+        return true;
     } catch (PDOException $ex) {
-        echo " ERROR PDO EN BORRADO " . $ex->getMessage() . " \n";
-        return false;
+        echo "***PDOERROR EN LA INSERCIÓN DE CECOCIAS CIAS=" . $cias, "  CECO=" . $ceco . " ERROR= " . $ex->getMessage() . " \n";
+        return null;
     }
-
-    return true;
 }
-
 /*
  * Comprobar si existe la plaza en las b.d de las areas 
  */
-
-function existePlaza($conexion, $cias) {
+/**
+ * @param $conexion
+ * @param $cias
+ * @return null
+ */
+function existePlaza($conexion, $cias)
+{
     try {
         $sentencia = " select cias from plazas where cias = :cias  ";
         $query = $conexion->prepare($sentencia);
@@ -69,34 +90,73 @@ function existePlaza($conexion, $cias) {
     }
 }
 
-function existeCecoCias($conexion, $cias, $ceco) {
+/**
+ * @param $conexion
+ * @param $cias
+ * @return bool
+ */
+function existeCecoCias($conexion, $cias)
+{
     try {
-        $sentencia = "select cias, ceco from cecocias  "
-                . "  where cias =  :cias "
-                . "   and  ceco =  :ceco ";
+        $sentencia = "select cias  from cecocias  "
+            . "  where cias =  :cias ";
         $query = $conexion->prepare($sentencia);
-        $params = [":cias" => $cias,
-            ":ceco" => $ceco];
+        $params = [":cias" => $cias];
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
         if ($res) {
-            echo "-->YA EXISTE CECOCIAS PARA CECO =" . $ceco . "  CIAS=" . $cias . " ** NO SE TRATA\n";
+            //echo "-->YA EXISTE CECOCIAS PARA CIAS=" . $cias . " ** NO SE TRATA\n";
             return true;
         } else {
             return false;
         }
     } catch (PDOException $ex) {
-        echo "**PDOERROR EN SELECT CECOCIAS CECO= " . $ceco . "  CIAS=" . $cias . $ex->getMessage() . " \n";
+        echo "**PDOERROR EN SELECT CECOCIAS  CIAS=" . $cias . $ex->getMessage() . " \n";
         return false;
     }
 
     return true;
 }
 
-/*
- * definimos las conexiones a las bases de datos intermedia jano_inte, unificada unif_01 Y CONTROL DE LOG JANO_CTRL 
- * a nivel global para poder usarlas en todo el proceso
+/**
+ * FUNCION PRINCIPAL
  */
+function main(){
+    global $Plaza, $tipobd, $CecoCias;
+
+    echo "==> CECOCIAS CIAS= (" . $Plaza["cias"] . ") CECO= (" . $Plaza["ceco"] . ") FECHA INICIO= (" . $CecoCias["f_inicio"] . ") EDIFICIO=" . $Plaza["edificio"] . "\n";
+
+    $BasesDatos = array();
+    $BasesDatos[] = SelectBaseDatosEdificio($tipobd, $Plaza["edificio"]);
+    $BasesDatos[] = SelectBaseDatos($tipobd, 'U');
+
+    foreach ($BasesDatos as $baseDatos) {
+        $datosConexion["maquina"] = $baseDatos["maquina"];
+        $datosConexion["puerto"] = $baseDatos["puerto"];
+        $datosConexion["servidor"] = $baseDatos["servidor"];
+        $datosConexion["esquema"] = $baseDatos["esquema"];
+        $datosConexion["usuario"] = $baseDatos["usuario"];
+        $datosConexion["password"] = $baseDatos["password"];
+        $conexion = conexionPDO($datosConexion);
+        if ($conexion) {
+            if (existePlaza($conexion, $Plaza["cias"])) {
+                if (!existeCecoCias($conexion, $Plaza["cias"])) {
+                    insertCecoCias($conexion, $Plaza["cias"], $Plaza["ceco"]);
+                } else {
+                    updateCecoCias($conexion, $Plaza["cias"], $Plaza["ceco"]);
+                }
+            }
+        }
+
+//    $asignacion = asignacionCeco($Plaza,$CecoCias["f_inicio"]);
+//    if (!$asignacion) {
+//        echo "**ERROR EN LA ASIGNACIÓN AL PROFESIONAL** \n";
+//        exit(1);
+//    }
+
+    }
+
+}
 
 /* * ***
  * CUERPO PRINCIPAL DEL SCRIPT
@@ -135,35 +195,8 @@ if ($Plaza == null) {
     echo "***ERROR NO EXISTE CCAP_PLAZA PARA ID= " . $CecoCias["plaza_id"];
     exit(1);
 }
-echo "==> CECOCIAS CIAS= (" . $Plaza["cias"] . ") CECO= (" . $Plaza["ceco"] . ") FECHA INICIO= (" . $CecoCias["f_inicio"] . ") EDIFICIO=" . $Plaza["edificio"] . "\n";
 
-$BasesDatos = array();
-$BasesDatos[] = SelectBaseDatosEdificio($tipobd, $Plaza["edificio"]);
-$BasesDatos[] = SelectBaseDatos($tipobd, 'U');
+main();
 
-foreach ($BasesDatos as $baseDatos) {
-    $alias = $baseDatos["alias"];
-    $datosConexion["maquina"] = $baseDatos["maquina"];
-    $datosConexion["puerto"] = $baseDatos["puerto"];
-    $datosConexion["servidor"] = $baseDatos["servidor"];
-    $datosConexion["esquema"] = $baseDatos["esquema"];
-    $datosConexion["usuario"] = $baseDatos["usuario"];
-    $datosConexion["password"] = $baseDatos["password"];
-    $conexion = conexionPDO($datosConexion);
-    if ($conexion) {
-        if (existePlaza($conexion, $Plaza["cias"])) {
-            if (!existeCecoCias($conexion, $Plaza["cias"], $Plaza["ceco"])) {
-                $error = insertCecoCias($conexion, $Plaza["cias"], $Plaza["ceco"]);
-            }
-        }
-    }
-
-//    $asignacion = asignacionCeco($Plaza,$CecoCias["f_inicio"]);
-//    if (!$asignacion) {
-//        echo "**ERROR EN LA ASIGNACIÓN AL PROFESIONAL** \n";
-//        exit(1);
-//    }
-    
-}
 echo "  +++++++++++ TERMINA PROCESO ACTUALIZACIÓN CECOCIAS +++++++++++++ \n";
 exit(0);
