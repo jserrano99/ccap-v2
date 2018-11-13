@@ -66,7 +66,7 @@ descargaLogPlaza:
     options:
         expose: true
 calcularCIAS:
-    path:   /plaza/calcularCias/{uf_id}/{pa_id}/{catgen_id}
+    path:   /plaza/calcularCias/{uf_id}/{catgen_id}
     defaults: { _controller: CostesBundle:Plaza:calcularCias}
     options:
         expose: true
@@ -93,6 +93,11 @@ amortizacionMasiva:
 ajaxCompruebaAmortizacionPlaza:
     path:   /plaza/compruebaAmortizacion/{cias}/{fecha}
     defaults: { _controller: CostesBundle:Plaza:ajaxCompruebaAmortizacion}
+    options:
+        expose: true
+comprobacionAsignacion:
+    path:   /plaza/ceco/comprobacion
+    defaults: { _controller: CostesBundle:Plaza:comprobacionAsignacion}
     options:
         expose: true
 importaCecoCias:
@@ -173,6 +178,12 @@ descargaLogCeco:
     defaults: { _controller: CostesBundle:Ceco:descargaLog}
     options:
         expose: true
+comprobacionCeco:
+    path:   /ceco/comprobacion
+    defaults: { _controller: CostesBundle:Ceco:comprobacion}
+    options:
+        expose: true
+
 #
 # UNIDADES FUNCIONALES 
 #

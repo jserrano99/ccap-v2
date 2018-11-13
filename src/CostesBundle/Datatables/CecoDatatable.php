@@ -48,7 +48,7 @@ class CecoDatatable extends AbstractDatatable {
                 ->add('codigo', Column::class, array('title' => 'Código','searchable' => true, 'width' => '150px'))
                 ->add('descripcion', Column::class, array('title' => 'Descripción','searchable' => true, 'width' => '300px'))
                 ->add('sincroLog.estado.descripcion', Column::class, array(
-                    'title' => 'Log',
+                    'title' => 'Estado Sincronización',
                     'width' => '120px',
                     'default_content' => ''))
                 

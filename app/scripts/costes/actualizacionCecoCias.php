@@ -62,6 +62,7 @@ function updateCecoCias($conexion, $cias, $ceco)
         return null;
     }
 }
+
 /*
  * Comprobar si existe la plaza en las b.d de las areas 
  */
@@ -75,7 +76,7 @@ function existePlaza($conexion, $cias)
     try {
         $sentencia = " select cias from plazas where cias = :cias  ";
         $query = $conexion->prepare($sentencia);
-        $params = array(":cias" => $cias);
+        $params = [":cias" => $cias];
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
         if ($res) {
@@ -98,8 +99,7 @@ function existePlaza($conexion, $cias)
 function existeCecoCias($conexion, $cias)
 {
     try {
-        $sentencia = "select cias  from cecocias  "
-            . "  where cias =  :cias ";
+        $sentencia = "select cias  from cecocias where cias =  :cias ";
         $query = $conexion->prepare($sentencia);
         $params = [":cias" => $cias];
         $query->execute($params);
@@ -121,12 +121,13 @@ function existeCecoCias($conexion, $cias)
 /**
  * FUNCION PRINCIPAL
  */
-function main(){
+function main()
+{
     global $Plaza, $tipobd, $CecoCias;
 
     echo "==> CECOCIAS CIAS= (" . $Plaza["cias"] . ") CECO= (" . $Plaza["ceco"] . ") FECHA INICIO= (" . $CecoCias["f_inicio"] . ") EDIFICIO=" . $Plaza["edificio"] . "\n";
 
-    $BasesDatos = array();
+    $BasesDatos = [];
     $BasesDatos[] = SelectBaseDatosEdificio($tipobd, $Plaza["edificio"]);
     $BasesDatos[] = SelectBaseDatos($tipobd, 'U');
 
@@ -148,11 +149,15 @@ function main(){
             }
         }
 
-//    $asignacion = asignacionCeco($Plaza,$CecoCias["f_inicio"]);
-//    if (!$asignacion) {
-//        echo "**ERROR EN LA ASIGNACIÓN AL PROFESIONAL** \n";
-//        exit(1);
-//    }
+        /**
+         * pendiente de desarrollar la asignación del ceco al profesional
+         *
+         * $asignacion = asignacionCeco($Plaza,$CecoCias["f_inicio"]);
+         * if (!$asignacion) {
+         * echo "**ERROR EN LA ASIGNACIÓN AL PROFESIONAL** \n";
+         * exit(1);
+         * }
+         */
 
     }
 

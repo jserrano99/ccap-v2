@@ -7,8 +7,9 @@
     <script>
         $(document).ready(function () {
             $("#importar_Guardar").click(function () {
+                let recurso;
                 $("#procesando").modal('show');
-                var recurso = Routing.generate("importaCecoCias", true);
+                recurso = Routing.generate("importaCecoCias", true);
                 $.ajax({
                     type: "POST",
                     url: recurso,

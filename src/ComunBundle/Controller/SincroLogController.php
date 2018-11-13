@@ -8,22 +8,38 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Response;
 use UniqueConstraintViolationException;
+use ComunBundle\Datatables\SincroLogDatatable;
 
+/**
+ * Class SincroLogController
+ * @package ComunBundle\Controller
+ */
 class SincroLogController extends Controller {
 
+    /**
+     * @var \Symfony\Component\HttpFoundation\Session\Session
+     */
     private $sesion;
 
+    /**
+     * SincroLogController constructor.
+     */
     public function __construct() {
         $this->sesion = new Session();
     }
 
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     */
     public function queryAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $isAjax = $request->isXmlHttpRequest();
 
         $usuario_id = $this->sesion->get('usuario_id');
         $Usuario = $em->getRepository("ComunBundle:Usuario")->find($usuario_id);
-        $datatable = $this->get('sg_datatables.factory')->create(\ComunBundle\Datatables\SincroLogDatatable::class);
+        $datatable = $this->get('sg_datatables.factory')->create(SincroLogDatatable::class);
         $datatable->buildDatatable();
 
         if ($isAjax) {
@@ -40,9 +56,7 @@ class SincroLogController extends Controller {
             return $responseService->getResponse();
         }
 
-        return $this->render('comun/logs/query.html.twig', array(
-                    'datatable' => $datatable,
-        ));
+        return $this->render('comun/logs/query.html.twig', ['datatable' => $datatable]);
     }
 
     public function descargaAction($id) {

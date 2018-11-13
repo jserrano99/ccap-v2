@@ -53,7 +53,7 @@ class SincroLog {
     private $idElemento;
 
     /**
-     * @var datetime
+     * @var \DateTime
      *
      * @ORM\Column(name="fecha_proceso", type="datetime",  nullable=false)
      */
@@ -81,12 +81,15 @@ class SincroLog {
      */
     private $estado;
 
+
+
     /**
      * Get id.
      *
      * @return int
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
@@ -97,7 +100,8 @@ class SincroLog {
      *
      * @return SincroLog
      */
-    public function setTabla($tabla) {
+    public function setTabla($tabla)
+    {
         $this->tabla = $tabla;
 
         return $this;
@@ -108,7 +112,8 @@ class SincroLog {
      *
      * @return string
      */
-    public function getTabla() {
+    public function getTabla()
+    {
         return $this->tabla;
     }
 
@@ -119,7 +124,8 @@ class SincroLog {
      *
      * @return SincroLog
      */
-    public function setIdElemento($idElemento) {
+    public function setIdElemento($idElemento)
+    {
         $this->idElemento = $idElemento;
 
         return $this;
@@ -130,7 +136,8 @@ class SincroLog {
      *
      * @return int
      */
-    public function getIdElemento() {
+    public function getIdElemento()
+    {
         return $this->idElemento;
     }
 
@@ -141,7 +148,8 @@ class SincroLog {
      *
      * @return SincroLog
      */
-    public function setFechaProceso($fechaProceso) {
+    public function setFechaProceso($fechaProceso)
+    {
         $this->fechaProceso = $fechaProceso;
 
         return $this;
@@ -152,7 +160,8 @@ class SincroLog {
      *
      * @return \DateTime
      */
-    public function getFechaProceso() {
+    public function getFechaProceso()
+    {
         return $this->fechaProceso;
     }
 
@@ -163,7 +172,8 @@ class SincroLog {
      *
      * @return SincroLog
      */
-    public function setFicheroLog($ficheroLog = null) {
+    public function setFicheroLog($ficheroLog = null)
+    {
         $this->ficheroLog = $ficheroLog;
 
         return $this;
@@ -174,79 +184,9 @@ class SincroLog {
      *
      * @return string|null
      */
-    public function getFicheroLog() {
+    public function getFicheroLog()
+    {
         return $this->ficheroLog;
-    }
-
-    /**
-     * Set usuario.
-     *
-     * @param \ComunBundle\Entity\Usuario|null $usuario
-     *
-     * @return SincroLog
-     */
-    public function setUsuario(\ComunBundle\Entity\Usuario $usuario = null) {
-        $this->usuario = $usuario;
-
-        return $this;
-    }
-
-    /**
-     * Get usuario.
-     *
-     * @return \ComunBundle\Entity\Usuario|null
-     */
-    public function getUsuario() {
-        return $this->usuario;
-    }
-
-
-    /**
-     * Set estadoCargaInicial.
-     *
-     * @param \ComunBundle\Entity\EstadoCargaInicial|null $estadoCargaInicial
-     *
-     * @return SincroLog
-     */
-    public function setEstadoCargaInicial(\ComunBundle\Entity\EstadoCargaInicial $estadoCargaInicial = null)
-    {
-        $this->estadoCargaInicial = $estadoCargaInicial;
-
-        return $this;
-    }
-
-    /**
-     * Get estadoCargaInicial.
-     *
-     * @return \ComunBundle\Entity\EstadoCargaInicial|null
-     */
-    public function getEstadoCargaInicial()
-    {
-        return $this->estadoCargaInicial;
-    }
-
-    /**
-     * Set estado.
-     *
-     * @param \ComunBundle\Entity\EstadoCargaInicial|null $estado
-     *
-     * @return SincroLog
-     */
-    public function setEstado(\ComunBundle\Entity\EstadoCargaInicial $estado = null)
-    {
-        $this->estado = $estado;
-
-        return $this;
-    }
-
-    /**
-     * Get estado.
-     *
-     * @return \ComunBundle\Entity\EstadoCargaInicial|null
-     */
-    public function getEstado()
-    {
-        return $this->estado;
     }
 
     /**
@@ -271,5 +211,53 @@ class SincroLog {
     public function getScript()
     {
         return $this->script;
+    }
+
+    /**
+     * Set usuario.
+     *
+     * @param \ComunBundle\Entity\Usuario|null $usuario
+     *
+     * @return SincroLog
+     */
+    public function setUsuario(Usuario $usuario = null)
+    {
+        $this->usuario = $usuario;
+
+        return $this;
+    }
+
+    /**
+     * Get usuario.
+     *
+     * @return \ComunBundle\Entity\Usuario|null
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * Set estado.
+     *
+     * @param \ComunBundle\Entity\EstadoCargaInicial|null $estado
+     *
+     * @return SincroLog
+     */
+    public function setEstado(EstadoCargaInicial $estado = null)
+    {
+        $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * Get estado.
+     *
+     * @return \ComunBundle\Entity\EstadoCargaInicial|null
+     */
+    public function getEstado()
+    {
+        return $this->estado;
     }
 }

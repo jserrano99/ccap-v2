@@ -166,8 +166,8 @@ class PaController extends Controller {
         $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(1);
         $Pa = $em->getRepository("CostesBundle:Pa")->find($id);
 
-        $SincroLog = new \ComunBundle\Entity\SincroLog();
-        $fechaProceso = new \DateTime();
+        $SincroLog = new SincroLog();
+        $fechaProceso = new DateTime();
 
         $SincroLog->setUsuario($Usuario);
         $SincroLog->setTabla("ccap_pf");

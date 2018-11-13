@@ -2,9 +2,10 @@
     $(document).ready(function () {
 
         $("#costesbundle_plaza_nuevoCeco").change(function () {
+            let valor, recurso;
             $("#procesando").modal('show');
-            var valor = $("#costesbundle_plaza_nuevoCeco").val();
-            var recurso = Routing.generate("ajaxVerCeco", {"id": valor}, true);
+            valor = $("#costesbundle_plaza_nuevoCeco").val();
+            recurso = Routing.generate("ajaxVerCeco", {"id": valor}, true);
             $.ajax({
                 type: "POST",
                 url: recurso,
@@ -25,21 +26,22 @@
     });
 
     function cambiarAsignacion() {
+        let cias, cecoAnterior, nuevoCeco, fInicio, recurso;
         if ($("#costesbundle_plaza_nuevoCecoInf").val() == '' ||
             $("#costesbundle_plaza_fInicio").val() == '') {
             bootbox.alert("OBLIGATORIO INFORMAR NUEVO CECO  Y FECHA DE INICIO",
                 function () {
                 });
         } else {
-            var cias = $("#costesbundle_plaza_cias").val();
-            var cecoAnterior = $("#costesbundle_plaza_cecoActual").val();
+            cias = $("#costesbundle_plaza_cias").val();
+            cecoAnterior = $("#costesbundle_plaza_cecoActual").val();
             alert(cecoAnterior);
-            if (cecoAnterior == '') {
+            if (cecoAnterior === '') {
                 cecoAnterior = 0;
             }
-            var nuevoCeco = $("#costesbundle_plaza_nuevoCecoCodigo").val();
-            var fInicio = $("#costesbundle_plaza_fInicio").val();
-            var recurso = Routing.generate("cambiarAsignacion", {
+            nuevoCeco = $("#costesbundle_plaza_nuevoCecoCodigo").val();
+            fInicio = $("#costesbundle_plaza_fInicio").val();
+            recurso = Routing.generate("cambiarAsignacion", {
                 "cias": cias,
                 "nuevoCeco": nuevoCeco,
                 "fInicio": fInicio,
@@ -50,14 +52,14 @@
     }
 
     function calcularCias() {
-        var uf = $("#costesbundle_plaza_uf").val();
-        var pa = $("#costesbundle_plaza_pa").val();
-        var catgen = $("#costesbundle_plaza_catGen").val();
-        if (uf == '' || pa == '' || catgen == '') {
+        let uf = $("#costesbundle_plaza_uf").val();
+        let catgen = $("#costesbundle_plaza_catGen").val();
+        let recurso;
+        if (uf == '' || catgen == '') {
             bootbox.alert("Unidad Funcional, Punto Asistencia y Categoría Obligatorios");
         } else {
             $("#procesando").modal('show');
-            var recurso = Routing.generate("calcularCIAS", {"uf_id": uf, "pa_id": pa, "catgen_id": catgen}, true);
+            recurso = Routing.generate("calcularCIAS", {"uf_id": uf, "catgen_id": catgen}, true);
             $.ajax({
                 type: "POST",
                 url: recurso,
@@ -76,9 +78,9 @@
     }
 
     function reCalcularCias() {
-        var cias = $("#costesbundle_plaza_cias").val();
-        var patron = cias.substr(0, 8);
-        var orden = $("#costesbundle_plaza_orden").val();
+        let cias = $("#costesbundle_plaza_cias").val();
+        let patron = cias.substr(0, 8);
+        let orden = $("#costesbundle_plaza_orden").val();
         $("#costesbundle_plaza_cias").val(patron + orden);
 
     }
@@ -116,7 +118,7 @@
         let pa = $("#costesbundle_plaza_pa").val();
         let cias = $("#costesbundle_plaza_cias").val();
         if (uf == '' || pa == '' || cias == '') {
-            bootbox.alert("Unidad Funcional, Punto Asistencia y Cias Obligatorios");
+            bootbox.alert("Unidad Funcional, Punto Asistencial y Cias Obligatorios");
         } else {
             $("#procesando").modal('show');
             recurso = Routing.generate("ajaxCalcularCeco", {"cias": cias, "uf_id": uf, "pa_id": pa}, true);
@@ -129,7 +131,7 @@
                     $("#procesando").hide();
                     $("#costesbundle_plaza_nuevoCecoCodigo").val(data.codigo);
                     $("#costesbundle_plaza_nuevoCecoDesc").val(data.descripcion);
-                    if ($("#costesbundle_plaza_nuevoCecoDesc").val() == 'ERROR NO EXISTE CECO') {
+                    if ($("#costesbundle_plaza_nuevoCecoDesc").val() === 'ERROR NO EXISTE CECO') {
                         $("#btnAsignacion").hide();
                     } else {
                         $("#btnAsignacion").show();

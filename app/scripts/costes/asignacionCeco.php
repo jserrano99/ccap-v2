@@ -1,8 +1,10 @@
 <?php
-/*
- * obtener todos los registros de movialta para un cias determinado
- */
 
+/**
+ * @param $cias
+ * @param $fInicio
+ * @return bool|null
+ */
 function selectMovialtabyCias($cias, $fInicio) {
     global $JanoUnif;
     try {
@@ -28,6 +30,12 @@ function selectMovialtabyCias($cias, $fInicio) {
     }
 }
 
+/**
+ * @param $conexion
+ * @param $ceco
+ * @param $cca_id
+ * @return bool|null
+ */
 function actualizaCcaArea($conexion, $ceco, $cca_id) {
     try {
         $sentencia = " update cca set cecos = :ceco where id = :cca_id";
@@ -45,6 +53,11 @@ function actualizaCcaArea($conexion, $ceco, $cca_id) {
     }
 }
 
+/**
+ * @param $ceco
+ * @param $cca_id
+ * @return bool|null
+ */
 function actualizaCcaUnif($ceco, $cca_id) {
     global $JanoUnif;
     try {
@@ -65,6 +78,11 @@ function actualizaCcaUnif($ceco, $cca_id) {
     }
 }
 
+/**
+ * @param $Plaza
+ * @param $fInicio
+ * @return bool|null
+ */
 function asignacionCeco($Plaza,$fInicio) {
 
     /*
@@ -83,7 +101,7 @@ function asignacionCeco($Plaza,$fInicio) {
             return null;
         }
      
-        $unifOk = actualizaCcaUnif($Plaza["ceco"], $movialta["CCA_ID"]);
+        /** actualizar la base de datos del area  pendiente de desarrollar */
      
     }
     return true;

@@ -2,6 +2,7 @@
 
 namespace CostesBundle\Controller;
 
+use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use CostesBundle\Form\ImportarType;
@@ -9,15 +10,22 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use CostesBundle\Entity\Ceco;
 use CostesBundle\Form\CecoType;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\Query;
+use ComunBundle\Entity\CargaFichero;
+use DateTime;
+use Doctrine\DBAL\DBALException;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use ComunBundle\Entity\SincroLog;
+use CostesBundle\Datatables\CecoDatatable;
+
 
 /**
  * Class CecoController
  * @package CostesBundle\Controller
  */
-class CecoController extends Controller {
+class CecoController extends Controller
+{
     /**
      * @var Session
      */
@@ -26,7 +34,8 @@ class CecoController extends Controller {
     /**
      * CecoController constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->sesion = new Session();
     }
 
@@ -35,10 +44,11 @@ class CecoController extends Controller {
      * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
      * @throws \Exception
      */
-    public function queryAction(Request $request) {
+    public function queryAction(Request $request)
+    {
         $isAjax = $request->isXmlHttpRequest();
 
-        $datatable = $this->get('sg_datatables.factory')->create(\CostesBundle\Datatables\CecoDatatable::class);
+        $datatable = $this->get('sg_datatables.factory')->create(CecoDatatable::class);
         $datatable->buildDatatable();
 
         if ($isAjax) {
@@ -50,29 +60,29 @@ class CecoController extends Controller {
             return $responseService->getResponse();
         }
 
-        return $this->render('costes/ceco/query.html.twig', array(
-                    'datatable' => $datatable,
-        ));
+        $params = ['datatable' => $datatable];
+        return $this->render('costes/ceco/query.html.twig', $params);
     }
 
-    /**
-     * @param $ceco_id
-     * @return Response
-     */
-    public function verCecoAction($ceco_id) {
-        $em = $this->getDoctrine()->getManager();
-        $Ceco_repo = $em->getRepository("CostesBundle:Ceco");
-        $Ceco = $Ceco_repo->find($ceco_id);
-
-        $params = ["ceco" => $Ceco];
-        return $this->render("costes/ceco/verCeco.html.twig", $params);
-    }
+//    /**
+//     * @param $ceco_id
+//     * @return Response
+//     */
+//    public function verCecoAction($ceco_id) {
+//        $em = $this->getDoctrine()->getManager();
+//        $Ceco_repo = $em->getRepository("CostesBundle:Ceco");
+//        $Ceco = $Ceco_repo->find($ceco_id);
+//
+//        $params = ["ceco" => $Ceco];
+//        return $this->render("costes/ceco/verCeco.html.twig", $params);
+//    }
 
     /**
      * @param $ceco_id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function deleteAction($ceco_id) {
+    public function deleteAction($ceco_id)
+    {
         $em = $this->getDoctrine()->getManager();
         $Ceco_repo = $em->getRepository("CostesBundle:Ceco");
         $Ceco = $Ceco_repo->find($ceco_id);
@@ -86,7 +96,8 @@ class CecoController extends Controller {
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function addAction(Request $request) {
+    public function addAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
 
         $Ceco = new Ceco();
@@ -112,7 +123,7 @@ class CecoController extends Controller {
                 $status = " YA EXISTE UN CECO CON ESTE CÓDIGO: " . $Ceco->getCodigo();
                 $this->sesion->getFlashBag()->add("status", $status);
 
-            } catch (Doctrine\DBAL\DBALException $ex) {
+            } catch (DBALException $ex) {
                 $status = "ERROR GENERAL=" . $ex->getMessage();
                 $this->sesion->getFlashBag()->add("status", $status);
             }
@@ -128,7 +139,8 @@ class CecoController extends Controller {
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function editAction(Request $request, $id) {
+    public function editAction(Request $request, $id)
+    {
         $em = $this->getDoctrine()->getManager();
         $Ceco_repo = $em->getRepository("CostesBundle:Ceco");
         $Ceco = $Ceco_repo->find($id);
@@ -143,7 +155,7 @@ class CecoController extends Controller {
                 $params = ["id" => $Ceco->getId(),
                     "actuacion" => "UPDATE"];
                 return $this->redirectToRoute("sincroCeco", $params);
-            } catch (Doctrine\DBAL\DBALException $ex) {
+            } catch (DBALException $ex) {
                 $status = "ERROR GENERAL=" . $ex->getMessage();
                 $this->sesion->getFlashBag()->add("status", $status);
             }
@@ -160,7 +172,8 @@ class CecoController extends Controller {
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      */
-    public function importaAction(Request $request) {
+    public function importaAction(Request $request)
+    {
         $ImportarForm = $this->createForm(ImportarType::class);
         $ImportarForm->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
@@ -178,8 +191,8 @@ class CecoController extends Controller {
                     return $this->render("costes/ceco/importar.html.twig", $params);
                 }
 
-                $CargaFichero = new \ComunBundle\Entity\CargaFichero();
-                $fecha = new \DateTime();
+                $CargaFichero = new CargaFichero();
+                $fecha = new DateTime();
                 $CargaFichero->setFechaCarga($fecha);
                 $CargaFichero->setDescripcion("CARGA  MASIVA DE CENTROS DE COSTE");
                 $CargaFichero->setFichero($file_name);
@@ -193,7 +206,7 @@ class CecoController extends Controller {
                 $em->flush();
 
                 $CargaFichero = $this->cargaCECO($CargaFichero, $PHPExcel);
-               
+
                 $em->persist($CargaFichero);
                 $em->flush();
 
@@ -213,7 +226,8 @@ class CecoController extends Controller {
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      */
-    public function validarFichero($fichero) {
+    public function validarFichero($fichero)
+    {
         $Cabecera = ["A" => "SOCIEDAD",
             "B" => "DIVISION",
             "C" => "CECO",
@@ -221,7 +235,7 @@ class CecoController extends Controller {
             "E" => "ACTUACION"];
 
         $file = "upload/" . $fichero->getClientOriginalName();
-        $PHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load($file);
+        $PHPExcel = IOFactory::load($file);
         $objWorksheet = $PHPExcel->setActiveSheetIndex(0);
         $headingsArray = $objWorksheet->rangeToArray('A1:E1', null, true, true, true);
         $linea = $headingsArray[1];
@@ -240,14 +254,12 @@ class CecoController extends Controller {
      * @param $PHPExcel
      * @return mixed
      */
-    public function cargaCECO($CargaFichero, $PHPExcel) {
+    public function cargaCECO($CargaFichero, $PHPExcel)
+    {
         $em = $this->getDoctrine()->getManager();
 
         $objWorksheet = $PHPExcel->setActiveSheetIndex(0);
         $highestRow = $objWorksheet->getHighestRow();
-        $highestColumn = $objWorksheet->getHighestColumn();
-        $Resultadocarga = array();
-        $col = 0;
 
         $ficheroLog = 'cargaFichero-' . $CargaFichero->getId() . '.log';
         $ServicioLog = $this->get('app.escribelog');
@@ -261,7 +273,6 @@ class CecoController extends Controller {
                 $em = $this->getDoctrine()->getManager()->create($em->getConnection(), $em->getConfiguration());
             }
             $Ceco_repo = $em->getRepository("CostesBundle:Ceco");
-            $headingsArray = array();
             $headingsArray = $objWorksheet->rangeToArray('A' . $i . ':E' . $i, null, true, true, true);
             $headingsArray = $headingsArray[$i];
 
@@ -269,7 +280,6 @@ class CecoController extends Controller {
             $division = $headingsArray["B"];
             $codigo = $headingsArray["C"];
             $descripcion = $headingsArray["D"];
-            $actuacion = $headingsArray["E"];
 
             $existe = $Ceco_repo->findCecoByCodigo($codigo);
             if ($existe) {
@@ -292,9 +302,9 @@ class CecoController extends Controller {
             $root = $this->get('kernel')->getRootDir();
             $modo = $this->getParameter('modo');
             $php = $this->getParameter('php');
-            $php_script = $php." " . $root . "/scripts/costes/actualizacionCeco.php " . $modo . "  " . $Ceco->getId() . " INSERT ";
+            $php_script = $php . " " . $root . "/scripts/costes/actualizacionCeco.php " . $modo . "  " . $Ceco->getId() . " INSERT ";
 
-            $mensaje = exec($php_script, $SALIDA, $resultado);
+            exec($php_script, $SALIDA, $resultado);
             if ($resultado != 0)
                 $error = 1;
             $ServicioLog->setLogger('ccap_ceco->codigo:' . $Ceco->getCodigo());
@@ -327,15 +337,16 @@ class CecoController extends Controller {
      * @param $actuacion
      * @return Response
      */
-    public function sincroAction($id, $actuacion) {
+    public function sincroAction($id, $actuacion)
+    {
         $em = $this->getDoctrine()->getManager();
         $usuario_id = $this->sesion->get('usuario_id');
         $Usuario = $em->getRepository("ComunBundle:Usuario")->find($usuario_id);
         $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(1);
         $Ceco = $em->getRepository("CostesBundle:Ceco")->find($id);
 
-        $SincroLog = new \ComunBundle\Entity\SincroLog();
-        $fechaProceso = new \DateTime();
+        $SincroLog = new SincroLog();
+        $fechaProceso = new DateTime();
 
         $SincroLog->setUsuario($Usuario);
         $SincroLog->setTabla("ccap_cecos");
@@ -351,13 +362,18 @@ class CecoController extends Controller {
         $root = $this->get('kernel')->getRootDir();
         $modo = $this->getParameter('modo');
         $php = $this->getParameter('php');
-        $php_script = $php. " ". $root . "/scripts/costes/actualizacionCeco.php " . $modo . "  " . $Ceco->getId() . " " . $actuacion;
+        $php_script = $php . " " . $root . "/scripts/costes/actualizacionCeco.php " . $modo . "  " . $Ceco->getId() . " " . $actuacion;
+         $res = exec($php_script, $SALIDA, $resultado);
 
-        exec($php_script, $SALIDA, $resultado);
         if ($resultado == 0) {
             $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(2);
         } else {
-            $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(3);
+            //$Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(3);
+            dump($php_script);
+            dump($res);
+            dump($resultado);
+            dump($SALIDA);
+            die();
         }
 
         $ficheroLog = 'sincroCeco-' . $Ceco->getCodigo() . '.log';
@@ -408,14 +424,14 @@ class CecoController extends Controller {
      * @param $id
      * @return Response
      */
-    public function ajaxVerCecoAction($id) {
+    public function ajaxVerCecoAction($id)
+    {
         $em = $this->getDoctrine()->getManager();
         $Ceco_repo = $em->getRepository("CostesBundle:Ceco");
         $Ceco = $Ceco_repo->createQueryBuilder('u')
-                        ->where('u.id = :id')
-                        ->setParameter('id', $id)
-                        ->getQuery()->getResult(Query::HYDRATE_ARRAY);
-        ;
+            ->where('u.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()->getResult(Query::HYDRATE_ARRAY);;
         $Ceco = $Ceco[0];
         $response = new Response();
         $response->setContent(json_encode($Ceco));
@@ -427,11 +443,121 @@ class CecoController extends Controller {
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function descargaLogAction($id) {
+    public function descargaLogAction($id)
+    {
         $em = $this->getDoctrine()->getManager();
         $Ceco = $em->getRepository("CostesBundle:Ceco")->find($id);
         $params = ["id" => $Ceco->getSincroLog()->getId()];
         return $this->redirectToRoute("descargaSincroLog", $params);
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function comprobacionAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $ImportarForm = $this->createForm(ImportarType::class);
+        $ImportarForm->handleRequest($request);
+
+        if ($ImportarForm->isSubmitted()) {
+            $file = $ImportarForm["fichero"]->getData();
+            if (!empty($file) && $file != null) {
+                $file_name = $file->getClientOriginalName();
+                $file->move("upload", $file_name);
+                $file = "upload/" . $file->getClientOriginalName();
+                try {
+                    $PHPExcel = IOFactory::load($file);
+                    $CargaFichero = new CargaFichero();
+                    $fecha = new DateTime();
+                    $CargaFichero->setFechaCarga($fecha);
+                    $CargaFichero->setDescripcion("COMPROBACIÓN CECO");
+                    $CargaFichero->setFichero($file_name);
+                    $CargaFichero->setTabla("CCAP_CECO)");
+                    $usuario_id = $this->sesion->get('usuario_id');
+                    $Usuario = $em->getRepository("ComunBundle:Usuario")->find($usuario_id);
+                    $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(1);
+                    $CargaFichero->setUsuario($Usuario);
+                    $CargaFichero->setEstadoCargaInicial($Estado);
+                    $em->persist($CargaFichero);
+                    $em->flush();
+                    return $this->comprobarCeco($CargaFichero, $PHPExcel);
+                } catch (Exception $e) {
+                    $status = "***ERROR EN FORMATO FICHERO **: " . $file_name;
+                    $this->sesion->getFlashBag()->add("status", $status);
+                    $params = ["form" => $ImportarForm->createView()];
+                    return $this->render("costes/ceco/comprobacion.html.twig", $params);
+                }
+            }
+        }
+
+        $params = ["form" => $ImportarForm->createView()];
+        return $this->render("costes/ceco/comprobacion.html.twig", $params);
+    }
+
+    /**
+     * @param $CargaFichero
+     * @param $PHPExcel
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function comprobarCeco($CargaFichero, $PHPExcel)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $Ceco_repo = $em->getRepository("CostesBundle:Ceco");
+
+        $objWorksheet = $PHPExcel->setActiveSheetIndex(0);
+        $highestRow = $objWorksheet->getHighestRow();
+
+        $ficheroLog = 'ComprobacionCeco-' . $CargaFichero->getId() . '.log';
+        $ServicioLog = $this->get('app.escribelog');
+        $ServicioLog->setLogger('');
+        $ServicioLog->setMensaje("==> COMIENZA TRATAMIENTO <== ");
+        $ServicioLog->escribeLog($ficheroLog);
+
+        $error = 0;
+        for ($i = 2; $i <= $highestRow; $i++) {
+            $em = $this->getDoctrine()->getManager();
+            if (!$em->isOpen()) {
+                $em = $this->getDoctrine()->getManager()->create($em->getConnection(), $em->getConfiguration());
+            }
+            $headingsArray = $objWorksheet->rangeToArray('A' . $i . ':F' . $i, null, true, true, true);
+            $headingsArray = $headingsArray[$i];
+
+
+            $ceco = $headingsArray["A"];
+            $descripcion = $headingsArray["B"];
+
+            $Ceco = $Ceco_repo->findCecoByCodigo($ceco);
+            if ($Ceco == null) {
+                $ServicioLog->setMensaje('CECO= (' . $ceco . ') '
+                    . 'DESCRIPCION= (' . $descripcion . ") "
+                    . "**ERROR NO EXISTE CECO :**");
+                $ServicioLog->escribeLog($ficheroLog);
+                continue;
+            }
+
+            if ($Ceco->getDescripcion() != $descripcion) {
+                $ServicioLog->setMensaje('CECO= (' . $ceco . ') '
+                    . 'DESCRIPCION FICHERO= (' . $descripcion . ") "
+                    . 'DESCRIPCION CCAP= (' . $Ceco->getDescripcion() . ") "
+                    . "**DESCRIPCION DIFERENTE**");
+                $ServicioLog->escribeLog($ficheroLog);
+            }
+        }
+
+        $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(2);
+        $ServicioLog->setMensaje("==> TERMINA COMPROBACION <==");
+        $ServicioLog->escribeLog($ficheroLog);
+        $CargaFichero->setFicheroLog($ServicioLog->getFilename());
+        $CargaFichero->setEstadoCargaInicial($Estado);
+        $em->persist($CargaFichero);
+        $em->flush();
+
+        $params = ["CargaFichero" => $CargaFichero,
+            "resultado" => $error];
+        return $this->render("finCarga.html.twig", $params);
     }
 
 }

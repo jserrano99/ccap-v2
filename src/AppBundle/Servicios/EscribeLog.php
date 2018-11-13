@@ -5,20 +5,22 @@ namespace AppBundle\Servicios;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
 
+
 /**
- * Description of EscribeLog
- *
- * @author jluis_local
+ * Class EscribeLog
+ * @package AppBundle\Servicios
  */
 class EscribeLog {
-
-    //put your code here
 
     private $logger;
     private $mensaje;
     private $repo;
     private $filename;
 
+	/**
+	 * @param $ficheroLog
+	 * @return bool
+	 */
     public function escribeLog($ficheroLog) {
 
         $ficheroLog = 'logs/'.$ficheroLog;
@@ -32,10 +34,16 @@ class EscribeLog {
         return true;
     }
 
+	/**
+	 * @return mixed
+	 */
     public function getLogger() {
         return $this->logger;
     }
 
+	/**
+	 * @return mixed
+	 */
     public function getRepo() {
         return $this->repo;
     }

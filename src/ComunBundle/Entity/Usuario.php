@@ -4,7 +4,6 @@ namespace ComunBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
-use ComunBundle\Entity\EstadoUsuario;
 
 /**
  * Usuario
@@ -79,18 +78,30 @@ class Usuario implements UserInterface {
 
     // FUNCIONES PARA LA GESTIÓN DE USUARIOS DE SYMFONY 
 
+	/**
+	 * @return string|void
+	 */
     public function getUsername() {
         $this->codigo;
     }
 
+	/**
+	 * @return null|string
+	 */
     public function getSalt() {
         return null;
     }
 
+	/**
+	 * @return array
+	 */
     public function getRoles() {
-        return array($this->getPerfil());
+        return [$this->getPerfil()];
     }
 
+	/**
+	 *
+	 */
     public function eraseCredentials() {
         
     }
