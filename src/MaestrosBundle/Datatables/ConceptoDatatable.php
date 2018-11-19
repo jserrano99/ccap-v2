@@ -31,9 +31,15 @@ class ConceptoDatatable extends AbstractDatatable {
             'dom' => 'lBtrip'
         ));
 
-        $edificios = $this->em->getRepository('ComunBundle:Edificio')->findAll();
+	    $this->events->set([
+		    'xhr' => ['template' => 'fin.js.twig'],
+		    'pre_xhr' => ['template' => 'inicio.js.twig'],
+		    'search' => ['template' => 'search.js.twig'],
+		    'state_loaded' => ['template' => 'loaded.js.twig'],
 
-        $this->features->set(array(
+	    ]);
+
+	    $this->features->set(array(
             'auto_width' => true,
             'ordering' => true,
             'length_change' => true,

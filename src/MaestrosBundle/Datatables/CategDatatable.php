@@ -36,8 +36,15 @@ class CategDatatable extends AbstractDatatable {
             'search_in_non_visible_columns' => true,
             'dom' => 'lBtrip'
         ));
+	    $this->events->set([
+		    'xhr' => ['template' => 'fin.js.twig'],
+		    'pre_xhr' => ['template' => 'inicio.js.twig'],
+		    'search' => ['template' => 'search.js.twig'],
+		    'state_loaded' => ['template' => 'loaded.js.twig'],
 
-        $this->extensions->set(array());
+	    ]);
+
+	    $this->extensions->set(array());
 
         $this->features->set(array());
         $catgenAll = $this->em->getRepository('MaestrosBundle:CatGen')->createQueryBuilder('u')
