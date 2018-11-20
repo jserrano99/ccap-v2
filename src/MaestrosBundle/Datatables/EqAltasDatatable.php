@@ -14,7 +14,7 @@ class EqAltasDatatable extends AbstractDatatable {
     /**
      * {@inheritdoc}
      */
-    public function buildDatatable(array $options = array()) {
+    public function buildDatatable(array $options = []) {
         $this->language->set(array(
             'cdn_language_by_locale' => true
         ));
@@ -82,18 +82,18 @@ class EqAltasDatatable extends AbstractDatatable {
                 ))
                 ->add(null, ActionColumn::class, array('title' => 'Acciones',
                     'actions' => array(
-                        array('route' => 'activaEqAltas',
-                            'route_parameters' => array('id' => 'id'),
+                        ['route' => 'activaEqAltas',
+                            'route_parameters' => ['id' => 'id'],
                             'label' => 'Activar',
                             'icon' => 'glyphicon glyphicon-ok-sign',
                             'render_if' => function($row) {
                                 if ($row['enuso'] === 'N')
                                     return true;
                             },
-                            'attributes' => array('rel' => 'tooltip',
+                            'attributes' => ['rel' => 'tooltip',
                                 'title' => 'Activar',
                                 'class' => 'btn btn-info btn-xs',
-                                'role' => 'button')),
+                                'role' => 'button']],
                         array('route' => 'desactivaEqAltas',
                             'route_parameters' => array('id' => 'id'),
                             'label' => 'Desactivar',

@@ -62,7 +62,7 @@ class SincroLogDatatable extends AbstractDatatable {
                     'title' => 'Tabla', 'width' => '15px', 'searchable' => false,
                 ))
                 ->add('script', Column::class, array(
-                    'title' => 'Script', 'width' => '15px', 'searchable' => false,
+                    'title' => 'Script', 'width' => '15px', 'searchable' => true,
                 ))
                 ->add('idElemento', Column::class, array(
                     'title' => 'Identificador Elemento', 'width' => '200px'

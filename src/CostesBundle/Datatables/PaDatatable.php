@@ -46,22 +46,14 @@ class PaDatatable extends AbstractDatatable {
             'order_cells_top' => true,
             'search_in_non_visible_columns' => true,
         ));
+	    $this->events->set([
+		    'xhr' => ['template' => 'fin.js.twig'],
+		    'pre_xhr'=> ['template' => 'inicio.js.twig'],
+		    'search'=> ['template' => 'search.js.twig'],
+		    'state_loaded'=> ['template' => 'loaded.js.twig'],
 
+	    ]);
 
-        /*
-          $this->callbacks->set(array(
-          'init_complete' => array(
-          'template' => 'pa/init.js.twig',
-          ),
-          ));
-
-          $this->events->set(array(
-          'xhr' => array(
-          'template' => 'pa/event.js.twig',
-          'vars' => array('table_name' => $this->getName()),
-          ),
-          ));
-         */
         $edificios = $this->em->getRepository('ComunBundle:Edificio')->findAll();
         $das = $this->em->getRepository('ComunBundle:Da')->findAll();
 

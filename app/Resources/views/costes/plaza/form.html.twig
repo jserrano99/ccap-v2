@@ -1,9 +1,92 @@
 <script>
     $(document).ready(function () {
+        $("#costesbundle_plaza_codigoUf").change(function () {
+            let valor, recurso;
+            $("#procesando").show();
+            valor = $("#costesbundle_plaza_codigoUf").val();
+            recurso = Routing.generate("ajaxVerUf", {"codigo": valor}, true);
+            $.ajax({
+                type: "POST",
+                url: recurso,
+                dataType: 'json',
+                success: function (data, status, xhr) {
+                    $('.modal-backdrop').remove();
+                    $("#procesando").hide();
+                    $("#costesbundle_plaza_descripcionUf").val(data.descripcion);
+                    $("#costesbundle_plaza_uf").val(data.id);
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    return null;
+                }
+            });
+        });
+        $("#costesbundle_plaza_codigoPa").change(function () {
+            let valor, recurso;
+            $("#procesando").show();
+            valor = $("#costesbundle_plaza_codigoPa").val();
+            recurso = Routing.generate("ajaxVerPa", {"codigo": valor}, true);
+            $.ajax({
+                type: "POST",
+                url: recurso,
+                dataType: 'json',
+                success: function (data, status, xhr) {
+                    $('.modal-backdrop').remove();
+                    $("#procesando").hide();
+                    $("#costesbundle_plaza_descripcionPa").val(data.descripcion);
+                    $("#costesbundle_plaza_pa").val(data.id);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    return null;
+                }
+            });
+        });
+
+        $("#costesbundle_plaza_uf").change(function () {
+            let valor, recurso;
+            $("#procesando").show();
+            valor = $("#costesbundle_plaza_uf").val();
+            recurso = Routing.generate("ajaxVerUfById", {"id": valor}, true);
+            $.ajax({
+                type: "POST",
+                url: recurso,
+                dataType: 'json',
+                success: function (data, status, xhr) {
+                    $('.modal-backdrop').remove();
+                    $("#procesando").hide();
+                    $("#costesbundle_plaza_codigoUf").val(data.oficial);
+                    $("#costesbundle_plaza_descripcionUf").val(data.descripcion);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    return null;
+                }
+            });
+        });
+        $("#costesbundle_plaza_pa").change(function () {
+            let valor, recurso;
+            //$("#procesando").modal('show');
+            $("#procesando").show();
+            valor = $("#costesbundle_plaza_pa").val();
+            recurso = Routing.generate("ajaxVerPaById", {"id": valor}, true);
+            $.ajax({
+                type: "POST",
+                url: recurso,
+                dataType: 'json',
+                success: function (data, status, xhr) {
+                    $('.modal-backdrop').remove();
+                    $("#procesando").hide();
+                    $("#costesbundle_plaza_codigoPa").val(data.oficial);
+                    $("#costesbundle_plaza_descripcionPa").val(data.descripcion);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    return null;
+                }
+            });
+        });
 
         $("#costesbundle_plaza_nuevoCeco").change(function () {
             let valor, recurso;
-            $("#procesando").modal('show');
+            $("#procesando").show();
             valor = $("#costesbundle_plaza_nuevoCeco").val();
             recurso = Routing.generate("ajaxVerCeco", {"id": valor}, true);
             $.ajax({
@@ -23,6 +106,29 @@
                 }
             });
         });
+
+        $("#costesbundle_plaza_turnof").change(function () {
+            let valor, recurso;
+            $("#procesando").show();
+            valor = $("#costesbundle_plaza_turnof").val();
+            recurso = Routing.generate("ajaxVerTurno", {"id": valor}, true);
+            $.ajax({
+                type: "POST",
+                url: recurso,
+                dataType: 'json',
+                success: function (data, status, xhr) {
+                    $('.modal-backdrop').remove();
+                    $("#procesando").hide();
+                    $("#costesbundle_plaza_h1ini").val(data.hini);
+                    $("#costesbundle_plaza_h2fin").val(data.hfin);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    return null;
+                }
+            });
+        });
+
+
     });
 
     function cambiarAsignacion() {
@@ -35,7 +141,6 @@
         } else {
             cias = $("#costesbundle_plaza_cias").val();
             cecoAnterior = $("#costesbundle_plaza_cecoActual").val();
-            alert(cecoAnterior);
             if (cecoAnterior === '') {
                 cecoAnterior = 0;
             }
@@ -58,7 +163,7 @@
         if (uf == '' || catgen == '') {
             bootbox.alert("Unidad Funcional, Punto Asistencia y Categoría Obligatorios");
         } else {
-            $("#procesando").modal('show');
+            $("#procesando").show();
             recurso = Routing.generate("calcularCIAS", {"uf_id": uf, "catgen_id": catgen}, true);
             $.ajax({
                 type: "POST",
@@ -104,7 +209,6 @@
     function desAmortizar() {
         let recurso;
         let cias = $("#costesbundle_plaza_cias").val();
-        alert(cias);
         recurso = Routing.generate("desAmortizacion", {
             "cias": cias
         }, true);
@@ -120,7 +224,7 @@
         if (uf == '' || pa == '' || cias == '') {
             bootbox.alert("Unidad Funcional, Punto Asistencial y Cias Obligatorios");
         } else {
-            $("#procesando").modal('show');
+            $("#procesando").show();
             recurso = Routing.generate("ajaxCalcularCeco", {"cias": cias, "uf_id": uf, "pa_id": pa}, true);
             $.ajax({
                 type: "POST",
@@ -145,16 +249,32 @@
         }
     }
 
+    function deletePlaza() {
+        let cias, recurso;
+        cias = $("#costesbundle_plaza_cias").val();
+        recurso = Routing.generate("deletePlaza", {
+            "cias": cias,
+        }, true);
+        alert(recurso);
+        window.location = recurso;
+    }
+
+
 </script>
 
 
-<div class="container">
+<div class="container-fluid">
     {{ form_start(form) }}
     {{ form_errors(form) }}
     <div class="panel panel-default">
         <div class="panel-heading">Identificación</div>
         <div class="panel-body">
+            <div class="form_row mismalinea">{{ form_row(form.codigoUf) }}</div>
+            <div class="form_row mismalinea">{{ form_row(form.descripcionUf) }}</div>
             <div class="form_row mismalinea">{{ form_row(form.uf) }}</div>
+            <div class="clearfix"></div>
+            <div class="form_row mismalinea">{{ form_row(form.codigoPa) }}</div>
+            <div class="form_row mismalinea">{{ form_row(form.descripcionPa) }}</div>
             <div class="form-row  mismalinea">{{ form_row(form.pa) }}</div>
             <div class="clearfix"></div>
             <div class="form-row mismalinea">{{ form_row(form.catGen) }}</div>
@@ -202,8 +322,14 @@
         <div id="datosGen">
             <div class="form-row mismalinea">{{ form_row(form.modalidad) }}</div>
             <div class="form-row mismalinea">{{ form_row(form.catFp) }}</div>
-            <div class="form-row mismalinea">{{ form_row(form.turno) }}</div>
             <div class="clearfix"></div>
+            <div class="form-row mismalinea">{{ form_row(form.turnof) }}</div>
+            <div class="form-row mismalinea">{{ form_row(form.h1ini) }}</div>
+            <div class="form-row mismalinea">{{ form_row(form.h1fin) }}</div>
+            <div class="form-row mismalinea">{{ form_row(form.h2ini) }}</div>
+            <div class="form-row mismalinea">{{ form_row(form.h2fin) }}</div>
+            <div class="clearfix"></div>
+
             <div class="form-row ">{{ form_row(form.observaciones) }}</div>
             <div class="clearfix"></div>
             <div class="form-row mismalinea">{{ form_row(form.fCreacion) }}</div>
@@ -263,7 +389,18 @@
             </div>
         {% endif %}
     </div>
-    <div class="form_row ">
+    <div class="form_row mismalinea">
         {{ form_row(form.Guardar) }}
     </div>
+    <div class="form-row mismalinea">
+        <button type="button"
+                id="btnAsignacion"
+                class="btn btn-default btn-danger btn-t"
+                onclick="deletePlaza()"
+                data-toggle="tooltip"
+                data-placement="bottom"
+                title="Eliminar Plaza"> Eliminar Plaza
+        </button>
+    </div>
+
 </div>

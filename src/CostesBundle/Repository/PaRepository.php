@@ -13,12 +13,33 @@ namespace CostesBundle\Repository;
  *
  * @author jluis_local
  */
-class PaRepository extends \Doctrine\orm\EntityRepository {
+class PaRepository extends \Doctrine\orm\EntityRepository
+{
+	/**
+	 * @return \Doctrine\ORM\QueryBuilder
+	 */
+	public function createAlphabeticalQueryBuilder()
+	{
+		return $this->createQueryBuilder('u')
+			->orderBy('u.descripcion', 'ASC')
+			->where("u.enuso = 'S' ");
+	}
 
-    public function createAlphabeticalQueryBuilder() {
-        return $this->createQueryBuilder('u')
-                        ->orderBy('u.descripcion', 'ASC')
-                ->where("u.enuso = 'S' ");
-    }
+	/**
+	 * @param $oficial
+	 * @return null
+	 */
+	public function findPaByOficial($oficial)
+	{
+		$PaAll = $this->createQueryBuilder('u')
+			->where('u.oficial = :oficial')
+			->setParameter('oficial', trim($oficial))
+			->getQuery()->getResult();
+		if ($PaAll) {
+			return $PaAll[0];
+		} else {
+			return null;
+		}
+	}
 
 }

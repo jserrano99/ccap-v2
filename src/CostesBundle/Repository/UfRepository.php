@@ -13,12 +13,29 @@ namespace CostesBundle\Repository;
  *
  * @author jluis_local
  */
-class UfRepository extends \Doctrine\orm\EntityRepository {
+class UfRepository extends \Doctrine\orm\EntityRepository
+{
+	/**
+	 * @return \Doctrine\ORM\QueryBuilder
+	 */
+	public function createAlphabeticalQueryBuilder()
+	{
+		return $this->createQueryBuilder('u')
+			->orderBy('u.descripcion', 'ASC')
+			->where("u.enuso = 'S'");
+	}
 
-    public function createAlphabeticalQueryBuilder() {
-        return $this->createQueryBuilder('u')
-                        ->orderBy('u.descripcion', 'ASC')
-                        ->where("u.enuso = 'S'");
-    }
+	public function findUfByOficial($oficial)
+	{
+		$UfAll = $this->createQueryBuilder('u')
+			->where('u.oficial = :oficial')
+			->setParameter('oficial', trim($oficial))
+			->getQuery()->getResult();
+		if ($UfAll) {
+			return $UfAll[0];
+		} else {
+			return null;
+		}
+	}
 
 }

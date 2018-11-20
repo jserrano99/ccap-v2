@@ -17,8 +17,8 @@ function selectMovialtaByCias (){
                    . " inner join trab as t3 on t3.cip = t2.cip "
                    ." where t2.cias = :cias and t2.fbaja >= :fecha ";
         $query = $JanoUnif->prepare($sentencia);
-        $params = array(":cias" => $cias,
-                        ":fecha" => $fecha );
+        $params = [":cias" => $cias,
+                        ":fecha" => $fecha];
         $query->execute($params);
         $res = $query->fetchAll(PDO::FETCH_ASSOC);
         return $res;
@@ -28,8 +28,6 @@ function selectMovialtaByCias (){
         echo " ERROR= ( ".$ex->getMessage().") \n";
         exit(1);
     }
-
-
 }
 /**
  * 

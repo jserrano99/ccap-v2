@@ -38,22 +38,7 @@ class BaseDatosDatatable extends AbstractDatatable {
         ));
 
 
-        /*
-          $this->callbacks->set(array(
-          'init_complete' => array(
-          'template' => 'pa/init.js.twig',
-          ),
-          ));
 
-          $this->events->set(array(
-          'xhr' => array(
-          'template' => 'pa/event.js.twig',
-          'vars' => array('table_name' => $this->getName()),
-          ),
-          ));
-         */
-        $edificios = $this->em->getRepository('ComunBundle:Edificio')->findAll();
-        $das = $this->em->getRepository('ComunBundle:Da')->findAll();
 
         $this->features->set(array(
             'auto_width' => true,

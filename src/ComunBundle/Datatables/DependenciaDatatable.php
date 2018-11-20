@@ -37,20 +37,6 @@ class DependenciaDatatable extends AbstractDatatable {
         ));
 
 
-        /*
-          $this->callbacks->set(array(
-          'init_complete' => array(
-          'template' => 'pa/init.js.twig',
-          ),
-          ));
-
-          $this->events->set(array(
-          'xhr' => array(
-          'template' => 'pa/event.js.twig',
-          'vars' => array('table_name' => $this->getName()),
-          ),
-          ));
-         */
         $EstadoCargaInicialAll = $this->em->getRepository('ComunBundle:EstadoCargaInicial')->findAll();
         $ModuloAll = $this->em->getRepository('ComunBundle:Modulo')->findAll();
 
