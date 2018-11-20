@@ -174,7 +174,8 @@ class PlazaController extends Controller
 				$em->persist($Plaza);
 				$em->flush();
 				$params = ["id" => $Plaza->getId(),
-					"actuacion" => "UPDATE"];
+					"actuacion" => "UPDATE",
+					"cias" => $Plaza->getCias()];
 				return $this->redirectToRoute("sincroPlaza", $params);
 			} catch (UniqueConstraintViolationException $ex) {
 				$status = " YA EXISTE UNA PLAZA CON ESTE CIAS : " . $Plaza->getCias();
@@ -217,7 +218,8 @@ class PlazaController extends Controller
 				$em->flush();
 
 				$params = ["id" => $Plaza->getId(),
-					"actuacion" => "INSERT"];
+					"actuacion" => "INSERT",
+					"cias" => $Plaza->getCias()];
 				return $this->redirectToRoute("sincroPlaza", $params);
 			} catch (UniqueConstraintViolationException $ex) {
 				$status = " YA EXISTE UNA PLAZA CON ESTE CIAS : " . $Plaza->getCias();
@@ -531,9 +533,10 @@ class PlazaController extends Controller
 	/**
 	 * @param $id
 	 * @param $actuacion
+	 * @param $cias
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	public function sincroAction($id, $actuacion)
+	public function sincroAction($id, $actuacion, $cias)
 	{
 		$em = $this->getDoctrine()->getManager();
 		$usuario_id = $this->sesion->get('usuario_id');
@@ -551,23 +554,33 @@ class PlazaController extends Controller
 		$SincroLog->setEstado($Estado);
 		$em->persist($SincroLog);
 		$em->flush();
-		$Plaza->setSincroLog($SincroLog);
-		$em->persist($Plaza);
-		$em->flush();
+		if ('DELETE' != $actuacion) {
+			$Plaza->setSincroLog($SincroLog);
+			$em->persist($Plaza);
+			$em->flush();
+		}
+
 
 		$root = $this->get('kernel')->getRootDir();
 		$modo = $this->getParameter('modo');
 		$php = $this->getParameter('php');
-		$php_script = $php . " " . $root . "/scripts/costes/actualizacionPlaza.php " . $modo . "  " . $Plaza->getId() . " " . $actuacion;
+
+		if ('DELETE' === $actuacion) {
+			$php_script = $php . " " . $root . "/scripts/costes/deletePlaza.php " . $modo . "  " . $cias;
+		} else {
+			$php_script = $php . " " . $root . "/scripts/costes/actualizacionPlaza.php " . $modo . "  " . $id . " " . $actuacion;
+		}
+
 		exec($php_script, $SALIDA, $resultado);
 		if ($resultado == 0) {
 			$Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(2);
 		} else {
 			$Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(3);
 		}
-		$ficheroLog = 'sincroPlaza-' . $Plaza->getCias() . '.log';
+		$ficheroLog = 'sincroPlaza-' . $cias . '.log';
 		$ServicioLog = $this->get('app.escribelog');
-		$ServicioLog->setLogger('ccap_plaza->cias:' . $Plaza->getCias());
+		$ServicioLog->setLogger('ccap_plaza->cias:' . $cias);
+
 		foreach ($SALIDA as $linea) {
 			$ServicioLog->setMensaje($linea);
 			$ServicioLog->escribeLog($ficheroLog);
@@ -819,7 +832,6 @@ class PlazaController extends Controller
 		$view = $this->renderView("finSincro.html.twig", $params);
 
 		$response = new Response($view);
-
 		$response->headers->set('Content-Disposition', 'inline');
 		$response->headers->set('Content-Type', 'text/html');
 		$response->headers->set('target', '_blank');
@@ -847,7 +859,8 @@ class PlazaController extends Controller
 					$em->persist($Plaza);
 					$em->flush();
 					$params = ["id" => $Plaza->getId(),
-						"actuacion" => "UPDATE"];
+						"actuacion" => "UPDATE",
+						"cias" => $Plaza->getCias()];
 					return $this->redirectToRoute("sincroPlaza", $params);
 				} catch (DBALException $ex) {
 					$status = "ERROR GENERAL=" . $ex->getMessage();
@@ -881,7 +894,8 @@ class PlazaController extends Controller
 			$em->persist($Plaza);
 			$em->flush();
 			$params = ["id" => $Plaza->getId(),
-				"actuacion" => "UPDATE"];
+				"actuacion" => "UPDATE",
+				"cias" => $Plaza->getCias()];
 			return $this->redirectToRoute("sincroPlaza", $params);
 		} catch (DBALException $ex) {
 			$status = "ERROR GENERAL=" . $ex->getMessage();
@@ -1085,6 +1099,10 @@ class PlazaController extends Controller
 		return $this->render("finCarga.html.twig", $params);
 	}
 
+	/**
+	 * @param $cias
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
 	public function deleteAction($cias)
 	{
 		$em = $this->getDoctrine()->getManager();
@@ -1093,11 +1111,14 @@ class PlazaController extends Controller
 		$ok = $this->compruebaDelete($Plaza);
 		if ($ok == 0) {
 			try {
+
 				$params = ["id" => $Plaza->getId(),
-					"actuacion" => "DELETE"];
+					"actuacion" => "DELETE",
+					"cias" => $Plaza->getCias()];
 				$em->remove($Plaza);
 				$em->flush();
 				return $this->redirectToRoute("sincroPlaza", $params);
+
 			} catch (DBALException $ex) {
 				$status = "ERROR GENERAL=" . $ex->getMessage();
 				$this->sesion->getFlashBag()->add("status", $status);
@@ -1109,6 +1130,10 @@ class PlazaController extends Controller
 		return $this->redirectToRoute("editPlaza", $params);
 	}
 
+	/**
+	 * @param $Plaza
+	 * @return mixed
+	 */
 	public function compruebaDelete($Plaza)
 	{
 		$em = $this->getDoctrine()->getManager();
@@ -1156,6 +1181,11 @@ class PlazaController extends Controller
 
 		return $resultado;
 	}
+
+	/**
+	 * @param $id
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
 	public function ajaxVerTurnoAction($id)
 	{
 		$em = $this->getDoctrine()->getManager();
@@ -1170,6 +1200,10 @@ class PlazaController extends Controller
 		return $response;
 	}
 
+	/**
+	 * @param $codigo
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
 	public function ajaxVerUfAction($codigo)
 	{
 		$em = $this->getDoctrine()->getManager();
@@ -1189,6 +1223,10 @@ class PlazaController extends Controller
 		return $response;
 	}
 
+	/**
+	 * @param $codigo
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
 	public function ajaxVerPaAction($codigo)
 	{
 		$em = $this->getDoctrine()->getManager();
@@ -1207,6 +1245,11 @@ class PlazaController extends Controller
 		$response->headers->set("Content-type", "application/json");
 		return $response;
 	}
+
+	/**
+	 * @param $id
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
 	public function ajaxVerUfByIdAction($id)
 	{
 		$em = $this->getDoctrine()->getManager();
@@ -1226,6 +1269,10 @@ class PlazaController extends Controller
 		return $response;
 	}
 
+	/**
+	 * @param $id
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
 	public function ajaxVerPaByIdAction($id)
 	{
 		$em = $this->getDoctrine()->getManager();
@@ -1243,6 +1290,179 @@ class PlazaController extends Controller
 		$response->setContent(json_encode($Pa));
 		$response->headers->set("Content-type", "application/json");
 		return $response;
+	}
+
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	public function cambioAdscripcionAction(Request $request)
+	{
+		$em = $this->getDoctrine()->getManager();
+
+		$ImportarForm = $this->createForm(ImportarType::class);
+		$ImportarForm->handleRequest($request);
+		if ($ImportarForm->isSubmitted()) {
+			$file = $ImportarForm["fichero"]->getData();
+			if (!empty($file) && $file != null) {
+				$file_name = $file->getClientOriginalName();
+				$file->move("upload", $file_name);
+				try {
+					$PHPExcel = $this->validarFicheroCambioAds($file);
+					$CargaFichero = new CargaFichero();
+					$fecha = new DateTime();
+					$CargaFichero->setFechaCarga($fecha);
+					$CargaFichero->setDescripcion("CAMBIO MASIVO DE ADSCRIPCIONES DE PLAZAS");
+					$CargaFichero->setFichero($file_name);
+					$CargaFichero->setTabla("CCAP_PLAZAS(ADSCRIPCIÓN)");
+					$usuario_id = $this->sesion->get('usuario_id');
+					$Usuario = $em->getRepository("ComunBundle:Usuario")->find($usuario_id);
+					$Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(1);
+					$CargaFichero->setUsuario($Usuario);
+					$CargaFichero->setEstadoCargaInicial($Estado);
+					$em->persist($CargaFichero);
+					$em->flush();
+					return $this->cambiaAdscripcionPlaza($CargaFichero, $PHPExcel);
+				} catch (Exception $e) {
+					$status = "***ERROR EN FORMATO FICHERO **: " . $file_name;
+					$this->sesion->getFlashBag()->add("status", $status);
+					$params = ["form" => $ImportarForm->createView()];
+					return $this->render("costes/plaza/cambio.adscripcion.html.twig", $params);
+				}
+			}
+		}
+		$params = ["form" => $ImportarForm->createView()];
+		return $this->render("costes/plaza/cambio.adscripcion.html.twig", $params);
+	}
+
+	public function validarFicheroCambioAds($fichero)
+	{
+		$Cabecera = ["A" => "CIAS",
+			"B" => "UF",
+			"C" => "PA"];
+
+		$file = "upload/" . $fichero->getClientOriginalName();
+		$PHPExcel = IOFactory::load($file);
+
+		$objWorksheet = $PHPExcel->setActiveSheetIndex(0);
+		$headingsArray = $objWorksheet->rangeToArray('A1:C1', null, true, true, true);
+
+		if ($headingsArray[1] != $Cabecera) {
+			dump($Cabecera);
+			dump($headingsArray[1]);
+			die();
+		}
+
+		return $PHPExcel;
+	}
+
+	public function cambiaAdscripcionPlaza($CargaFichero, $PHPExcel)
+	{
+		$em = $this->getDoctrine()->getManager();
+
+		$objWorksheet = $PHPExcel->setActiveSheetIndex(0);
+		$highestRow = $objWorksheet->getHighestRow();
+		$ficheroLog = 'cambioAdscripcion-' . $CargaFichero->getId() . '.log';
+		$ServicioLog = $this->get('app.escribelog');
+		$ServicioLog->setLogger('FICHERO: ' . $ficheroLog);
+		$ServicioLog->setMensaje("==> COMIENZA TRATAMIENTO PARA EL FICHERO: ");
+		$ServicioLog->escribeLog($ficheroLog);
+
+		$error = 0;
+		for ($i = 2; $i <= $highestRow; $i++) {
+			$em = $this->getDoctrine()->getManager();
+			if (!$em->isOpen()) {
+				$em = $this->getDoctrine()->getManager()->create($em->getConnection(), $em->getConfiguration());
+			}
+			$headingsArray = $objWorksheet->rangeToArray('A' . $i . ':C' . $i, null, true, true, true);
+			$headingsArray = $headingsArray[$i];
+			$cias = $headingsArray["A"];
+			$codigoUf = $headingsArray["B"];
+			$codigoPa = $headingsArray["C"];
+
+			$Plaza = $em->getRepository("CostesBundle:Plaza")->findPlazaByCias($cias);
+			$ServicioLog->setLogger('CIAS: ' . $cias);
+
+			if ($Plaza == null) {
+				$ServicioLog->setMensaje("**ERROR NO EXISTE PLAZA PARA EL CIAS: " . $cias);
+				$ServicioLog->escribeLog($ficheroLog);
+				$error = 1;
+				continue;
+			}
+
+			$Uf = $em->getRepository('CostesBundle:Uf')->findUfByOficial($codigoUf);
+			if ($Uf == null) {
+				$ServicioLog->setMensaje("**ERROR NO EXISTE UNIDAD FUNCIONAL PARA EL CODIGO :(" . $codigoUf . ') ');
+				$ServicioLog->escribeLog($ficheroLog);
+				$error = 1;
+				continue;
+			}
+
+			$Pa = $em->getRepository('CostesBundle:Pa')->findPaByOficial($codigoPa);
+			if ($Pa == null) {
+				$ServicioLog->setMensaje("**ERROR NO EXISTE PUNTO ASISTENCIAL PARA EL CODIGO :(" . $codigoPa . ') ');
+				$ServicioLog->escribeLog($ficheroLog);
+				$error = 1;
+				continue;
+			}
+
+
+			$ServicioLog->setMensaje('Unidad Funcional Anterior: (' . $Plaza->getUf()->getOficial() . ') (' . $Plaza->getUf()->getDescripcion() . ') ');
+			$ServicioLog->escribeLog($ficheroLog);
+			$ServicioLog->setMensaje('Punto Asistencial Anterior: (' . $Plaza->getPa()->getOficial() . ') (' . $Plaza->getPa()->getDescripcion() . ') ');
+			$ServicioLog->escribeLog($ficheroLog);
+			$ServicioLog->setMensaje('Unidad Funcional Nuevo: (' . $Uf->getOficial() . ') (' . $Uf->getDescripcion() . ') ');
+			$ServicioLog->escribeLog($ficheroLog);
+			$ServicioLog->setMensaje('Punto Asistencial Nuevo: (' . $Pa->getOficial() . ') (' . $Pa->getDescripcion() . ') ');
+			$ServicioLog->escribeLog($ficheroLog);
+
+			$Plaza->setUf($Uf);
+			$Plaza->setPa($Pa);
+			$em->persist($Plaza);
+			$em->flush();
+
+			$root = $this->get('kernel')->getRootDir();
+			$modo = $this->getParameter('modo');
+			$php = $this->getParameter('php');
+			$php_script = $php . " " . $root . "/scripts/costes/actualizacionPlaza.php " . $modo . "  " . $Plaza->getId() . " UPDATE";
+			dump($php_script);
+
+			$SALIDA = [];
+			exec($php_script, $SALIDA, $resultado);
+			if ($resultado != 0) {
+				dump($resultado);
+				die();
+			}
+			foreach ($SALIDA as $linea) {
+				$ServicioLog->setLogger('Sincro-Plaza CIAS: ' . $cias);
+				$ServicioLog->setMensaje($linea);
+				$ServicioLog->escribeLog($ficheroLog);
+			}
+
+		}
+
+		$ServicioLog->setLogger('FICHERO: ' . $ficheroLog);
+		$ServicioLog->setMensaje("==> TERMINA TRATAMIENTO PARA EL FICHERO: ");
+		$ServicioLog->escribeLog($ficheroLog);
+
+		if ($error == 0) {
+			$Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(2);
+			$ServicioLog->setMensaje("==> TERMINA CORRECTAMENTE");
+			$ServicioLog->escribeLog($ficheroLog);
+		} else {
+			$Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(3);
+			$ServicioLog->setMensaje("==> TERMINA EN ERROR");
+			$ServicioLog->escribeLog($ficheroLog);
+		}
+
+		$CargaFichero->setFicheroLog($ServicioLog->getFilename());
+		$CargaFichero->setEstadoCargaInicial($Estado);
+		$em->persist($CargaFichero);
+		$em->flush();
+
+		$params = ["CargaFichero" => $CargaFichero,
+			"resultado" => $error];
+		return $this->render("finCarga.html.twig", $params);
 	}
 
 }

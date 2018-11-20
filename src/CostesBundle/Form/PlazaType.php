@@ -54,7 +54,7 @@ class PlazaType extends AbstractType
 				},
 				'required' => true,
 				'disabled' => false,
-				"attr" => ["class" => "form-control corto"]])
+				"attr" => ["class" => "form-control medio"]])
 			->add('pa', EntityType::class, [
 				"label" => 'Punto Asistencial',
 				'class' => 'CostesBundle:Pa',
@@ -64,7 +64,7 @@ class PlazaType extends AbstractType
 				},
 				'required' => true,
 				'disabled' => false,
-				"attr" => ["class" => "form-control corto"]])
+				"attr" => ["class" => "form-control medio"]])
 			->add('fAmortiza', DateType::class, [
 				"label" => 'Fecha Amortización',
 				"required" => false,

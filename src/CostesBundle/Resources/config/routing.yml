@@ -46,7 +46,7 @@ verPlazaSinCeco:
   options:
     expose: true
 sincroPlaza:
-  path:   /plaza/sincro/{id}/{actuacion}
+  path:   /plaza/sincro/{id}/{actuacion}/{cias}
   defaults: { _controller: CostesBundle:Plaza:sincro}
   options:
     expose: true
@@ -85,7 +85,11 @@ ajaxVerPaById:
   defaults: { _controller: CostesBundle:Plaza:ajaxVerPaById}
   options:
     expose: true
-
+cambioAdscripcion:
+  path:   /plaza/cambioadscripcion
+  defaults: { _controller: CostesBundle:Plaza:cambioAdscripcion}
+  options:
+    expose: true
 descargaLogPlaza:
   path:   /plaza/descargaLog/{id}
   defaults: { _controller: CostesBundle:Plaza:descargaLog}

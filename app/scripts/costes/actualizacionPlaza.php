@@ -113,13 +113,8 @@ function updateCecoCias($conexion, $cias, $ceco)
  */
 function procesoInsert($Plaza)
 {
-	if (!insertPlazaUnif($Plaza)) {
-		return false;
-	}
-
-	if (!insertPlazaArea($Plaza)) {
-		return false;
-	}
+	insertPlazaUnif($Plaza);
+	insertPlazaArea($Plaza);
 
 	return true;
 }
@@ -179,7 +174,7 @@ function equivalenciasPlaza($Plaza)
 	echo " PUNTO ASISTENCIAL= (" . $Plaza["pa"] . ") / (" . $Equi["p_asist"] . ")\n";
 	echo " CATEGORIA GENERAL= (" . $Plaza["catgen"] . ") / (" . $Equi["catgen"] . ")\n";
 	echo " CATEGORIA FP= (" . $Plaza["catfp"] . ") / (" . $Equi["catfp"] . ")\n";
-	echo " TURNO = (".$Plaza["turno"] . ") / (" . $Equi["turno"] . ")\n";
+	echo " TURNO = (" . $Plaza["turno"] . ") / (" . $Equi["turno"] . ")\n";
 
 	return $Equi;
 }
@@ -190,7 +185,7 @@ function equivalenciasPlaza($Plaza)
  */
 function insertPlazaUnif($Plaza)
 {
-	global $JanoUnif;
+	global $JanoUnif, $gblerror;
 	try {
 		$sentencia = " delete from plazas where cias = :cias";
 		$query = $JanoUnif->prepare($sentencia);
@@ -230,6 +225,7 @@ function insertPlazaUnif($Plaza)
 		$ins = $query->execute($params);
 		if ($ins == 0) {
 			echo "**ERROR EN INSERCIÓN EN LA BASE DE DATOS UNIFICADA CIAS=" . $Plaza["cias"] . "\n";
+			$gblerror = 1;
 			return false;
 		}
 
@@ -240,6 +236,7 @@ function insertPlazaUnif($Plaza)
 		}
 	} catch (PDOException $ex) {
 		echo "****PDOERROR EN INSERT BASE DE DATOS UNIFICADA " . $ex->getMessage() . " \n";
+		$gblerror = 1;
 		return false;
 	}
 
@@ -252,7 +249,7 @@ function insertPlazaUnif($Plaza)
  */
 function insertPlazaArea($Plaza)
 {
-	global $tipobd, $gblError,$tipo;
+	global $tipobd, $gblError, $tipo;
 
 	$baseDatos = SelectBaseDatosEdificio($tipobd, $Plaza["edificio"]);
 	if ($baseDatos == null) {
@@ -319,6 +316,7 @@ function insertPlazaArea($Plaza)
 
 		if ($ins == 0) {
 			echo "***ERROR EN INSERCION CIAS=" . $Plaza["cias"] . "\n";
+			$gblError = 1;
 			return false;
 		}
 
@@ -341,7 +339,7 @@ function insertPlazaArea($Plaza)
  */
 function deletePlazaUnif($Plaza)
 {
-	global $JanoUnif;
+	global $JanoUnif, $gblError;
 
 	try {
 		$sentencia = "delete from plazas "
@@ -352,12 +350,14 @@ function deletePlazaUnif($Plaza)
 		$ins = $query->execute($params);
 		if ($ins == 0) {
 			echo "***Error en delete base de datos unificada cias= " . $Plaza["cias"] . "\n";
+			$gblError = 1;
 			return false;
 		}
 		echo " PLAZA " . $Plaza["cias"] . " ELIMINADA EN LA BASE DE DATOS UNIFICADA \n";
 		return true;
 	} catch (PDOException $ex) {
 		echo "***PDOERROR EN DELETE " . $ex->getMessage() . " \n";
+		$gblError = 1;
 		return false;
 	}
 }
@@ -369,7 +369,7 @@ function deletePlazaUnif($Plaza)
 
 function updatePlazaUnif($Plaza)
 {
-	global $JanoUnif;
+	global $JanoUnif, $gblError;
 
 	try {
 		$sentencia = "update plazas set  "
@@ -420,6 +420,7 @@ function updatePlazaUnif($Plaza)
 		$ins = $query->execute($params);
 		if ($ins == 0) {
 			echo "***Error en actualización base de datos unificada cias= " . $Plaza["cias"] . "\n";
+			$gblError = 1;
 			return false;
 		}
 		echo " PLAZA " . $Plaza["cias"] . " MODIFICADA EN LA BASE DE DATOS UNIFICADA \n";
@@ -429,6 +430,7 @@ function updatePlazaUnif($Plaza)
 		return true;
 	} catch (PDOException $ex) {
 		echo "***PDOERRO EN  Actualicación " . $ex->getMessage() . " \n";
+		$gblError = 1;
 		return false;
 	}
 }
@@ -523,8 +525,7 @@ function deletePlazaArea($Plaza)
 		return false;
 	}
 	try {
-		$sentencia = "delete from plazas "
-			. " where cias = :cias ";
+		$sentencia = "delete from plazas where cias = :cias ";
 		$query = $conexionArea->prepare($sentencia);
 
 		$params = [":cias" => $Plaza["cias"]];
@@ -535,8 +536,8 @@ function deletePlazaArea($Plaza)
 			return false;
 		}
 		echo "==> PLAZA CIAS= (" . $Plaza["cias"] . ") ELIMINADA EN LA BASE DE DATOS AREA \n";
-
 		return true;
+
 	} catch (PDOException $ex) {
 		echo "***PDOERROR EN DELETE PLAZAS CIAS= (" . $Plaza["cias"] . ") \n" . $ex->getMessage() . "\n";
 		$gblError = 1;
