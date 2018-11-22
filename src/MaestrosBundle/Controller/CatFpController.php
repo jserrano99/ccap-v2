@@ -2,11 +2,9 @@
 
 namespace MaestrosBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Response;
 use UniqueConstraintViolationException;
 
 class CatFpController extends Controller {
@@ -28,9 +26,9 @@ class CatFpController extends Controller {
             $responseService->setDatatable($datatable);
             $datatableQueryBuilder = $responseService->getDatatableQueryBuilder();
             $datatableQueryBuilder->buildQuery();
-
             return $responseService->getResponse();
         }
+
 
         return $this->render('maestros/catfp/query.html.twig', array(
                     'datatable' => $datatable,

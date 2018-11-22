@@ -50,7 +50,7 @@ addEqCatFp:
 # CATEGORIAS (CATGEN)
 #
 queryCatGen:
-    path: /catgen/query/
+    path: /catgen/query
     defaults: { _controller: MaestrosBundle:CatGen:query}    
     options:
         expose: true

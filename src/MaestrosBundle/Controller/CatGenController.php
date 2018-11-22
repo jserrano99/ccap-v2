@@ -2,239 +2,252 @@
 
 namespace MaestrosBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Response;
 use UniqueConstraintViolationException;
 
-class CatGenController extends Controller {
+class CatGenController extends Controller
+{
 
-    private $sesion;
+	private $sesion;
 
-    public function __construct() {
-        $this->sesion = new Session();
-    }
+	public function __construct()
+	{
+		$this->sesion = new Session();
+	}
 
-    public function queryAction(Request $request) {
-        $isAjax = $request->isXmlHttpRequest();
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
+	 * @throws \Exception
+	 */
+	public function queryAction(Request $request)
+	{
+		$isAjax = $request->isXmlHttpRequest();
+		$datatable = $this->get('sg_datatables.factory')->create(\MaestrosBundle\Datatables\CatGenDatatable::class);
+		$datatable->buildDatatable();
 
-        $datatable = $this->get('sg_datatables.factory')->create(\MaestrosBundle\Datatables\CatGenDatatable::class);
-        $datatable->buildDatatable();
+		if ($isAjax) {
+			$responseService = $this->get('sg_datatables.response');
+			$responseService->setDatatable($datatable);
+			$datatableQueryBuilder = $responseService->getDatatableQueryBuilder();
+			$datatableQueryBuilder->buildQuery();
+			return $responseService->getResponse();
+		}
 
-        if ($isAjax) {
-            $responseService = $this->get('sg_datatables.response');
-            $responseService->setDatatable($datatable);
-            $datatableQueryBuilder = $responseService->getDatatableQueryBuilder();
-            $datatableQueryBuilder->buildQuery();
+		return $this->render('maestros/catgen/query.html.twig', [
+			'datatable' => $datatable,
+		]);
+	}
 
-            return $responseService->getResponse();
-        }
+	public function queryEqCatGenAction(Request $request, $catgen_id)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$CatGen_repo = $em->getRepository("MaestrosBundle:CatGen");
+		$CatGen = $CatGen_repo->find($catgen_id);
 
-        return $this->render('maestros/catgen/query.html.twig', array(
-                    'datatable' => $datatable,
-        ));
-    }
+		$isAjax = $request->isXmlHttpRequest();
 
-    public function queryEqCatGenAction(Request $request, $catgen_id) {
-        $em = $this->getDoctrine()->getManager();
-        $CatGen_repo = $em->getRepository("MaestrosBundle:CatGen");
-        $CatGen = $CatGen_repo->find($catgen_id);
+		$datatable = $this->get('sg_datatables.factory')->create(\MaestrosBundle\Datatables\EqCatGenDatatable::class);
+		$datatable->buildDatatable();
 
-        $isAjax = $request->isXmlHttpRequest();
+		if ($isAjax) {
+			$responseService = $this->get('sg_datatables.response');
+			$responseService->setDatatable($datatable);
+			$datatableQueryBuilder = $responseService->getDatatableQueryBuilder();
+			$qb = $datatableQueryBuilder->getQb();
+			$qb->andWhere('catgen = :catgen');
+			$qb->setParameter('catgen', $CatGen);
 
-        $datatable = $this->get('sg_datatables.factory')->create(\MaestrosBundle\Datatables\EqCatGenDatatable::class);
-        $datatable->buildDatatable();
+			return $responseService->getResponse();
+		}
 
-        if ($isAjax) {
-            $responseService = $this->get('sg_datatables.response');
-            $responseService->setDatatable($datatable);
-            $datatableQueryBuilder = $responseService->getDatatableQueryBuilder();
-            $qb = $datatableQueryBuilder->getQb();
-            $qb->andWhere('catgen = :catgen');
-            $qb->setParameter('catgen', $CatGen);
+		return $this->render('maestros/catgen/query.eq.html.twig', [
+			'datatable' => $datatable,
+		]);
+	}
 
-            return $responseService->getResponse();
-        }
+	public function editAction(Request $request, $id)
+	{
+		$entityManager = $this->getDoctrine()->getManager();
+		$CatGen_repo = $entityManager->getRepository("MaestrosBundle:CatGen");
+		$CatGen = $CatGen_repo->find($id);
 
-        return $this->render('maestros/catgen/query.eq.html.twig', array(
-                    'datatable' => $datatable,
-        ));
-    }
+		$form = $this->createForm(\MaestrosBundle\Form\CatGenType::class, $CatGen);
+		$form->handleRequest($request);
 
-    public function editAction(Request $request, $id) {
-        $entityManager = $this->getDoctrine()->getManager();
-        $CatGen_repo = $entityManager->getRepository("MaestrosBundle:CatGen");
-        $CatGen = $CatGen_repo->find($id);
+		if ($form->isSubmitted()) {
+			try {
+				$entityManager->persist($CatGen);
+				$entityManager->flush();
+				$params = ["id" => $CatGen->getId(),
+					"actuacion" => "UPDATE",
+					"edificio" => 'TODOS',
+					"eqcatgen_id" => 'TT'];
+				return $this->redirectToRoute("sincroCatGen", $params);
+			} catch (Doctrine\DBAL\DBALException $ex) {
+				$status = "ERROR GENERAL=" . $ex->getMessage();
+				$this->sesion->getFlashBag()->add("status", $status);
+				return $this->redirectToRoute("queryCatGen");
+			}
+		}
 
-        $form = $this->createForm(\MaestrosBundle\Form\CatGenType::class, $CatGen);
-        $form->handleRequest($request);
+		$params = ["catgen" => $CatGen,
+			"accion" => "MODIFICACIÓN",
+			"form" => $form->createView()];
+		return $this->render("maestros/catgen/edit.html.twig", $params);
+	}
 
-        if ($form->isSubmitted()) {
-            try {
-                $entityManager->persist($CatGen);
-                $entityManager->flush();
-                $params = array("id" => $CatGen->getId(),
-                    "actuacion" => "UPDATE",
-                    "edificio" => 'TODOS',
-                    "eqcatgen_id" => 'TT');
-                return $this->redirectToRoute("sincroCatGen", $params);
-            } catch (Doctrine\DBAL\DBALException $ex) {
-                $status = "ERROR GENERAL=" . $ex->getMessage();
-                $this->sesion->getFlashBag()->add("status", $status);
-                return $this->redirectToRoute("queryCatGen");
-            }
-        }
+	public function crearEquivalencias($CatGen)
+	{
+		$entityManager = $this->getDoctrine()->getManager();
+		$Edificio_repo = $entityManager->getRepository("ComunBundle:Edificio");
+		$EdificioAll = $Edificio_repo->querySoloAreas();
+		foreach ($EdificioAll as $Edificio) {
+			$EqCatGen = new \MaestrosBundle\Entity\EqCatGen();
+			$EqCatGen->setCatGen($CatGen);
+			$EqCatGen->setEdificio($Edificio);
+			$EqCatGen->setCodigoLoc($CatGen->getCodigo());
+			$EqCatGen->setEnuso('X');
+			$entityManager->persist($EqCatGen);
+			$entityManager->flush();
+		}
+		return true;
+	}
 
-        $params = array("catgen" => $CatGen,
-            "accion" => "MODIFICACIÓN",
-            "form" => $form->createView());
-        return $this->render("maestros/catgen/edit.html.twig", $params);
-    }
+	public function addAction(Request $request)
+	{
+		$entityManager = $this->getDoctrine()->getManager();
+		$CatGen = new \MaestrosBundle\Entity\CatGen();
 
-    public function crearEquivalencias($CatGen) {
-        $entityManager = $this->getDoctrine()->getManager();
-        $Edificio_repo = $entityManager->getRepository("ComunBundle:Edificio");
-        $EdificioAll = $Edificio_repo->querySoloAreas();
-        foreach ($EdificioAll as $Edificio) {
-            $EqCatGen = new \MaestrosBundle\Entity\EqCatGen();
-            $EqCatGen->setCatGen($CatGen);
-            $EqCatGen->setEdificio($Edificio);
-            $EqCatGen->setCodigoLoc($CatGen->getCodigo());
-            $EqCatGen->setEnuso('X');
-            $entityManager->persist($EqCatGen);
-            $entityManager->flush();
-        }
-        return true;
-    }
+		$form = $this->createForm(\MaestrosBundle\Form\CatGenType::class, $CatGen);
+		$form->handleRequest($request);
 
-    public function addAction(Request $request) {
-        $entityManager = $this->getDoctrine()->getManager();
-        $CatGen = new \MaestrosBundle\Entity\CatGen();
+		if ($form->isSubmitted()) {
+			try {
+				$entityManager->persist($CatGen);
+				$entityManager->flush();
+				$this->crearEquivalencias($CatGen);
+				$params = ["id" => $CatGen->getId(),
+					"actuacion" => "INSERT",
+					"edificio" => 'TODOS',
+					"eqcatgen_id" => 'TT'];
+				return $this->redirectToRoute("sincroCatGen", $params);
+			} catch (UniqueConstraintViolationException $ex) {
+				$status = " YA EXISTE UNA CATEGORIA GENERAL ESTE CÓDIGO: " . $CatGen->getCodigo();
+				$this->sesion->getFlashBag()->add("status", $status);
+				return $this->redirectToRoute("queryCatGen");
+			} catch (Doctrine\DBAL\DBALException $ex) {
+				$status = "ERROR GENERAL=" . $ex->getMessage();
+				$this->sesion->getFlashBag()->add("status", $status);
+				return $this->redirectToRoute("queryCatGen");
+			}
+		}
 
-        $form = $this->createForm(\MaestrosBundle\Form\CatGenType::class, $CatGen);
-        $form->handleRequest($request);
+		$params = ["catgen" => $CatGen,
+			"accion" => "CREACIÓN",
+			"form" => $form->createView()];
+		return $this->render("maestros/catgen/edit.html.twig", $params);
+	}
 
-        if ($form->isSubmitted()) {
-            try {
-                $entityManager->persist($CatGen);
-                $entityManager->flush();
-                $this->crearEquivalencias($CatGen);
-                $params = array("id" => $CatGen->getId(),
-                    "actuacion" => "INSERT",
-                    "edificio" => 'TODOS',
-                    "eqcatgen_id" => 'TT');
-                return $this->redirectToRoute("sincroCatGen", $params);
-            } catch (UniqueConstraintViolationException $ex) {
-                $status = " YA EXISTE UNA CATEGORIA GENERAL ESTE CÓDIGO: " . $CatGen->getCodigo();
-                $this->sesion->getFlashBag()->add("status", $status);
-                return $this->redirectToRoute("queryCatGen");
-            } catch (Doctrine\DBAL\DBALException $ex) {
-                $status = "ERROR GENERAL=" . $ex->getMessage();
-                $this->sesion->getFlashBag()->add("status", $status);
-                return $this->redirectToRoute("queryCatGen");
-            }
-        }
+	public function activarAction($eqcatgen_id)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$EqCatGen = $em->getRepository("MaestrosBundle:EqCatGen")->find($eqcatgen_id);
+		$params = ["id" => $EqCatGen->getCatGen()->getId(),
+			"actuacion" => 'ACTIVAR',
+			"eqcatgen_id" => $EqCatGen->getId(),
+			"edificio" => $EqCatGen->getEdificio()->getCodigo()];
+		return $this->redirectToRoute("sincroCatGen", $params);
+	}
 
-        $params = array("catgen" => $CatGen,
-            "accion" => "CREACIÓN",
-            "form" => $form->createView());
-        return $this->render("maestros/catgen/edit.html.twig", $params);
-    }
+	public function desactivarAction($eqcatgen_id)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$EqCatGen = $em->getRepository("MaestrosBundle:EqCatGen")->find($eqcatgen_id);
+		$params = ["id" => $EqCatGen->getCatGen()->getId(),
+			"actuacion" => 'DESACTIVAR',
+			"eqcatgen_id" => $EqCatGen->getId(),
+			"edificio" => $EqCatGen->getEdificio()->getCodigo()];
+		return $this->redirectToRoute("sincroCatGen", $params);
+	}
 
-    public function activarAction($eqcatgen_id) {
-        $em = $this->getDoctrine()->getManager();
-        $EqCatGen = $em->getRepository("MaestrosBundle:EqCatGen")->find($eqcatgen_id);
-        $params = array("id" => $EqCatGen->getCatGen()->getId(),
-            "actuacion" => 'ACTIVAR',
-            "eqcatgen_id" => $EqCatGen->getId(),
-            "edificio" => $EqCatGen->getEdificio()->getCodigo());
-        return $this->redirectToRoute("sincroCatGen", $params);
-    }
+	public function crearAction($eqcatgen_id)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$EqCatGen = $em->getRepository("MaestrosBundle:EqCatGen")->find($eqcatgen_id);
+		if ($EqCatGen->getCodigoLoc() == 'XX') {
+			$status = "ERROR EN EL CODIGO NO PUEDE SER (XX) ";
+			$this->sesion->getFlashBag()->add("status", $status);
+			$params = ["catgen_id" => $EqCatGen->getCatGen()->getId()];
+			return $this->redirectToRoute("queryEqCatGen", $params);
+		}
+		$params = ["id" => $EqCatGen->getCatGen()->getId(),
+			"actuacion" => 'CREAR',
+			"eqcatgen_id" => $EqCatGen->getId(),
+			"edificio" => $EqCatGen->getEdificio()->getCodigo()];
+		return $this->redirectToRoute("sincroCatGen", $params);
+	}
 
-    public function desactivarAction($eqcatgen_id) {
-        $em = $this->getDoctrine()->getManager();
-        $EqCatGen = $em->getRepository("MaestrosBundle:EqCatGen")->find($eqcatgen_id);
-        $params = array("id" => $EqCatGen->getCatGen()->getId(),
-            "actuacion" => 'DESACTIVAR',
-            "eqcatgen_id" => $EqCatGen->getId(),
-            "edificio" => $EqCatGen->getEdificio()->getCodigo());
-        return $this->redirectToRoute("sincroCatGen", $params);
-    }
+	public function sincroAction($id, $actuacion, $eqcatgen_id, $edificio)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$CatGen = $em->getRepository("MaestrosBundle:CatGen")->find($id);
+		$usuario_id = $this->sesion->get('usuario_id');
+		$Usuario = $em->getRepository("ComunBundle:Usuario")->find($usuario_id);
+		$Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(1);
 
-    public function crearAction($eqcatgen_id) {
-        $em = $this->getDoctrine()->getManager();
-        $EqCatGen = $em->getRepository("MaestrosBundle:EqCatGen")->find($eqcatgen_id);
-        if ($EqCatGen->getCodigoLoc() == 'XX') {
-            $status = "ERROR EN EL CODIGO NO PUEDE SER (XX) ";
-            $this->sesion->getFlashBag()->add("status", $status);
-            $params = array("catgen_id" => $EqCatGen->getCatGen()->getId());
-            return $this->redirectToRoute("queryEqCatGen", $params);
-        }
-        $params = array("id" => $EqCatGen->getCatGen()->getId(),
-            "actuacion" => 'CREAR',
-            "eqcatgen_id" => $EqCatGen->getId(),
-            "edificio" => $EqCatGen->getEdificio()->getCodigo());
-        return $this->redirectToRoute("sincroCatGen", $params);
-    }
+		$SincroLog = new \ComunBundle\Entity\SincroLog();
+		$fechaProceso = new \DateTime();
 
-    public function sincroAction($id, $actuacion, $eqcatgen_id, $edificio) {
-        $em = $this->getDoctrine()->getManager();
-        $CatGen = $em->getRepository("MaestrosBundle:CatGen")->find($id);
-        $usuario_id = $this->sesion->get('usuario_id');
-        $Usuario = $em->getRepository("ComunBundle:Usuario")->find($usuario_id);
-        $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(1);
+		$SincroLog->setUsuario($Usuario);
+		$SincroLog->setTabla("gums_catgen");
+		$SincroLog->setIdElemento($CatGen->getId());
+		$SincroLog->setFechaProceso($fechaProceso);
+		$SincroLog->setEstado($Estado);
+		$em->persist($SincroLog);
 
-        $SincroLog = new \ComunBundle\Entity\SincroLog();
-        $fechaProceso = new \DateTime();
+		$CatGen->setSincroLog($SincroLog);
+		$em->persist($CatGen);
+		$em->flush();
 
-        $SincroLog->setUsuario($Usuario);
-        $SincroLog->setTabla("gums_catgen");
-        $SincroLog->setIdElemento($CatGen->getId());
-        $SincroLog->setFechaProceso($fechaProceso);
-        $SincroLog->setEstado($Estado);
-        $em->persist($SincroLog);
+		$root = $this->get('kernel')->getRootDir();
+		$modo = $this->getParameter('modo');
+		$php = $this->getParameter('php');
+		$php_script = $php . " " . $root . "/scripts/maestros/actualizacionCatGen.php " . $modo . " " . $CatGen->getId() . " " . $actuacion . " " . $eqcatgen_id . " " . $edificio;
+		$mensaje = exec($php_script, $SALIDA, $resultado);
 
-        $CatGen->setSincroLog($SincroLog);
-        $em->persist($CatGen);
-        $em->flush();
+		if ($resultado == 0) {
+			$Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(2);
+		} else {
+			$Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(3);
+		}
 
-        $root = $this->get('kernel')->getRootDir();
-        $modo = $this->getParameter('modo');
-        $php = $this->getParameter('php');
-        $php_script = $php." " . $root . "/scripts/maestros/actualizacionCatGen.php " . $modo . " " . $CatGen->getId() . " " . $actuacion . " " . $eqcatgen_id . " " . $edificio;
-        $mensaje = exec($php_script, $SALIDA, $resultado);
+		$ficheroLog = 'sincroCatGen-' . $CatGen->getCodigo() . '.log';
+		$ServicioLog = $this->get('app.escribelog');
+		$ServicioLog->setLogger('gums_catgen->codigo:' . $CatGen->getCodigo());
+		foreach ($SALIDA as $linea) {
+			$ServicioLog->setMensaje($linea);
+			$ServicioLog->escribeLog($ficheroLog);
+		}
+		$SincroLog->setScript($php_script);
+		$SincroLog->setFicheroLog($ServicioLog->getFilename());
+		$SincroLog->setEstado($Estado);
+		$em->persist($SincroLog);
+		$em->flush();
 
-        if ($resultado == 0) {
-            $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(2);
-        } else {
-            $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(3);
-        }
+		$params = ["SincroLog" => $SincroLog,
+			"resultado" => $resultado];
+		return $this->render("maestros/finSincro.html.twig", $params);
+	}
 
-        $ficheroLog = 'sincroCatGen-' . $CatGen->getCodigo() . '.log';
-        $ServicioLog = $this->get('app.escribelog');
-        $ServicioLog->setLogger('gums_catgen->codigo:' . $CatGen->getCodigo());
-        foreach ($SALIDA as $linea) {
-            $ServicioLog->setMensaje($linea);
-            $ServicioLog->escribeLog($ficheroLog);
-        }
-        $SincroLog->setScript($php_script);
-        $SincroLog->setFicheroLog($ServicioLog->getFilename());
-        $SincroLog->setEstado($Estado);
-        $em->persist($SincroLog);
-        $em->flush();
-
-        $params = array("SincroLog" => $SincroLog,
-            "resultado" => $resultado);
-        return $this->render("maestros/finSincro.html.twig", $params);
-    }
-
-    public function descargaLogAction($id) {
-        $em = $this->getDoctrine()->getManager();
-        $CatGen = $em->getRepository("MaestrosBundle:CatGen")->find($id);
-        $params = array("id" => $CatGen->getSincroLog()->getId());
-        return $this->redirectToRoute("descargaSincroLog", $params);
-    }
+	public function descargaLogAction($id)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$CatGen = $em->getRepository("MaestrosBundle:CatGen")->find($id);
+		$params = ["id" => $CatGen->getSincroLog()->getId()];
+		return $this->redirectToRoute("descargaSincroLog", $params);
+	}
 
 }
