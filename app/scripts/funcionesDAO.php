@@ -1255,7 +1255,7 @@ function selectEqCentro($codigo, $edificio, $vista)
 	global $JanoInte;
 	try {
 		$sentencia = " select codigo_loc from eq_centros  "
-			. " where edificio = :edificio and codigo_uni = :codigo and vista = :vista";
+			. " where edificio = :edificio and codigo_uni = :codigo and vista = :vista and enuso = 'S'";
 		$query = $JanoInte->prepare($sentencia);
 		$params = [":edificio" => $edificio,
 			":codigo" => $codigo,

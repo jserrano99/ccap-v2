@@ -36,6 +36,13 @@ class DependenciaDatatable extends AbstractDatatable {
             'dom' => 'lBtrip'
         ));
 
+	    $this->events->set([
+		    'xhr' => ['template' => 'fin.js.twig'],
+		    'pre_xhr'=> ['template' => 'inicio.js.twig'],
+		    'search'=> ['template' => 'search.js.twig'],
+		    'state_loaded'=> ['template' => 'loaded.js.twig'],
+
+	    ]);
 
         $EstadoCargaInicialAll = $this->em->getRepository('ComunBundle:EstadoCargaInicial')->findAll();
         $ModuloAll = $this->em->getRepository('ComunBundle:Modulo')->findAll();

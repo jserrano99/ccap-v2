@@ -37,8 +37,12 @@ class BaseDatosDatatable extends AbstractDatatable {
             'dom' => 'lBtrip'
         ));
 
-
-
+	    $this->events->set([
+		    'xhr' => ['template' => 'fin.js.twig'],
+		    'pre_xhr'=> ['template' => 'inicio.js.twig'],
+		    'search'=> ['template' => 'search.js.twig'],
+		    'state_loaded'=> ['template' => 'loaded.js.twig'],
+	    ]);
 
         $this->features->set(array(
             'auto_width' => true,
