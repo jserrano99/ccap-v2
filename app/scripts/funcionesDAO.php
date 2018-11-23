@@ -1065,7 +1065,7 @@ function selectPlazabyCias($cias)
 			. " left join gums_catgen as t5 on t5.id = t1.catgen_id"
 			. " left join gums_catfp as t6 on t6.id = t1.catfp_id"
 			. " left join comun_edificio as t7 on t7.id = t2.edificio_id"
-			. " left join ccap_cecos as t8 on t8.id = t1.ceco_id"
+			. " left join ccap_cecos as t8 on t8.id = t1.ceco_actual_id"
 			. " where t1.cias = :cias";
 		$query = $JanoControl->prepare($sentencia);
 		$params = [":cias" => $cias];

@@ -2,7 +2,9 @@
 
 namespace CostesBundle\Controller;
 
+use CostesBundle\Entity\TempAltas;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\SecurityBundle\Tests\DependencyInjection\Fixtures\UserProvider\DummyProvider;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +17,8 @@ use CostesBundle\Entity\Plaza;
 use ComunBundle\Entity\CargaFichero;
 use CostesBundle\Datatables\PlazaDatatable;
 use CostesBundle\Datatables\CecoCiasDatatable;
+use CostesBundle\Datatables\TempAltasDatatable;
+
 use ComunBundle\Entity\SincroLog;
 use CostesBundle\Form\AmortizacionPlazaType;
 use CostesBundle\Form\ImportarType;
@@ -1463,6 +1467,36 @@ class PlazaController extends Controller
 		$params = ["CargaFichero" => $CargaFichero,
 			"resultado" => $error];
 		return $this->render("finCarga.html.twig", $params);
+	}
+
+	public function consultaAltasAction(Request $request,$cias)
+	{
+//		$root = $this->get('kernel')->getRootDir();
+//		$modo = $this->getParameter('modo');
+//		$php = $this->getParameter('php');
+//		$php_script = $php . " " . $root . "/scripts/costes/consultaAltasByCias.php " . $modo . " " . $cias;
+//
+//		exec($php_script, $SALIDA, $resultado);
+
+		$Plaza = $this->getDoctrine()->getManager()->getRepository("CostesBundle:Plaza")->findPlazaByCias($cias);
+
+		$isAjax = $request->isXmlHttpRequest();
+		$datatableAltas = $this->get('sg_datatables.factory')->create(TempAltasDatatable::class);
+		$datatableAltas->buildDatatable();
+
+		if ($isAjax) {
+			$responseService = $this->get('sg_datatables.response');
+			$responseService->setDatatable($datatableAltas);
+			$datatableQueryBuilder = $responseService->getDatatableQueryBuilder();
+			$datatableQueryBuilder->buildQuery();
+
+			return $responseService->getResponse();
+		}
+
+
+		$params = ["plaza" => $Plaza,
+			"datatable" => $datatableAltas];
+		return $this->render("costes/plaza/consultaAltas.html.twig", $params);
 	}
 
 }

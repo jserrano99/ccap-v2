@@ -14,6 +14,12 @@
 .btn-b {
     margin-bottom: 25px;
 }
+.btn-l {
+    margin-left: 250px;
+}
+.btn-r {
+    margin-right: 250px;
+}
 
 .btn-group {
     margin-bottom: 15px;

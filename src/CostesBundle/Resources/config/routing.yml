@@ -115,6 +115,11 @@ amortizacionPlaza:
   defaults: { _controller: CostesBundle:Plaza:amortizacionPlaza}
   options:
     expose: true
+consultarAltas:
+  path:   /plaza/consultarAltas/{cias}
+  defaults: { _controller: CostesBundle:Plaza:consultaAltas}
+  options:
+    expose: true
 deletePlaza:
   path:   /plaza/delete/{cias}
   defaults: { _controller: CostesBundle:Plaza:delete}

@@ -1,4 +1,3 @@
-
 <script>
     $(document).ready(function () {
         $("#costesbundle_plaza_codigoUf").change(function () {
@@ -217,6 +216,17 @@
 
     }
 
+    function consultarAltas() {
+        let cias = $("#costesbundle_plaza_cias").val();
+        let recurso;
+        recurso = Routing.generate("consultarAltas", {"cias": cias}, true);
+        window.location = recurso;
+    }
+
+    function cerrarConsulta() {
+        $("#consultaAltas").hide();
+    }
+
     function calcularCeco() {
         let recurso;
         let uf = $("#costesbundle_plaza_uf").val();
@@ -256,10 +266,71 @@
         recurso = Routing.generate("deletePlaza", {
             "cias": cias,
         }, true);
-        alert(recurso);
         window.location = recurso;
     }
+
+    function abrirAyudaPa() {
+        $("#ayudaPa").show();
+    }
+
+    function closeAyudaPa() {
+        $("#ayudaPa").hide();
+    }
+
+    function abrirAyudaUf() {
+        $("#ayudaUf").show();
+    }
+
+    function closeAyudaUf() {
+        $("#ayudaUf").hide();
+    }
+
 </script>
+<div id="ayudaUf" class="modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" text-align="center">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Unidad Funcional</div>
+                    <div class="panel-body">
+                        <div class="form_row mismalinea">{{ form_row(form.codigoUf) }}</div>
+                        <div class="form_row mismalinea">{{ form_row(form.descripcionUf) }}</div>
+                    </div>
+                    <button type="button"
+                            class="btn btn-default btn-info btn-b btn-r"
+                            onclick="closeAyudaUf()"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            title="Volver a Editar Plaza">Cerrar
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="ayudaPa" class="modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" text-align="center">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Punto Asistencial</div>
+                    <div class="panel-body">
+                        <div class="form_row mismalinea">{{ form_row(form.codigoPa) }}</div>
+                        <div class="form_row mismalinea">{{ form_row(form.descripcionPa) }}</div>
+                    </div>
+                    <button type="button"
+                            class="btn btn-default btn-info btn-b btn-r"
+                            onclick="closeAyudaPa()"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            title="Volver a Editar Plaza">Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <div class="container-fluid">
@@ -268,13 +339,25 @@
     <div class="panel panel-default">
         <div class="panel-heading">Identificación</div>
         <div class="panel-body">
-            <div class="form_row mismalinea">{{ form_row(form.codigoUf) }}</div>
-            <div class="form_row mismalinea">{{ form_row(form.descripcionUf) }}</div>
             <div class="form_row mismalinea">{{ form_row(form.uf) }}</div>
+            <button type="button"
+                    class="btn btn-default btn-info"
+                    onclick="abrirAyudaUf()"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="Introducir Código Unidad Funcional ">
+                <span class="glyphicon glyphicon-question-sign"></span></a>
+            </button>
             <div class="clearfix"></div>
-            <div class="form_row mismalinea">{{ form_row(form.codigoPa) }}</div>
-            <div class="form_row mismalinea">{{ form_row(form.descripcionPa) }}</div>
             <div class="form-row  mismalinea">{{ form_row(form.pa) }}</div>
+            <button type="button"
+                    class="btn btn-default btn-info"
+                    onclick="abrirAyudaPa()"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="Introducir Código Punto Asistencial">
+                <span class="glyphicon glyphicon-question-sign"></span></a>
+            </button>
             <div class="clearfix"></div>
             <div class="form-row mismalinea">{{ form_row(form.catGen) }}</div>
             <div class="form-row  mismalinea">{{ form_row(form.cias) }}</div>
@@ -307,6 +390,17 @@
                             title="Calcular letra de Control de Plaza">Calcular Letra
                     </button>
                 </div>
+            {% else %}
+                <div class="form-row  mismalinea">
+                    <button type="button"
+                            class="btn btn-default btn-warning"
+                            onclick="consultarAltas()"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            title="Consultas Altas de este CIAS">Consultar Altas
+                    </button>
+                </div>
+
             {% endif %}
         </div>
     </div>
