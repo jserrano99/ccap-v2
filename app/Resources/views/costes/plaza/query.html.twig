@@ -2,7 +2,7 @@
 {% block titulo %}PLAZAS **CONSULTA**
     <script>
         function exportar() {
-            var recurso = Routing.generate("exportarPlaza", true);
+            let recurso = Routing.generate("exportarPlaza", true);
             
             $('#procesando').modal('show');
             $.ajax({
@@ -29,3 +29,4 @@
         {{sg_datatables_render(datatable)}}
     </div>
 {% endblock %}
+

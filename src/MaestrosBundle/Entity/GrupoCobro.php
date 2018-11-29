@@ -64,7 +64,17 @@ class GrupoCobro {
      */
     private $grupoCot;
 
-    /**
+	/**
+	 * @var GrupoProf|null
+	 *
+	 * @ORM\ManyToOne(targetEntity="MaestrosBundle\Entity\GrupoProf")
+	 * * @ORM\JoinColumns({
+	 *   @ORM\JoinColumn(name="grupoprof_id", referencedColumnName="id",onDelete="CASCADE")
+	 * })
+	 */
+	private $grupoProf;
+
+	/**
      * @var integer
      *
      * @ORM\Column(name="nivel", type="integer", length=5, nullable=false)
@@ -291,9 +301,19 @@ class GrupoCobro {
      * @ORM\Column(name="asumedia_periodo", type="string", length=1, nullable=false)
      */
     private $asuMediaPeriodo;
-    
+	/**
+	 * @var ComunBundle\Entity\SincroLog|null
+	 *
+	 * @ORM\ManyToOne(targetEntity="ComunBundle\Entity\SincroLog")
+	 * @ORM\JoinColumns({
+	 *   @ORM\JoinColumn(name="sincro_log_id", referencedColumnName="id", onDelete="SET NULL")
+	 * })
+	 */
 
-    /**
+	private $sincroLog;
+
+
+	/**
      * Get id.
      *
      * @return int
@@ -1169,5 +1189,53 @@ class GrupoCobro {
     
     public function __toString() {
         return '('.$this->codigo.') '.$this->descripcion;
+    }
+
+    /**
+     * Set sincroLog.
+     *
+     * @param \ComunBundle\Entity\SincroLog|null $sincroLog
+     *
+     * @return GrupoCobro
+     */
+    public function setSincroLog(\ComunBundle\Entity\SincroLog $sincroLog = null)
+    {
+        $this->sincroLog = $sincroLog;
+
+        return $this;
+    }
+
+    /**
+     * Get sincroLog.
+     *
+     * @return \ComunBundle\Entity\SincroLog|null
+     */
+    public function getSincroLog()
+    {
+        return $this->sincroLog;
+    }
+
+    /**
+     * Set grupoProf.
+     *
+     * @param \MaestrosBundle\Entity\GrupoProf|null $grupoProf
+     *
+     * @return GrupoCobro
+     */
+    public function setGrupoProf(\MaestrosBundle\Entity\GrupoProf $grupoProf = null)
+    {
+        $this->grupoProf = $grupoProf;
+
+        return $this;
+    }
+
+    /**
+     * Get grupoProf.
+     *
+     * @return \MaestrosBundle\Entity\GrupoProf|null
+     */
+    public function getGrupoProf()
+    {
+        return $this->grupoProf;
     }
 }

@@ -11,6 +11,11 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
+use MaestrosBundle\Repository\ModalidadRepository;
+use MaestrosBundle\Repository\CatGenRepository;
+use MaestrosBundle\Repository\CatFpRepository;
+use CostesBundle\Repository\UfRepository;
+use CostesBundle\Repository\PaRepository;
 
 class PlazaType extends AbstractType
 {
@@ -24,7 +29,7 @@ class PlazaType extends AbstractType
 			"label" => 'Categoría General',
 			'class' => 'MaestrosBundle:CatGen',
 			'placeholder' => 'Seleccione Categoría General....',
-			'query_builder' => function (\MaestrosBundle\Repository\CatGenRepository $er) {
+			'query_builder' => function (CatGenRepository $er) {
 				return $er->createAlphabeticalQueryBuilder();
 			},
 			'required' => true,
@@ -34,7 +39,7 @@ class PlazaType extends AbstractType
 				"label" => 'Categoría Fp',
 				'class' => 'MaestrosBundle:CatFp',
 				'placeholder' => 'Seleccione Categoría ....',
-				'query_builder' => function (\MaestrosBundle\Repository\CatFpRepository $er) {
+				'query_builder' => function (CatFpRepository $er) {
 					return $er->createAlphabeticalQueryBuilder();
 				},
 				'required' => false,
@@ -49,7 +54,7 @@ class PlazaType extends AbstractType
 				"label" => 'Unidad Funcional',
 				'class' => 'CostesBundle:Uf',
 				'placeholder' => 'Seleccione Unidad Funcional ...',
-				'query_builder' => function (\CostesBundle\Repository\UfRepository $er) {
+				'query_builder' => function (UfRepository $er) {
 					return $er->createAlphabeticalQueryBuilder();
 				},
 				'required' => true,
@@ -59,7 +64,7 @@ class PlazaType extends AbstractType
 				"label" => 'Punto Asistencial',
 				'class' => 'CostesBundle:Pa',
 				'placeholder' => 'Seleccione Punto Asistencial ...',
-				'query_builder' => function (\CostesBundle\Repository\PaRepository $er) {
+				'query_builder' => function (PaRepository $er) {
 					return $er->createAlphabeticalQueryBuilder();
 				},
 				'required' => true,
@@ -71,22 +76,22 @@ class PlazaType extends AbstractType
 				"disabled" => true,
 				'widget' => 'single_text',
 				'attr' => [
-					'class' => 'form-control corto js-datepicker',
+					'class' => 'form-control corto',
 					'data-date-format' => 'dd-mm-yyyy',
 					'data-class' => 'string',]])
 			->add('fCreacion', DateType::class, [
-				"label" => 'Fecha Creación',
-				"required" => false,
+				'label' => 'Fecha Creación',
+				'required' => false,
 				'widget' => 'single_text',
 				'attr' => [
-					'class' => 'form-control corto js-datepicker',
-					'data-date-format' => 'dd-mm-yyyy',
-					'data-class' => 'string',]])
+					'class' => 'form-control corto',
+				]
+			])
 			->add('modalidad', EntityType::class, [
 				"label" => 'Modalidad',
 				'class' => 'MaestrosBundle:Modalidad',
 				'placeholder' => 'Seleccione Modalidad ...',
-				'query_builder' => function (\MaestrosBundle\Repository\ModalidadRepository $er) {
+				'query_builder' => function (ModalidadRepository $er) {
 					return $er->createAlphabeticalQueryBuilder();
 				},
 				'required' => true,
@@ -210,24 +215,29 @@ class PlazaType extends AbstractType
 				"label" => 'Horario 1 Inicio',
 				'required' => false,
 				'disabled' => false,
+				'widget' => 'single_text',
 				"attr" => ["class" => "muycorto form-control"]
 			])
 			->add('h1fin', TimeType::class, [
 				"label" => 'Horario 1 Fin',
 				'required' => false,
 				'disabled' => false,
+				'widget' => 'single_text',
 				"attr" => ["class" => "muycorto form-control"]
 			])
 			->add('h2ini', TimeType::class, [
 				"label" => 'Horario 2 Inicio',
 				'required' => false,
 				'disabled' => false,
+				'widget' => 'single_text',
+
 				"attr" => ["class" => "muycorto form-control"]
 			])
 			->add('h2fin', TimeType::class, [
 				"label" => 'Horario 2 Fin',
 				'required' => false,
 				'disabled' => false,
+				'widget' => 'single_text',
 				"attr" => ["class" => "muycorto form-control"]
 			])
 			->addEventSubscriber(new EventListener\PlazaEventSuscribe());

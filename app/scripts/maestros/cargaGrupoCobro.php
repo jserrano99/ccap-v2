@@ -25,7 +25,7 @@ function insertEqGrc($EqGrc) {
         . " EN USO = " . $EqGrc["enuso"] . "\n";
     } catch (PDOException $ex) {
         echo "**PDOERROR EN INSERT gums_eq_grc EDIFICIO: " . $row["EDIFICIO"]
-        . " GRC=" . $codigo
+        . " GRC=" . $EqGrc["codigo_uni"]
         . " CODIGO_LOC= " . $row["CODIGO_LOC"] . "\n"
         . $ex->getMessage() . "\n";
         $gblError = 1;
@@ -35,7 +35,7 @@ function insertEqGrc($EqGrc) {
 function selectGrcEnuso($conexion, $codigo) {
     global $gblError;
     try {
-        $sentencia = " select enuso from grc as t1 "
+        $sentencia = " select enuso from grupoCobro as t1 "
                 . " where t1.codigo = :codigo";
         $query = $conexion->prepare($sentencia);
         $params = array(":codigo" => $codigo);
@@ -63,7 +63,7 @@ function insertGrc($row) {
                 . ", tipo, minimo_fijo, minimo_interino, minimo_eventual, minimo_ev"
                 . ", horas_anuales, horas_sabados, media_vacaciones, excluir_plpage"
                 . ", grcrpt_codigo, grcrpt_descripcion, grcrptid, personal, peac"
-                . ", excluir_extra, asumedia, extra_por_horas, asumedia_periodo"
+                . ", excluir_extra, asumedia, extra_por_horas, asumedia_periodo, descripcion"
                 . " ) values ( "
                 . "  :codigo, :enuso, :epiacc_id, :grupocot_id, :ocupacion_id"
                 . ", :nivel, :horas, :grupob, :apd, :refuerzo, :persinsueldo, :cobra_nomina"
@@ -71,10 +71,11 @@ function insertGrc($row) {
                 . ", :tipo, :minimo_fijo, :minimo_interino, :minimo_eventual, :minimo_ev"
                 . ", :horas_anuales, :horas_sabados, :media_vacaciones, :excluir_plpage"
                 . ", :grcrpt_codigo, :grcrpt_descripcion, :grcrptid, :personal, :peac"
-                . ", :excluir_extra, :asumedia, :extra_por_horas, :asumedia_periodo)";
+                . ", :excluir_extra, :asumedia, :extra_por_horas, :asumedia_periodo, :descripcion)";
 
         $query = $JanoControl->prepare($sentencia);
         $params = array(":codigo" => $row["CODIGO"],
+            ":descripcion" => $row["DESCRIP"],
             ":enuso" => $row["ENUSO"],
             ":epiacc_id" => selectEpiAcc($row["EPIACC"]),
             ":grupocot_id" => selectGrupoCot($row["GRUPCOT"]),
@@ -179,7 +180,7 @@ $EdificioAll = $query->fetchAll(PDO::FETCH_ASSOC);
 /*
  * SELECCIONAMOS TODOS LOS REGISTROS DE LA TABLA GRC
  */
-$sentencia = " select * from grc";
+$sentencia = " select * from grupoCobro";
 $query = $JanoUnif->prepare($sentencia);
 $query->execute();
 $resultSet = $query->fetchAll(PDO::FETCH_ASSOC);

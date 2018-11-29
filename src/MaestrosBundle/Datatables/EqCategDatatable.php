@@ -73,7 +73,7 @@ class EqCategDatatable extends AbstractDatatable {
                 ->add(null, ActionColumn::class, array('title' => 'Acciones',
                     'actions' => array(
                         array('route' => 'activaEqCateg',
-                            'route_parameters' => array('id' => 'id'),
+                            'route_parameters' => array('eqcateg_id' => 'id'),
                             'label' => 'Activar',
                             'icon' => 'glyphicon glyphicon-ok-sign',
                             'render_if' => function($row) {
@@ -85,7 +85,7 @@ class EqCategDatatable extends AbstractDatatable {
                                 'class' => 'btn btn-info btn-xs',
                                 'role' => 'button')),
                         array('route' => 'desactivaEqCateg',
-                            'route_parameters' => array('id' => 'id'),
+                            'route_parameters' => array('eqcateg_id' => 'id'),
                             'label' => 'Desactivar',
                             'icon' => 'glyphicon glyphicon-remove-sign',
                             'render_if' => function($row) {
@@ -97,7 +97,7 @@ class EqCategDatatable extends AbstractDatatable {
                                 'class' => 'btn btn-danger btn-xs',
                                 'role' => 'button')),
                         array('route' => 'addEqCateg',
-                            'route_parameters' => array('id' => 'id'),
+                            'route_parameters' => array('eqcateg_id' => 'id'),
                             'label' => 'Crear',
                             'icon' => 'glyphicon glyphicon-new-window',
                             'render_if' => function($row) {

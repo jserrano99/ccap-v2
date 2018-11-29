@@ -108,8 +108,10 @@
         });
 
         $("#costesbundle_plaza_turnof").change(function () {
-            let valor, recurso;
-            $("#procesando").show();
+            let valor, recurso, dia, diaf,str, str1;
+            let zero = "0"; /* String de cero */
+
+                $("#procesando").show();
             valor = $("#costesbundle_plaza_turnof").val();
             recurso = Routing.generate("ajaxVerTurno", {"id": valor}, true);
             $.ajax({
@@ -119,8 +121,18 @@
                 success: function (data, status, xhr) {
                     $('.modal-backdrop').remove();
                     $("#procesando").hide();
-                    $("#costesbundle_plaza_h1ini").val(data.hini);
-                    $("#costesbundle_plaza_h2fin").val(data.hfin);
+                    $("#costesbundle_plaza_h1ini").val('00:00');
+                    $("#costesbundle_plaza_h1fin").val('00:00');
+                    if (data.codigo === 'M') {
+                        $("#costesbundle_plaza_h1ini").val('08:00');
+                        $("#costesbundle_plaza_h1fin").val('15:00');
+                    }
+                    if (data.codigo === 'T') {
+                        $("#costesbundle_plaza_h1ini").val('14:00');
+                        $("#costesbundle_plaza_h1fin").val('21:00');
+                    }
+                    $("#costesbundle_plaza_h2ini").val("00:00");
+                    $("#costesbundle_plaza_h2fin").val("00:00");
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     return null;

@@ -94,23 +94,12 @@ addEqCatGen:
     defaults: { _controller: MaestrosBundle:CatGen:crear}    
     options:
         expose: true
-
-
-
-
-
-
 #
 # MODOS OCUPACION 
 #
 queryModOcupa:
     path: /modocupa/query/
     defaults: { _controller: MaestrosBundle:ModOcupa:query}    
-    options:
-        expose: true
-addModOcupa:
-    path: /modocupa/add/
-    defaults: { _controller: MaestrosBundle:ModOcupa:add}    
     options:
         expose: true
 editModOcupa:
@@ -148,7 +137,6 @@ ajaxComprobarEqModOcupa:
     defaults: { _controller: MaestrosBundle:EqModOcupa:ajaxComprobar}    
     options:
         expose: true
-
 #
 # CUENTAS COTIZACIÓN  
 #
@@ -251,7 +239,6 @@ ajaxComprobarEqModoPago:
     defaults: { _controller: MaestrosBundle:EqModoPago:ajaxComprobar}    
     options:
         expose: true
-
 #
 # MOTIVOS DE ALTA
 #
@@ -486,7 +473,7 @@ deleteCateg:
     options:
         expose: true
 sincroCateg:
-    path: /categ/sincro/{id}/{actuacion}/{eqcateg_id}
+    path: /categ/sincro/{id}/{actuacion}/{eqcateg_id}/{edificio}
     defaults: { _controller: MaestrosBundle:Categ:sincro}    
     options:
         expose: true
@@ -506,23 +493,21 @@ queryEqCateg:
     options:
         expose: true
 activaEqCateg:
-    path:   /categ/equivalencias/activa/{id}
-    defaults: { _controller: MaestrosBundle:Categ:activa}
+    path:   /categ/equivalencias/activa/{eqcateg_id}
+    defaults: { _controller: MaestrosBundle:Categ:activar}
     options:
         expose: true
 desactivaEqCateg:
-    path:   /categ/equivalencias/desactiva/{id}
-    defaults: { _controller: MaestrosBundle:Categ:desactiva}
+    path:   /categ/equivalencias/desactiva/{eqcateg_id}
+    defaults: { _controller: MaestrosBundle:Categ:desactivar}
     options:
         expose: true
 addEqCateg:
-    path:   /categ/equivalencias/add/{id}
+    path:   /categ/equivalencias/add/{eqcateg_id}
     defaults: { _controller: MaestrosBundle:Categ:crear}
     options:
         expose: true
-
- 
- #
+#
 # CONCEPTOS  (CONCEPTO)
 #
 queryConcepto:
@@ -568,5 +553,53 @@ desactivaEqConcepto:
 addEqConcepto:
     path: /eqconcepto/add/{eqconcepto_id}
     defaults: { _controller: MaestrosBundle:Concepto:crear}    
+    options:
+        expose: true
+#
+# GRUPOS DE COBRO
+#
+queryGrupoCobro:
+    path: /grupocobro/query/
+    defaults: { _controller: MaestrosBundle:GrupoCobro:query}
+    options:
+        expose: true
+addGrupoCobro:
+    path: /grupocobro/add/
+    defaults: { _controller: MaestrosBundle:GrupoCobro:add}
+    options:
+        expose: true
+editGrupoCobro:
+    path: /grupocobro/edit/{id}
+    defaults: { _controller: MaestrosBundle:GrupoCobro:edit}
+    options:
+        expose: true
+deleteGrupoCobro:
+    path: /grupocobro/delete/{id}
+    defaults: { _controller: MaestrosBundle:GrupoCobro:delete}
+    options:
+        expose: true
+equiGrupoCobro:
+    path: /grupocobro/verequi/{id}
+    defaults: { _controller: MaestrosBundle:GrupoCobro:verEqui}
+    options:
+        expose: true
+activaEqGrupoCobro:
+    path: /grupocobro/activa/{eqgrupocobro_id}
+    defaults: { _controller: MaestrosBundle:GrupoCobro:activar}
+    options:
+        expose: true
+desactivaEqGrupoCobro:
+    path: /grupocobro/desactiva/{eqgrupocobro_id}
+    defaults: { _controller: MaestrosBundle:GrupoCobro:desActivar}
+    options:
+        expose: true
+addEqGrupoCobro:
+    path: /grupocobro/add/{eqgrupocobro_id}
+    defaults: { _controller: MaestrosBundle:GrupoCobro:crear}
+    options:
+        expose: true
+sincroGrupoCobro:
+    path: /grupocobro/sincro/{id}/{actuacion}/{eqgrupocobro_id}/{edificio}
+    defaults: { _controller: MaestrosBundle:GrupoCobro:sincro}
     options:
         expose: true

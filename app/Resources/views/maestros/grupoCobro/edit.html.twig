@@ -1,0 +1,12 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} GRUPOS DE COBRO **{{accion}}**
+   <a href="{{path("queryGrupoCobro")}}" class="btn btn-success">
+        <span class="glyphicon glyphicon-th-list"></span> Volver</a>
+{% endblock %}
+    
+{% block contenido %}
+    <div class="container">
+        {% include 'maestros/grupoCobro/form.html.twig' %}
+    </div>
+    <div class="clearfix"> </div>
+{% endblock %}  

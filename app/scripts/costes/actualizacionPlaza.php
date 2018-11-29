@@ -1,6 +1,81 @@
 <?php
 
 include_once __DIR__ . '/../funcionesDAO.php';
+
+/**
+ * @param $Plaza
+ * @return bool
+ */
+function amortizaPlazaArea($Plaza)
+{
+	global $tipobd, $gblError;
+	$conexionArea = conexionEdificio($Plaza["edificio"], $tipobd);
+	if ($conexionArea == null) {
+		return false;
+	}
+	try {
+		$sentencia = "update plazas set  "
+			. " f_amortiza= :f_amortiza"
+			. ", observaciones = :observaciones"
+			. " where cias = :cias ";
+
+		$query = $conexionArea->prepare($sentencia);
+		$params = [":cias" => $Plaza["cias"],
+			":f_amortiza" => $Plaza["f_amortiza"],
+			":observaciones" => $Plaza["observaciones"],
+		];
+
+		$ins = $query->execute($params);
+		if ($ins == 0) {
+			echo "**ERROR AMORTIZACION PLAZA EN EDIFICIO= " . $Plaza["edificio"] . " cias= " . $Plaza["cias"] . "\n";
+			$gblError = 1;
+			return false;
+		}
+		echo "==> PLAZA CIAS= (" . $Plaza["cias"] . ") AMORTIZADA EN LA BASE DE DATOS AREA \n";
+		return true;
+
+	} catch (PDOException $ex) {
+		echo "***PDOERROR EN AMORTIZACION PLAZAS CIAS= (" . $Plaza["cias"] . ") \n" . $ex->getMessage() . "\n";
+		$gblError = 1;
+		return false;
+	}
+}
+
+/**
+ * @param $Plaza
+ * @return bool
+ */
+function amortizaPlazaUnif($Plaza)
+{
+	global $JanoUnif, $gblError;
+	try {
+		$sentencia = "update plazas set  "
+			. " f_amortiza= :f_amortiza"
+			. ", observaciones = :observaciones"
+			. " where cias = :cias ";
+		$query = $JanoUnif->prepare($sentencia);
+
+		$params = [":cias" => $Plaza["cias"],
+			":f_amortiza" => $Plaza["f_amortiza"],
+			":observaciones" => $Plaza["observaciones"],
+		];
+
+		$ins = $query->execute($params);
+		if ($ins == 0) {
+			echo "**ERROR AMORTIZACION PLAZA EN EDIFICIO= " . $Plaza["edificio"] . " cias= " . $Plaza["cias"] . "\n";
+			$gblError = 1;
+			return false;
+		}
+		echo "==> PLAZA CIAS= (" . $Plaza["cias"] . ") AMORTIZADA EN LA BASE DE DATOS UNIFICADA \n";
+		return true;
+
+	} catch (PDOException $ex) {
+		echo "***PDOERROR EN AMORTIZACION PLAZAS CIAS= (" . $Plaza["cias"] . ") \n" . $ex->getMessage() . "\n";
+		$gblError = 1;
+		return false;
+	}
+}
+
 /**
  * @param $conexion
  * @param $cias
@@ -611,6 +686,10 @@ if ($actuacion == 'UPDATE') {
 if ($actuacion == 'DELETE') {
 	procesoDelete($Plaza);
 }
+if ($actuacion == 'AMORTIZACION') {
+	procesoAmortizacion($Plaza);
+}
+
 
 echo "  +++++++++++ TERMINA PROCESO ACTUALIZACIÓN PLAZA +++++++++++++ \n";
 exit($gblError);

@@ -263,8 +263,8 @@ class CategController extends Controller {
      */
     public function descargaLogAction($id) {
         $em = $this->getDoctrine()->getManager();
-        $CatFp = $em->getRepository("MaestrosBundle:Categ")->find($id);
-        $params = array("id" => $Categ->getSincroLog()->getId());
+        $Categ = $em->getRepository("MaestrosBundle:Categ")->find($id);
+        $params = ["id" => $Categ->getSincroLog()->getId()];
         return $this->redirectToRoute("descargaSincroLog", $params);
     }
 
@@ -275,7 +275,7 @@ class CategController extends Controller {
     public function activarAction($eqcateg_id) {
         $em = $this->getDoctrine()->getManager();
         $EqCateg = $em->getRepository("MaestrosBundle:EqCateg")->find($eqcateg_id);
-        $params = ["id" => $EqCateg->getCateg()->getId(),
+	    $params = ["id" => $EqCateg->getCateg()->getId(),
             "actuacion" => 'ACTIVAR',
             "edificio" => $EqCateg->getEdificio()->getCodigo(),
             "eqcateg_id" => $EqCateg->getId()];

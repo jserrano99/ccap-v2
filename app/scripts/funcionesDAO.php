@@ -147,8 +147,6 @@ function selectModalidad($modalidad)
  */
 function conexionPDO($datosConexion)
 {
-	global $ERROR, $sdterr;
-	$conexion = 0;
 	$host = $datosConexion['maquina'];
 	$service = $datosConexion['puerto'];
 	$database = $datosConexion['esquema'];
@@ -165,8 +163,6 @@ function conexionPDO($datosConexion)
 	try {
 		$conexion = new \PDO($cadena, $user, $pass);
 		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		//$conexion->setAttribute(PDO);
-		//echo 'CONEXIÓN GENERADA CORRECTAMENTE: ' . $cadena . "\n";
 	} catch (PDOException $e) {
 		echo "**PDOERROR EN CONEXION: " . $cadena . " MENSAJE ERROR: " . $e->getMessage() . " \n";
 		return null;
@@ -284,7 +280,7 @@ function selectBaseDatos($tipo, $areas)
  * @param string $edificio
  * @return type
  */
-function selectBaseDatosEdificio($tipo , $edificio)
+function selectBaseDatosEdificio($tipo, $edificio)
 {
 	global $JanoControl;
 	try {
@@ -808,6 +804,36 @@ function selectGrupoCobro($grupoCobro)
 	}
 }
 
+function selectGrupoCobroById($grupoCobro_id)
+{
+	global $JanoControl;
+
+	try {
+		$sentencia = " select t1.*, t4.codigo as grupocot, "
+			. " t7.codigo as ocupacion, t8.codigo as epiacc "
+			. " from gums_grc as t1  "
+			. " right join gums_grupocot as t4 on t4.id = t1.grupocot_id"
+			. " right join gums_ocupacion as t7 on t7.id = t1.ocupacion_id"
+			. " right join gums_epiacc as t8 on t8.id = t1.epiacc_id"
+			. " where t1.id = :id ";
+
+		$query = $JanoControl->prepare($sentencia);
+		$params = [":id" => $grupoCobro_id];
+		$query->execute($params);
+		$res = $query->fetch(PDO::FETCH_ASSOC);
+		if ($res) {
+			return $res;
+		} else {
+			echo " ERROR NO EXISTE GRUPOCOBRO ID= (" . $grupoCobro_id . ") \n";
+			return null;
+		}
+	} catch (PDOException $ex) {
+		echo " PDOERROR PDO EN GRUPOCOBRO ID =(" . $grupoCobro_id . ") " . $ex->getMessage() . "\n";
+		return null;
+	}
+}
+
+
 function selectUf($uf)
 {
 	global $JanoControl;
@@ -1322,6 +1348,7 @@ function selectEqCatFp($catfp_id, $edificio_id)
 		return null;
 	}
 }
+
 /**
  * @param int $turno_id
  * @param int $edificio_id
@@ -1330,7 +1357,7 @@ function selectEqCatFp($catfp_id, $edificio_id)
 function selectEqTurno($turno_id, $edificio_id)
 {
 	global $JanoControl;
-	if ($turno_id== null)
+	if ($turno_id == null)
 		return null;
 
 	try {
@@ -1352,6 +1379,7 @@ function selectEqTurno($turno_id, $edificio_id)
 		return null;
 	}
 }
+
 /**
  * @param $catanexo_id
  * @param $edificio_id
@@ -1426,6 +1454,39 @@ function selectEqGrupoCobro($grupocobro_id, $edificio_id)
 		return null;
 	}
 }
+
+/**
+ * @param $id
+ * @return mixed|null
+ */
+function selectEqGrupoCobroById($id)
+{
+	global $JanoControl;
+	try {
+		$sentencia = " select t1.id as id, t1.codigo_loc as codigo_loc , t3.codigo as codigo_uni "
+			. ", t1.edificio_id, t2.codigo as edificio "
+			. ", t1.grupoCobro_id as grupoCobro_id "
+			. " from gums_eq_grc as t1"
+			. " inner join gums_grc as t3 on t3.id = t1.grupoCobro_id "
+			. " inner join comun_edificio as t2 on t2.id = t1.edificio_id "
+			. " where t1.id = :id ";
+		$query = $JanoControl->prepare($sentencia);
+		$params = [":id" => $id];
+		$query->execute($params);
+		$res = $query->fetch(PDO::FETCH_ASSOC);
+		if ($res) {
+			return $res;
+		} else {
+			echo "**ERROR NO EXISTE gums_eq_grc ID = " . $id . "\n";
+			return null;
+		}
+	} catch (PDOException $ex) {
+		echo "**PDOERROR EN gums_eq_grc ID = " . $id . " " . $ex->getMessage() . "\n";
+		return null;
+	}
+}
+
+
 /**
  * @param $grupoprof_id
  * @param $edificio_id

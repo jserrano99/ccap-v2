@@ -20,67 +20,33 @@
             <li><a href="#tabs-2">Otros datos</a></li>
         </ul>
         <div id="tabs-1">
-            <div class="form-row  mismalinea">
-                {{form_row(form.codigo)}}
-            </div>
-            <div class="form-row  mismalinea">
-                {{form_row(form.descripcion)}}
-            </div>
+            <div class="form-row  mismalinea">{{form_row(form.codigo)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.descripcion)}}</div>
             <div class="clearfix"></div>
-            <div class="form-row  mismalinea">
-                {{form_row(form.subaltasAfi)}}
-            </div>
-            <div class="form-row  mismalinea">
-                {{form_row(form.subaltasCerti)}}
-            </div>
+            <div class="form-row  mismalinea">{{form_row(form.subaltasAfi)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.subaltasCerti)}}</div>
             <div class="clearfix"></div>
-            <div class="form-row  mismalinea">
-                {{form_row(form.certificar)}}
-            </div>
-            <div class="form-row  mismalinea">
-                {{form_row(form.enuso)}}
-            </div>
-            <div class="form-row  mismalinea">
-                {{form_row(form.l13)}}
-            </div>
-            <div class="form-row  mismalinea">
-                {{form_row(form.pagarTramo)}}
-            </div>
+            <div class="form-row  mismalinea">{{form_row(form.certificar)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.enuso)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.l13)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.pagarTramo)}}</div>
             <div class="clearfix"></div>
-            <div class="form-row  mismalinea">
-                {{form_row(form.modOcupa)}}
-            </div>
-            <div class="form-row  mismalinea">
-                {{form_row(form.modoPago)}}
-            </div>
-            <div class="form-row  mismalinea">
-                {{form_row(form.moviPat)}}
-            </div>
+            <div class="form-row  mismalinea">{{form_row(form.modOcupa)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.modoPago)}}</div>
+            <div class="form-row  mismalinea">{{form_row(form.moviPat)}}</div>
         </div>
         <div id="tabs-2">
-            <div class="form_row mismalinea" >
-                {{form_row(form.btcMconCodigo)}}
-            </div>
-            <div class="form_row mismalinea" >
-                {{form_row(form.btcTipocon)}}
-            </div>
-            <div class="form_row mismalinea" >
-                {{form_row(form.motivoAltaRptId)}}
-            </div>
-            <div class="form_row mismalinea" >
-                {{form_row(form.malRptCodigo)}}
-            </div>
-            <div class="form_row mismalinea" >
-                {{form_row(form.malRptDescripcion)}}
-            </div>
-            <div class="form_row mismalinea" >
-                {{form_row(form.relJuridica)}}
-            </div>
+            <div class="form_row mismalinea" >{{form_row(form.btcMconCodigo)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.btcTipocon)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.motivoAltaRptId)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.malRptCodigo)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.malRptDescripcion)}}</div>
+            <div class="form_row mismalinea" >{{form_row(form.relJuridica)}}</div>
         </div>
     </div>
     <div class="form_row " >
         {{form_row(form.Guardar)}}
-        {{ form_end(form) }}
+        {{form_end(form) }}
     </div>
 
 </div>

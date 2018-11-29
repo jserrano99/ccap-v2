@@ -49,14 +49,20 @@ function insertCategUnif() {
 
 function equivalenciasCateg($CATEG, $edificio) {
     $edificio_id = selectEdificio($edificio);
-
+var_dump($edificio_id);
     $catgen = selectEqCatGen($CATEG["catgen_id"], $edificio_id);
+	var_dump($catgen);
     $catanexo = selectEqCatAnexo($CATEG["catanexo_id"], $edificio_id);
+	var_dump($catanexo);
     $GrupoCot = selectEqGrupoCot($CATEG["grupocot_id"], $edificio_id);
+    var_dump($GrupoCot);
     //$epiacc = selectEqEpiAcc($CATEG["epiacc"],$edificio);
     $grupoprof = selectEqGrupoProf($CATEG["grupoprof_id"], $edificio_id);
+    var_dump($grupoprof);
     $grupocobro = selectEqGrupoCobro($CATEG["grupocobro_id"], $edificio_id);
+    var_dump($grupocobro);
     $ocupacion = selectEqOcupacion($CATEG["ocupacion_id"], $edificio_id);
+var_dump($ocupacion);
 
     if ($catgen && $catanexo && $GrupoCot && $grupoprof && $grupocobro && $ocupacion) {
         $equivalenciasCateg["catgen"] = $catgen;
@@ -118,7 +124,7 @@ function parametrosCateg($CATEG, $edificio) {
         return null;
     }
 
-    $params = array(":codigo" => $CATEG["codigo"],
+    $params = [":codigo" => $CATEG["codigo"],
         ":catgen" => $equivalenciasCateg["catgen"],
         ":descrip" => $CATEG["descripcion"],
         ":fsn" => $CATEG["fsn"],
@@ -131,20 +137,20 @@ function parametrosCateg($CATEG, $edificio) {
         ":ocupacion" => $equivalenciasCateg["ocupacion"],
         ":mir" => $CATEG["mir"],
         ":condicionado" => $CATEG["condicionado"],
-        ":directivo" => $CATEG["directivo"]);
+        ":directivo" => $CATEG["directivo"]];
 
     return $params;
 }
 
-function updateEqCategControl($Categ) {
-    global $JanoControl;
+function updateEqCategControl() {
+    global $JanoControl,$CATEG,$EqCateg;
     try {
         $sql = " update gums_eq_categ set "
                 . " codigo_loc = :codigo_loc"
                 . " ,enuso = :enuso"
                 . " where id = :id ";
         $query = $JanoControl->prepare($sql);
-        $params = array(":codigo_loc" => $Categ["codigo"],
+        $params = array(":codigo_loc" => $CATEG["codigo"],
             ":id" => $EqCateg["id"],
             ":enuso" => $EqCateg["enuso"]);
         $res = $query->execute($params);
@@ -154,7 +160,7 @@ function updateEqCategControl($Categ) {
         }
         echo "-->UPDATE GUMS_EQ_CATEG CODIGO_LOC=(" . $EqCateg["codigo_loc"] . ") EDIFICIO=(" . $EqCateg["edificio"] . ") Uso= (" . $EqCateg["uso"] . ") \n";
     } catch (PDOException $ex) {
-        echo "***PDOERROR EN UPDATE GUMS_EQ_CATEG CATEG= " . $codigo . " EDIFICIO=" . $edificio . "\n"
+        echo "***PDOERROR EN UPDATE GUMS_EQ_CATEG CATEG= " . $CATEG["codigo"] . " EDIFICIO=" . $EqCateg["edificio"] . "\n"
         . $ex->getMessage() . "\n";
         return null;
     }
@@ -247,6 +253,13 @@ function updateCategUnif($CATEG) {
     }
 }
 
+/**
+ * @param $CATEG
+ * @param $conexion
+ * @param $codigo
+ * @param $edificio
+ * @return bool
+ */
 function updateCategAreas($CATEG, $conexion, $codigo, $edificio) {
     try {
         $sentencia = " update categ set "
@@ -264,6 +277,7 @@ function updateCategAreas($CATEG, $conexion, $codigo, $edificio) {
                 . " ,condicionado = :condicionado"
                 . " ,directivo = :directivo"
                 . " where codigo = :codigo ";
+        var_dump("update");
         $update = $conexion->prepare($sentencia);
 
         $params = parametrosCateg($CATEG, $edificio);
@@ -398,21 +412,23 @@ echo "==> ACTUACION= (" . $actuacion . ") REPLICA= (" . $CATEG["replica"] . ") E
 if ($actuacion == 'INSERT') {
     if (!procesoInsert()) {
         echo "  +++++++++++ TERMINA PROCESO INSERT EN ERROR +++++++++++++ \n";
+        exit(1);
     }
 }
 
 if ($actuacion == 'UPDATE') {
     if (!procesoUpdate()) {
         echo "  +++++++++++ TERMINA PROCESO UPDATE EN ERROR +++++++++++++ \n";
+        exit(1);
     }
 }
 
 if ($actuacion == 'ACTIVAR') {
     $EqCateg = selectEqCategById($eqcateg_id);
     $conexion = conexionEdificio($EqCateg["edificio"], $tipobd);
-    $Categ["enuso"] = 'S';
+    $CATEG["enuso"] = 'S';
     if ($conexion) {
-        updateCateg($conexion, $EqCateg["codigo_loc"]);
+        updateCategAreas($CATEG,$conexion, $EqCateg["codigo_loc"],$EqCateg["edificio"]);
         $EqCateg["enuso"] = 'S';
         updateEqCategControl($EqCateg);
     }
@@ -420,19 +436,20 @@ if ($actuacion == 'ACTIVAR') {
 
 if ($actuacion == 'DESACTIVAR') {
     $EqCateg = selectEqCategById($eqcateg_id);
-    $conexion = conexionEdificio($EqCateg["edificio"], $tipobd);
-    $Categ["enuso"] = 'N';
-    if ($conexion) {
-        updateCateg($conexion, $EqCateg["codigo_loc"]);
+	$conexion = conexionEdificio($EqCateg["edificio"], $tipobd);
+	$CATEG["enuso"] = 'N';
+
+	if ($conexion) {
+		updateCategAreas($CATEG,$conexion, $EqCateg["codigo_loc"],$EqCateg["edificio"]);
         $EqCateg["enuso"] = 'N';
-        updateEqCategControl($EqCateg);
+        updateEqCategControl();
     }
 }
 
 if ($actuacion == 'CREAR') {
     $EqCateg = selectEqCategById($eqcateg_id);
     $conexion = conexionEdificio($EqCateg["edificio"], $tipobd);
-    $Categ["codigo"] = $EqCateg["codigo_loc"];
+    $CATEG["codigo"] = $EqCateg["codigo_loc"];
     if ($conexion) {
         if (insertCategAreas($CATEG, $conexion, $EqCateg["edificio"])) {
             $EqCateg["enuso"] = 'S';
@@ -440,7 +457,6 @@ if ($actuacion == 'CREAR') {
         }
     }
 }
-
 
 echo "  +++++++++++ TERMINA PROCESO REPLICA CATEGORIA PROFESIONAL +++++++++++++ \n";
 exit(0);

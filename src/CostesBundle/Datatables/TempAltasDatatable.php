@@ -74,7 +74,7 @@ class TempAltasDatatable extends AbstractDatatable
 				'width' => '40px',
 			])
 			->add('dni', Column::class, [
-				'title' => 'DNI',
+				'title' => 'DNI', 'width' => '150px',
 			])
 			->add('nombre', Column::class, [
 				'title' => 'Nombre',
