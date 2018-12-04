@@ -20,7 +20,8 @@ class UfDatatable extends AbstractDatatable {
      */
     public function buildDatatable(array $options = array()) {
         $this->language->set(array(
-            'cdn_language_by_locale' => true
+            //'cdn_language_by_locale' => true
+			'language' => 'es',
         ));
 
         $this->ajax->set(array());
