@@ -33,6 +33,8 @@ class UfDatatable extends AbstractDatatable {
             'order' => array(array(0, 'asc')),
             'order_cells_top' => true,
             'search_in_non_visible_columns' => false,
+	        'dom' => 'lBrftip',
+
         ));
 
         $this->extensions->set(array());
@@ -98,40 +100,48 @@ class UfDatatable extends AbstractDatatable {
                     ),
                 ))
                 ->add('sincroLog.estado.descripcion', Column::class, array(
-                    'title' => 'Log',
-                    'width' => '120px',
+                    'title' => 'Estado Sincronización',
                     'default_content' => ''))
-                
-                ->add(null, ActionColumn::class, array(
+
+                ->add(null, ActionColumn::class, [
                     'title' => 'Acciones',
-                    'actions' => array(
-                        array(
+                    'actions' => [
+                        [
                             'route' => 'editUf',
-                            'route_parameters' => array(
+                            'route_parameters' => [
                                 'id' => 'id'
-                            ),
+                            ],
                             'label' => 'Editar',
                             'icon' => 'glyphicon glyphicon-edit',
-                            'attributes' => array(
+                            'attributes' => [
                                 'rel' => 'tooltip',
                                 'title' => 'Editar Unidad Funcional',
                                 'class' => 'btn btn-primary btn-xs',
                                 'role' => 'button'
-                            )),
-                        array('route' => 'descargaLogUf',
-                            'route_parameters' => array('id' => 'id'),
+                            ]],
+	                    ['route' => 'queryEqUf',
+		                    'route_parameters' => ['uf_id' => 'id'],
+		                    'label' => 'Equivalencias',
+		                    'icon' => 'glyphicon glyphicon-th-list',
+		                    'attributes' => ['rel' => 'tooltip',
+			                    'title' => 'Ver Equivalencias',
+			                    'class' => 'btn btn-primary btn-xs',
+			                    'role' => 'button']],
+
+	                    ['route' => 'descargaLogUf',
+                            'route_parameters' => ['id' => 'id'],
                             'label' => 'Logs',
                             'icon' => 'glyphicon glyphicon-edit',
                             'render_if' => function ($row) {
                                 if ($row['sincroLog'] != null)
                                     return true;
                             },
-                            'attributes' => array('rel' => 'tooltip',
+                            'attributes' => ['rel' => 'tooltip',
                                 'title' => 'Logs',
                                 'class' => 'btn btn-primary btn-xs',
-                                'role' => 'button'))
-                    )
-                ))
+                                'role' => 'button']]
+                    ]
+                ])
         ;
     }
 

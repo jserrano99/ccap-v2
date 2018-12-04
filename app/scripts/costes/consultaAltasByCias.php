@@ -9,9 +9,12 @@ function selectMovialtaByCias()
 {
 	global $JanoUnif, $cias;
 	try {
-		$sentencia = " select t3.cip, t3.dni, t3.ape12, t3.nombre, t2.codigo, t2.falta, t2.fbaja, t2.cip "
+		$sentencia = " select t3.cip, t3.dni, t3.ape12, t3.nombre, t2.codigo, t2.falta, t2.fbaja, t2.cip,"
+		." t4.descrip as causa_alta, t5.descrip as causa_baja "
 			. " from movialta as t2 "
 			. " inner join trab as t3 on t3.cip = t2.cip "
+			. " inner join altas as t4 on t4.codigo = t2.altas"
+			. " left join bajas as t5 on t5.codigo = t2.baja"
 			. " where t2.cias = :cias ";
 		$query = $JanoUnif->prepare($sentencia);
 		$params = [":cias" => $cias];
@@ -49,15 +52,17 @@ function main()
 	if ($MovialtaAll != null) {
 		foreach ($MovialtaAll as $Movialta) {
 			try {
-				$sql = 'insert into ccap_temp_altas (cip, dni,f_alta, f_baja, nombre, plaza_id) values '
-					. '(:cip, :dni, :f_alta, :f_baja, :nombre, :plaza_id ) ';
+				$sql = 'insert into ccap_temp_altas (cip, dni,f_alta, f_baja, nombre, plaza_id, causa_alta, causa_baja) values '
+					. '(:cip, :dni, :f_alta, :f_baja, :nombre, :plaza_id, :causa_alta, :causa_baja ) ';
 				$query = $JanoControl->prepare($sql);
 				$params = [':cip' => $Movialta["CIP"],
 					':dni' => $Movialta["DNI"],
 					':f_alta' => $Movialta["FALTA"],
 					':f_baja' => $Movialta["FBAJA"],
-					':nombre' => $Movialta["APE12"] . ', ' . $Movialta["NOMBRE"],
-					":plaza_id" => $Plaza["id"]];
+					':nombre' => trim($Movialta["APE12"]) . ', ' . trim($Movialta["NOMBRE"]),
+					":plaza_id" => $Plaza["id"],
+					":causa_alta" => $Movialta["CAUSA_ALTA"],
+					":causa_baja" => $Movialta["CAUSA_BAJA"]];
 				$res = $query->execute($params);
 
 				if ($res == 0) {

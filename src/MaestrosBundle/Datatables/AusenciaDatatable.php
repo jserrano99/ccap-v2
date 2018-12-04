@@ -56,10 +56,6 @@ class AusenciaDatatable extends AbstractDatatable
             ->add('codigo', Column::class, array('title' => 'Código Unif.', 'width' => '40px', 'searchable' => true))
             ->add('descrip', Column::class, array('title' => 'Descripción'))
             ->add('janoCodigo', Column::class, array('title' => 'Código JANO', 'searchable' => true))
-            ->add('sincroLog.estado.descripcion', Column::class, array(
-                'title' => 'Estado Sincronización',
-                'width' => '320px',
-                'default_content' => ''))
             ->add('enuso', Column::class, array(
                 'title' => 'Uso',
                 'filter' => array(SelectFilter::class,
@@ -116,6 +112,9 @@ class AusenciaDatatable extends AbstractDatatable
                     ),
                 ),
             ))
+	        ->add('sincroLog.estado.descripcion', Column::class, array(
+		        'title' => 'Estado Sincronización',
+		        'default_content' => ''))
             ->add(null, ActionColumn::class, array('title' => 'Acciones',
                 'actions' => array(
                     array('route' => 'editAusencia',

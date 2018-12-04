@@ -888,6 +888,62 @@ function selectUfById($id)
 	}
 }
 
+/**
+ * @param $codigo
+ * @return mixed|null
+ */
+function selectUfByCodigo($codigo)
+{
+	global $JanoControl;
+	try {
+		$sentencia = " select t1.*  from ccap_uf as t1 where t1.uf = :codigo ";
+		$query = $JanoControl->prepare($sentencia);
+		$params = [":codigo" => $codigo];
+		$query->execute($params);
+		$res = $query->fetch(PDO::FETCH_ASSOC);
+
+		if ($res) {
+			return $res;
+		} else {
+			echo "**ERROR NO EXISTE UF codigo=(" . $codigo . ") \n";
+			return null;
+		}
+	} catch (PDOException $ex) {
+		echo "**PDOERROR UF codigo=(" . $codigo . ") " . $ex->getMessage() . "\n";
+		return null;
+	}
+}
+
+/**
+ * @param $codigo
+ * @return mixed|null
+ */
+function selectPaByCodigo($codigo)
+{
+	global $JanoControl;
+	try {
+		$sentencia = " select t1.*  from ccap_pa as t1 where t1.pa = :codigo ";
+		$query = $JanoControl->prepare($sentencia);
+		$params = [":codigo" => $codigo];
+		$query->execute($params);
+		$res = $query->fetch(PDO::FETCH_ASSOC);
+
+		if ($res) {
+			return $res;
+		} else {
+			echo "**ERROR NO EXISTE PA codigo=(" . $codigo . ") \n";
+			return null;
+		}
+	} catch (PDOException $ex) {
+		echo "**PDOERROR PA codigo=(" . $codigo . ") " . $ex->getMessage() . "\n";
+		return null;
+	}
+}
+
+/**
+ * @param $pa
+ * @return mixed|null
+ */
 function selectPa($pa)
 {
 	global $JanoControl;

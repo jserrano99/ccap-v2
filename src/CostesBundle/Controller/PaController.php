@@ -9,15 +9,29 @@ use CostesBundle\Entity\Pa;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use CostesBundle\Datatables\PaDatatable;
 use Symfony\Component\HttpFoundation\Response;
+use CostesBundle\Datatables\EqPaDatatable;
 
+/**
+ * Class PaController
+ * @package CostesBundle\Controller
+ */
 class PaController extends Controller {
-
+	/**
+	 * @var \Symfony\Component\HttpFoundation\Session\Session
+	 */
     private $sesion;
 
+	/**
+	 * PaController constructor.
+	 */
     public function __construct() {
         $this->sesion = new Session();
     }
 
+	/**
+	 * @param $id
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
     public function verPaAction($id) {
         $entityManager = $this->getDoctrine()->getManager();
         $Pa_repo = $entityManager->getRepository("CostesBundle:Pa");
@@ -26,6 +40,11 @@ class PaController extends Controller {
         return $this->render("costes/pa/verPa.html.twig", $params);
     }
 
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @param $id
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
     public function editAction(Request $request, $id) {
         $EM = $this->getDoctrine()->getManager();
         $Pa_repo = $EM->getRepository("CostesBundle:Pa");
@@ -56,6 +75,10 @@ class PaController extends Controller {
         return $this->render("costes/pa/edit.html.twig", $params);
     }
 
+	/**
+	 * @param $id
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
     public function deleteAction($id) {
         $EM = $this->getDoctrine()->getManager();
         $Pa_repo = $EM->getRepository("CostesBundle:Pa");
@@ -69,6 +92,10 @@ class PaController extends Controller {
         return $this->redirectToRoute("queryPa");
     }
 
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
     public function addAction(Request $request) {
         $EM = $this->getDoctrine()->getManager();
         $Pa_repo = $EM->getRepository("CostesBundle:Pa");
@@ -82,7 +109,7 @@ class PaController extends Controller {
             try {
                 $EM->persist($Pa);
                 $EM->flush();
-                $params = array("id" => $Pa->getId(), "actuacion" => "INSERT");
+                $params = ["id" => $Pa->getId(), "actuacion" => "INSERT"];
                 return $this->redirectToRoute("sincroPa", $params);
             } catch (UniqueConstraintViolationException $ex) {
                 $status = " YA EXISTE UNA PUNTO ASISTENCIAL CON ESTE CÓDIGO: " . $Pa->getPa();
@@ -100,6 +127,11 @@ class PaController extends Controller {
         return $this->render("costes/pa/edit.html.twig", $params);
     }
 
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
+	 * @throws \Exception
+	 */
     public function queryAction(Request $request) {
         $isAjax = $request->isXmlHttpRequest();
 
@@ -116,11 +148,15 @@ class PaController extends Controller {
             return $responseService->getResponse();
         }
 
-        return $this->render('costes/pa/query.html.twig', array(
+        return $this->render('costes/pa/query.html.twig', [
                     'datatable' => $datatable,
-        ));
+        ]);
     }
 
+	/**
+	 * @param $codigo
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
     public function ajaxCalculaCodigoAction($codigo) {
         $edificio = (int) substr($codigo, 2, 2);
         $areaZona = substr($codigo, 2, 4);
@@ -159,6 +195,11 @@ class PaController extends Controller {
         return $response;
     }
 
+	/**
+	 * @param $id
+	 * @param $actuacion
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
     public function sincroAction($id, $actuacion) {
         $em = $this->getDoctrine()->getManager();
         $usuario_id = $this->sesion->get('usuario_id');
@@ -218,11 +259,45 @@ class PaController extends Controller {
         return $response;
     }
 
+	/**
+	 * @param $id
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
     public function descargaLogAction($id) {
         $em = $this->getDoctrine()->getManager();
         $Pa = $em->getRepository("CostesBundle:Pa")->find($id);
         $params = array("id" => $Pa->getSincroLog()->getId());
         return $this->redirectToRoute("descargaSincroLog", $params);
     }
+
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @param $pa_id
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
+	 * @throws \Exception
+	 */
+	public function queryEqPaAction(Request $request, $pa_id)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$Pa = $em->getRepository("CostesBundle:Pa")->find($pa_id);;
+
+		$isAjax = $request->isXmlHttpRequest();
+
+		$datatable = $this->get('sg_datatables.factory')->create(EqPaDatatable::class);
+		$datatable->buildDatatable();
+
+		if ($isAjax) {
+			$responseService = $this->get('sg_datatables.response');
+			$responseService->setDatatable($datatable);
+			$datatableQueryBuilder = $responseService->getDatatableQueryBuilder();
+			$qb = $datatableQueryBuilder->getQb();
+			$qb->andWhere('pa = :pa');
+			$qb->setParameter('pa', $Pa);
+			return $responseService->getResponse();
+		}
+
+		$params = ['datatable' => $datatable];
+		return $this->render('costes/pa/query.eq.html.twig', $params);
+	}
 
 }

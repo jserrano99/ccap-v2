@@ -50,11 +50,6 @@ sincroPlaza:
   defaults: { _controller: CostesBundle:Plaza:sincro}
   options:
     expose: true
-verCecos:
-  path:   /plaza/verceco/{plaza_id}
-  defaults: { _controller: CostesBundle:Plaza:verCecos}
-  options:
-    expose: true
 exportarPlaza:
   path:   /plaza/exportar
   defaults: { _controller: CostesBundle:Plaza:exportar}
@@ -247,6 +242,11 @@ verUf:
   defaults: { _controller: CostesBundle:Uf:verUf}
   options:
     expose: true
+queryEqUf:
+  path: /uf/equivalencias/query/{uf_id}
+  defaults: {_controller: CostesBundle:Uf:queryEqUf}
+  options:
+    expose: true
 addUf:
   path:   /uf/add/
   defaults: { _controller: CostesBundle:Uf:add}
@@ -323,5 +323,10 @@ descargaLogPa:
 verZonaBasica:
   path:   /pa/verZonaBasica/{id}
   defaults: { _controller: CostesBundle:Pa:verZonaBasica}
+  options:
+    expose: true
+queryEqPa:
+  path: /pa/equivalencias/query/{pa_id}
+  defaults: {_controller: CostesBundle:Pa:queryEqPa}
   options:
     expose: true

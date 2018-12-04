@@ -12,11 +12,10 @@
 {% block contenido %}
     {% include 'procesando.html.twig' %}
 
-    <div id="consultaAltas" class="container">
-            <div class="modal-content">
+    <div id="consultaAltas" class="container-fluid">
+            <div class="modal-content container-fluid">
                 <div class="modal-body" text-align="center">
                    <h3><span> CONSULTA ALTAS CIAS: {{plaza.cias }}</span></h3>
-
                     {{ sg_datatables_render(datatable) }}
                     <button type="button"
                             class="btn btn-default btn-warning"

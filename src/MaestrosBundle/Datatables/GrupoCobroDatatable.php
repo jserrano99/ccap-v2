@@ -51,7 +51,6 @@ class GrupoCobroDatatable extends AbstractDatatable
 		$this->columnBuilder
 			->add('id', Column::class, ['title' => 'Id', 'width' => '20px', 'searchable' => false])
 			->add('codigo', Column::class, ['title' => 'Código', 'width' => '40px', 'searchable' => true])
-
 			->add('descripcion', Column::class, ['title' => 'Descripción', 'width' => '500px'])
 			->add('enuso', Column::class, [
 				'title' => 'Uso',
@@ -72,8 +71,7 @@ class GrupoCobroDatatable extends AbstractDatatable
 			->add(null, ActionColumn::class, [
 				'title' => 'Acciones',
 				'actions' => [
-					[
-						'route' => 'editGrupoCobro',
+					['route' => 'editGrupoCobro',
 						'route_parameters' => ['id' => 'id'],
 						'label' => 'Editar',
 						'icon' => 'glyphicon glyphicon-edit',
@@ -84,8 +82,7 @@ class GrupoCobroDatatable extends AbstractDatatable
 							'role' => 'button'
 						],
 					],
-					[
-						'route' => 'equiGrupoCobro',
+					['route' => 'equiGrupoCobro',
 						'route_parameters' => [
 							'id' => 'id'],
 						'label' => 'Equivalencias',
@@ -96,7 +93,16 @@ class GrupoCobroDatatable extends AbstractDatatable
 							'class' => 'btn btn-primary btn-xs',
 							'role' => 'button'
 						],
-					]
+					],
+					['route' => 'queryCategByGrupoCobro',
+						'route_parameters' => ['grupoCobro_id' => 'id'],
+						'label' => '',
+						'icon' => 'glyphicon glyphicon-zoom-in',
+						'attributes' => ['rel' => 'tooltip',
+							'title' => 'Ver Categorias Profesionales',
+							'class' => 'btn btn-warning btn-xs',
+							'role' => 'button']],
+
 				]
 			]);
 	}

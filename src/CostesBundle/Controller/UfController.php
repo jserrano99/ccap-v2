@@ -9,6 +9,7 @@ use CostesBundle\Entity\Uf;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use CostesBundle\Datatables\UfDatatable;
 use Symfony\Component\HttpFoundation\Response;
+use CostesBundle\Datatables\EqUfDatatable;
 
 class UfController extends Controller {
 
@@ -224,5 +225,29 @@ class UfController extends Controller {
         $params = array("id" => $Uf->getSincroLog()->getId());
         return $this->redirectToRoute("descargaSincroLog", $params);
     }
+
+	public function queryEqUfAction(Request $request, $uf_id)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$Uf = $em->getRepository("CostesBundle:Uf")->find($uf_id);;
+
+		$isAjax = $request->isXmlHttpRequest();
+
+		$datatable = $this->get('sg_datatables.factory')->create(EqUfDatatable::class);
+		$datatable->buildDatatable();
+
+		if ($isAjax) {
+			$responseService = $this->get('sg_datatables.response');
+			$responseService->setDatatable($datatable);
+			$datatableQueryBuilder = $responseService->getDatatableQueryBuilder();
+			$qb = $datatableQueryBuilder->getQb();
+			$qb->andWhere('uf = :uf');
+			$qb->setParameter('uf', $Uf);
+			return $responseService->getResponse();
+		}
+
+		$params = ['datatable' => $datatable];
+		return $this->render('costes/uf/query.eq.html.twig', $params);
+	}
 
 }

@@ -86,7 +86,9 @@ class TempAltasDatatable extends AbstractDatatable
 					'cancel_button' => false,
 				]],
 			])
-
+			->add('causaAlta', Column::class, [
+				'title' => 'Causa de Alta',
+			])
 			->add('fBaja', DateTimeColumn::class, ['title' => 'Fecha Baja', 'width' => '150px',
 				'date_format' => 'DD/MM/YYYY',
 				'default_content' => '',
@@ -94,7 +96,9 @@ class TempAltasDatatable extends AbstractDatatable
 					'cancel_button' => false,
 				]],
 			])
-		;
+			->add('causaBaja', Column::class, [
+				'title' => 'Causa de Baja',
+			]);
 
 	}
 

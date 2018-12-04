@@ -60,8 +60,18 @@ class TempAltas
 	 * @ORM\Column(name="f_baja", type="date", nullable=true)
 	 */
 	private $fBaja;
+	/**
+	 * @var string
+	 * @ORM\Column(name="causa_alta", type="string", length=250, nullable=true)
+	 */
+	private $causaAlta;
+	/**
+	 * @var string
+	 * @ORM\Column(name="causa_baja", type="string", length=250, nullable=true)
+	 */
+	private $causaBaja;
 
-    /**
+	/**
      * Get id.
      *
      * @return int
@@ -213,5 +223,53 @@ class TempAltas
     public function getPlaza()
     {
         return $this->plaza;
+    }
+
+    /**
+     * Set causaAlta.
+     *
+     * @param string $causaAlta
+     *
+     * @return TempAltas
+     */
+    public function setCausaAlta($causaAlta)
+    {
+        $this->causaAlta = $causaAlta;
+
+        return $this;
+    }
+
+    /**
+     * Get causaAlta.
+     *
+     * @return string
+     */
+    public function getCausaAlta()
+    {
+        return $this->causaAlta;
+    }
+
+    /**
+     * Set causaBaja.
+     *
+     * @param string $causaBaja
+     *
+     * @return TempAltas
+     */
+    public function setCausaBaja($causaBaja)
+    {
+        $this->causaBaja = $causaBaja;
+
+        return $this;
+    }
+
+    /**
+     * Get causaBaja.
+     *
+     * @return string
+     */
+    public function getCausaBaja()
+    {
+        return $this->causaBaja;
     }
 }

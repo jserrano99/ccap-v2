@@ -1,13 +1,12 @@
 {% extends "layout.html.twig" %} 
 {% block titulo %} CATEGORÍAS PROFESIONALES **CONSULTA**
     <a href="{{path("addCateg")}}" 
-       target="_blank"
        class="btn btn-success">
         <span class="glyphicon glyphicon-new-window"></span> Nueva Categoría</a>
     <hr/>
 {% endblock %}
 {% block contenido %}
-    <div class="container-fluid">
+    <div class="container-fluid" text-align="center">
         {% for message in app.session.flashbag().get('status') %}
             <div class="alert alert-success">
                 {{message}}
@@ -15,6 +14,5 @@
             <hr/>
         {% endfor %}
         {{ sg_datatables_render(datatable) }}
-
     </div>
 {% endblock %}

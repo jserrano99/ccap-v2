@@ -27,10 +27,10 @@ class AltasDatatable extends AbstractDatatable
 			'stripe_classes' => ['strip1', 'strip2', 'strip3'],
 			'individual_filtering' => true,
 			'individual_filtering_position' => 'head',
-			'order' => [[0, 'asc']],
+			'order' => [[1, 'asc']],
 			'order_cells_top' => true,
 			'search_in_non_visible_columns' => true,
-			'dom' => 'lBtrip'
+			'dom' => 'lBrftip'
 		]);
 
 		$this->features->set([
@@ -44,17 +44,12 @@ class AltasDatatable extends AbstractDatatable
 			'pre_xhr' => ['template' => 'inicio.js.twig'],
 			'search' => ['template' => 'search.js.twig'],
 			'state_loaded' => ['template' => 'loaded.js.twig'],
-
 		]);
 
 		$this->columnBuilder
 			->add('id', Column::class, ['title' => 'Id', 'width' => '20px', 'searchable' => false])
 			->add('codigo', Column::class, ['title' => 'Código', 'width' => '40px', 'searchable' => true])
 			->add('descripcion', Column::class, ['title' => 'Descripción', 'width' => '500px'])
-			->add('sincroLog.estado.descripcion', Column::class, [
-				'title' => 'Estado Sincronización',
-				'width' => '320px',
-				'default_content' => ''])
 			->add('enuso', Column::class, [
 				'title' => 'Uso',
 				'filter' => [SelectFilter::class,
@@ -69,6 +64,9 @@ class AltasDatatable extends AbstractDatatable
 					],
 				],
 			])
+			->add('sincroLog.estado.descripcion', Column::class, [
+				'title' => 'Estado Sincronización',
+				'default_content' => ''])
 			->add(null, ActionColumn::class, [
 				'title' => 'Acciones',
 				'actions' => [
