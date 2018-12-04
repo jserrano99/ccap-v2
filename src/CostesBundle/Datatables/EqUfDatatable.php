@@ -73,6 +73,33 @@ class EqUfDatatable extends AbstractDatatable
 				],
 				],
 			])
+			->add(null, ActionColumn::class, array('title' => 'Acciones',
+				'actions' => array(
+					array('route' => 'activarEqUf',
+						'route_parameters' => array('equf_id' => 'id'),
+						'label' => 'Activar',
+						'icon' => 'glyphicon glyphicon-ok-sign',
+						'render_if' => function($row) {
+							if ($row['enuso'] === 'N')
+								return true;
+						},
+						'attributes' => array('rel' => 'tooltip',
+							'title' => 'Activar',
+							'class' => 'btn btn-info btn-xs',
+							'role' => 'button')),
+					array('route' => 'desActivarEqUf',
+						'route_parameters' => array('equf_id' => 'id'),
+						'label' => 'Desactivar',
+						'icon' => 'glyphicon glyphicon-remove-sign',
+						'render_if' => function($row) {
+							if ($row['enuso'] === 'S')
+								return true;
+						},
+						'attributes' => array('rel' => 'tooltip',
+							'title' => 'Desactivar',
+							'class' => 'btn btn-danger btn-xs',
+							'role' => 'button')),
+				)))
 			;
 	}
 

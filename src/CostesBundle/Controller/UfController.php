@@ -186,7 +186,7 @@ class UfController extends Controller {
         $php = $this->getParameter('php');
         $php_script = $php." " . $root . "/scripts/costes/actualizacionUf.php " . $modo . "  " . $Uf->getId() . " " . $actuacion;
 
-        $mensaje = exec($php_script, $SALIDA, $resultado);
+        exec($php_script, $SALIDA, $resultado);
         if ($resultado == 0) {
             $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(2);
         } else {
@@ -248,6 +248,28 @@ class UfController extends Controller {
 
 		$params = ['datatable' => $datatable];
 		return $this->render('costes/uf/query.eq.html.twig', $params);
+	}
+
+	public function activarAction($equf_id)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$EqUf = $em->getRepository("CostesBundle:EqUf")->find($equf_id);
+		$params = ["id" => $EqUf->getUf()->getId(),
+			"actuacion" => 'ACTIVAR',
+			"edificio" => $EqUf->getEdificio()->getCodigo(),
+			"equf_id" => $EqUf->getId()];
+		return $this->redirectToRoute("sincroUf", $params);
+	}
+
+	public function desActivarAction($equf_id)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$EqUf = $em->getRepository("CostesBundle:EqUf")->find($equf_id);
+		$params = ["id" => $EqUf->getUf()->getId(),
+			"actuacion" => 'DESACTIVAR',
+			"edificio" => $EqUf->getEdificio()->getCodigo(),
+			"equf_id" => $EqUf->getId()];
+		return $this->redirectToRoute("sincroUf", $params);
 	}
 
 }
