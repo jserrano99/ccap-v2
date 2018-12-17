@@ -6,9 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * CargaFichero
- *
- * @ORM\Table(name="comun_carga_fichero", 
- *           )
+ * @ORM\Table(name="comun_carga_fichero")
  * @ORM\Entity
  */
 class CargaFichero {
@@ -73,9 +71,31 @@ class CargaFichero {
      * })
      */
     private $usuario;
+	/**
+	 * @var
+	 */
+	private $proceso;
 
-    
-    
+	/**
+	 * @var
+	 */
+	private $orden;
+	/**
+	 * @var
+	 */
+	private $numDep;
+	/**
+	 * @var
+	 */
+	private $modulo;
+	/**
+	 * @var
+	 */
+	private $check;
+
+	/**
+	 * @return string
+	 */
     public function __toString() {
         return $this->descripcion;
     }
@@ -89,13 +109,12 @@ class CargaFichero {
         return $this->id;
     }
 
-    /**
-     * Set fechaCarga.
-     *
-     * @param \DateTime|null $fechaCarga
-     *
-     * @return CargaInicial
-     */
+	/**
+	 * Set fechaCarga.
+	 *
+	 * @param \DateTime|null $fechaCarga
+	 * @return \ComunBundle\Entity\CargaFichero
+	 */
     public function setFechaCarga($fechaCarga = null) {
         $this->fechaCarga = $fechaCarga;
 
@@ -111,13 +130,12 @@ class CargaFichero {
         return $this->fechaCarga;
     }
 
-    /**
-     * Set tabla.
-     *
-     * @param string $tabla
-     *
-     * @return CargaInicial
-     */
+	/**
+	 * Set tabla.
+	 *
+	 * @param string $tabla
+	 * @return \ComunBundle\Entity\CargaFichero
+	 */
     public function setTabla($tabla) {
         $this->tabla = $tabla;
 
@@ -133,13 +151,12 @@ class CargaFichero {
         return $this->tabla;
     }
 
-    /**
-     * Set descripcion.
-     *
-     * @param string $descripcion
-     *
-     * @return CargaInicial
-     */
+	/**
+	 * Set descripcion.
+	 *
+	 * @param string $descripcion
+	 * @return \ComunBundle\Entity\CargaFichero
+	 */
     public function setDescripcion($descripcion) {
         $this->descripcion = $descripcion;
 
@@ -155,13 +172,12 @@ class CargaFichero {
         return $this->descripcion;
     }
 
-    /**
-     * Set proceso.
-     *
-     * @param string $proceso
-     *
-     * @return CargaInicial
-     */
+	/**
+	 * Set proceso.
+	 *
+	 * @param string $proceso
+	 * @return \ComunBundle\Entity\CargaFichero
+	 */
     public function setProceso($proceso) {
         $this->proceso = $proceso;
 
@@ -177,13 +193,12 @@ class CargaFichero {
         return $this->proceso;
     }
 
-    /**
-     * Set orden.
-     *
-     * @param int|null $orden
-     *
-     * @return CargaInicial
-     */
+	/**
+	 * Set orden.
+	 *
+	 * @param int|null $orden
+	 * @return \ComunBundle\Entity\CargaFichero
+	 */
     public function setOrden($orden = null) {
         $this->orden = $orden;
 
@@ -191,7 +206,7 @@ class CargaFichero {
     }
 
     /**
-     * Get orden.
+     * Get orden
      *
      * @return int|null
      */
@@ -199,13 +214,12 @@ class CargaFichero {
         return $this->orden;
     }
 
-    /**
-     * Set numDep.
-     *
-     * @param int|null $numDep
-     *
-     * @return CargaInicial
-     */
+	/**
+	 * Set numDep.
+	 *
+	 * @param int|null $numDep
+	 * @return \ComunBundle\Entity\CargaFichero
+	 */
     public function setNumDep($numDep = null) {
         $this->numDep = $numDep;
 
@@ -221,14 +235,13 @@ class CargaFichero {
         return $this->numDep;
     }
 
-    /**
-     * Set estadoCargaInicial.
-     *
-     * @param \ComunBundle\Entity\EstadoCargaInicial|null $estadoCargaInicial
-     *
-     * @return CargaInicial
-     */
-    public function setEstadoCargaInicial(\ComunBundle\Entity\EstadoCargaInicial $estadoCargaInicial = null) {
+	/**
+	 * Set estadoCargaInicial.
+	 *
+	 * @param \ComunBundle\Entity\EstadoCargaInicial|null $estadoCargaInicial
+	 * @return \ComunBundle\Entity\CargaFichero
+	 */
+    public function setEstadoCargaInicial(EstadoCargaInicial $estadoCargaInicial = null) {
         $this->estadoCargaInicial = $estadoCargaInicial;
 
         return $this;
@@ -243,14 +256,13 @@ class CargaFichero {
         return $this->estadoCargaInicial;
     }
 
-    /**
-     * Set modulo.
-     *
-     * @param \ComunBundle\Entity\Modulo|null $modulo
-     *
-     * @return CargaInicial
-     */
-    public function setModulo(\ComunBundle\Entity\Modulo $modulo = null) {
+	/**
+	 * Set modulo.
+	 *
+	 * @param \ComunBundle\Entity\Modulo|null $modulo
+	 * @return \ComunBundle\Entity\CargaFichero
+	 */
+    public function setModulo(Modulo $modulo = null) {
         $this->modulo = $modulo;
 
         return $this;
@@ -265,13 +277,10 @@ class CargaFichero {
         return $this->modulo;
     }
 
-    /**
-     * Set ficheroLog.
-     *
-     * @param string $ficheroLog
-     *
-     * @return CargaInicial
-     */
+	/**
+	 * @param $ficheroLog
+	 * @return $this
+	 */
     public function setFicheroLog($ficheroLog) {
         $this->ficheroLog = $ficheroLog;
 
@@ -293,7 +302,7 @@ class CargaFichero {
      *
      * @param bool $check
      *
-     * @return CargaInicial
+     * @return $this
      */
     public function setCheck($check)
     {
@@ -343,7 +352,7 @@ class CargaFichero {
      *
      * @return CargaFichero
      */
-    public function setUsuario(\ComunBundle\Entity\Usuario $usuario = null)
+    public function setUsuario(Usuario $usuario = null)
     {
         $this->usuario = $usuario;
 

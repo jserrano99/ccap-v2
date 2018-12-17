@@ -69,7 +69,7 @@ class CategDatatable extends AbstractDatatable
 						'select_options' => ['' => 'Todo'] + $this->getOptionsArrayFromEntities($catgenAll, 'descripcion', 'descripcion'),
 						'search_type' => 'eq']]])
 			->add('grupoCobro.descripcion', Column::class, [
-				'title' => 'Grupo Cobro',
+				'title' => 'Grupo Cobro por Defecto',
 				'filter' => [SelectFilter::class,
 					[
 						'multiple' => false,

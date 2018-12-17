@@ -10,54 +10,82 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use CostesBundle\Datatables\UfDatatable;
 use Symfony\Component\HttpFoundation\Response;
 use CostesBundle\Datatables\EqUfDatatable;
+use ComunBundle\Entity\SincroLog;
+use DateTime;
+use CostesBundle\Form\UfType;
+use Doctrine\DBAL\DBALException;
 
+
+/**
+ * Class UfController
+ *
+ * @package CostesBundle\Controller
+ */
 class UfController extends Controller {
-
+	/**
+	 * @var \Symfony\Component\HttpFoundation\Session\Session
+	 */
     private $sesion;
 
+	/**
+	 * UfController constructor.
+	 */
     public function __construct() {
         $this->sesion = new Session();
     }
 
+	/**
+	 * @param $id
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
     public function verUfAction($id) {
         $entityManager = $this->getDoctrine()->getManager();
         $Uf_repo = $entityManager->getRepository("CostesBundle:Uf");
         $Uf = $Uf_repo->find($id);
-        $params = array("uf" => $Uf);
+        $params = ["uf" => $Uf];
         return $this->render("costes/uf/verUf.html.twig", $params);
     }
 
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @param                                           $id
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
     public function editAction(Request $request, $id) {
         $EM = $this->getDoctrine()->getManager();
         $Uf_repo = $EM->getRepository("CostesBundle:Uf");
         $Uf = $Uf_repo->find($id);
 
-        $form = $this->createForm(\CostesBundle\Form\UfType::class, $Uf);
+        $form = $this->createForm(UfType::class, $Uf);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             try {
                 $EM->persist($Uf);
                 $EM->flush();
-                $params = array("id" => $Uf->getId(), "actuacion" => "UPDATE");
+                $params = ["id" => $Uf->getId(), "actuacion" => "UPDATE"];
                 return $this->redirectToRoute("sincroUf", $params);
             } catch (UniqueConstraintViolationException $ex) {
                 $status = " YA EXISTE UNA UNIDAD FUNCIONAL CON ESTE CÓDIGO: " . $Uf->getUf();
                 $this->sesion->getFlashBag()->add("status", $status);
                 return $this->redirectToRoute("queryUf");
-            } catch (Doctrine\DBAL\DBALException $ex) {
+            } catch (DBALException $ex) {
                 $status = "ERROR GENERAL=" . $ex->getMessage();
                 $this->sesion->getFlashBag()->add("status", $status);
                 return $this->redirectToRoute("queryUf");
             }
         }
 
-        $params = array("uf" => $Uf,
+        $params = ["uf" => $Uf,
             "accion" => "MODIFICACIÓN",
-            "form" => $form->createView());
+            "form" => $form->createView()];
         return $this->render("costes/uf/edit.html.twig", $params);
     }
 
+	/**
+	 * @param $id
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
     public function deleteAction($id) {
         $EM = $this->getDoctrine()->getManager();
         $Uf_repo = $EM->getRepository("CostesBundle:Uf");
@@ -71,37 +99,45 @@ class UfController extends Controller {
         return $this->redirectToRoute("queryUf");
     }
 
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
     public function addAction(Request $request) {
         $EM = $this->getDoctrine()->getManager();
-        $Uf_repo = $EM->getRepository("CostesBundle:Uf");
         $Uf = new Uf();
 
-        $form = $this->createForm(\CostesBundle\Form\UfType::class, $Uf);
+        $form = $this->createForm(UfType::class, $Uf);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             try {
                 $EM->persist($Uf);
                 $EM->flush();
-                $params = array("id" => $Uf->getId(), "actuacion" => "INSERT");
+                $params = ["id" => $Uf->getId(), "actuacion" => "INSERT"];
                 return $this->redirectToRoute("sincroUf", $params);
             } catch (UniqueConstraintViolationException $ex) {
                 $status = " YA EXISTE UNA UNIDAD FUNCIONAL CON ESTE CÓDIGO: " . $Uf->getUf();
                 $this->sesion->getFlashBag()->add("status", $status);
                 return $this->redirectToRoute("queryUf");
-            } catch (Doctrine\DBAL\DBALException $ex) {
+            } catch (DBALException $ex) {
                 $status = "ERROR GENERAL=" . $ex->getMessage();
                 $this->sesion->getFlashBag()->add("status", $status);
                 return $this->redirectToRoute("queryUf");
             }
         }
 
-        $params = array("uf" => $Uf,
+        $params = ["uf" => $Uf,
             "accion" => "CREACIÓN",
-            "form" => $form->createView());
+            "form" => $form->createView()];
         return $this->render("costes/uf/edit.html.twig", $params);
     }
 
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
+	 * @throws \Exception
+	 */
     public function queryAction(Request $request) {
         $isAjax = $request->isXmlHttpRequest();
 
@@ -118,13 +154,17 @@ class UfController extends Controller {
             return $responseService->getResponse();
         }
 
-        return $this->render('costes/uf/query.html.twig', array(
+        return $this->render('costes/uf/query.html.twig', [
                     'datatable' => $datatable,
-        ));
+        ]);
     }
 
+	/**
+	 * @param $codigo
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
     public function ajaxCalculaCodigoAction($codigo) {
-        $edificio = (int) substr($codigo, 2, 2);
+        $gerencia = (int) substr($codigo, 2, 2);
         $areaZona = substr($codigo, 2, 4);
 
 
@@ -143,16 +183,16 @@ class UfController extends Controller {
 
         $Edificio_repo = $entityManager->getRepository("ComunBundle:Edificio");
         $EdificioAll = $Edificio_repo->createQueryBuilder('u')
-                        ->where("u.codigo = :codigo")
-                        ->setParameter("codigo", $edificio)
+                        ->where("u.gerencia = :gerencia")
+                        ->setParameter("gerencia", $gerencia)
                         ->getQuery()->getResult();
         IF ($EdificioAll == null) {
-            $codigoSaint["codigo"] = "ERROR-";
-            $codigoSaint["edificio"] = $edificio;
+            $codigoSaint["codigo"] = "ERROR-".$gerencia;
         } else {
             $Edificio = $EdificioAll[0];
             $codigoSaint["codigo"] = $codigo12 . substr($codigo, 6, 4);
-            $codigoSaint["edificio"] = $Edificio->getId();
+            $codigoSaint["gerencia"] = $gerencia;
+            $codigoSaint["edificio_id"] = $Edificio->getId();
         }
         $response = new Response();
         $response->setContent(json_encode($codigoSaint));
@@ -160,6 +200,12 @@ class UfController extends Controller {
         return $response;
     }
 
+	/**
+	 * @param $id
+	 * @param $actuacion
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 * @throws \Exception
+	 */
     public function sincroAction($id, $actuacion) {
         $em = $this->getDoctrine()->getManager();
         $usuario_id = $this->sesion->get('usuario_id');
@@ -167,8 +213,8 @@ class UfController extends Controller {
         $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(1);
         $Uf = $em->getRepository("CostesBundle:Uf")->find($id);
 
-        $SincroLog = new \ComunBundle\Entity\SincroLog();
-        $fechaProceso = new \DateTime();
+        $SincroLog = new SincroLog();
+        $fechaProceso = new DateTime();
 
         $SincroLog->setUsuario($Usuario);
         $SincroLog->setTabla("ccap_uf");
@@ -206,8 +252,8 @@ class UfController extends Controller {
         $em->persist($SincroLog);
         $em->flush();
 
-        $params = array("SincroLog" => $SincroLog,
-            "resultado" => $resultado);
+        $params = ["SincroLog" => $SincroLog,
+            "resultado" => $resultado];
         $view = $this->renderView("finSincro.html.twig", $params);
 
         $response = new Response($view);
@@ -219,13 +265,23 @@ class UfController extends Controller {
         return $response;
     }
 
+	/**
+	 * @param $id
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
     public function descargaLogAction($id) {
         $em = $this->getDoctrine()->getManager();
         $Uf = $em->getRepository("CostesBundle:Uf")->find($id);
-        $params = array("id" => $Uf->getSincroLog()->getId());
+        $params = ["id" => $Uf->getSincroLog()->getId()];
         return $this->redirectToRoute("descargaSincroLog", $params);
     }
 
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @param  int                      $uf_id
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
+	 * @throws \Exception
+	 */
 	public function queryEqUfAction(Request $request, $uf_id)
 	{
 		$em = $this->getDoctrine()->getManager();
@@ -250,6 +306,10 @@ class UfController extends Controller {
 		return $this->render('costes/uf/query.eq.html.twig', $params);
 	}
 
+	/**
+	 * @param $equf_id
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
 	public function activarAction($equf_id)
 	{
 		$em = $this->getDoctrine()->getManager();
@@ -261,6 +321,10 @@ class UfController extends Controller {
 		return $this->redirectToRoute("sincroUf", $params);
 	}
 
+	/**
+	 * @param $equf_id
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
 	public function desActivarAction($equf_id)
 	{
 		$em = $this->getDoctrine()->getManager();

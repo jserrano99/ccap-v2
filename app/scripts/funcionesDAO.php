@@ -1,7 +1,9 @@
 <?php
 
 include_once __DIR__ . '../../../vendor/autoload.php';
-
+/**
+ * @return array|null
+ */
 function selectEdificioAll()
 {
 	global $JanoControl;
@@ -23,9 +25,9 @@ function selectEdificioAll()
 
 /**
  *
- * @global type $JanoControl
- * @param type $id
- * @return type
+ * @global \PDO $JanoControl
+ * @param int $id
+ * @return array
  */
 function selectAltasById($id)
 {
@@ -54,9 +56,9 @@ function selectAltasById($id)
 
 /**
  *
- * @global type $JanoControl
- * @param type $id
- * @return type
+ * @global \PDO $JanoControl
+ * @param int $id
+ * @return array
  */
 function selectCatFpById($id)
 {
@@ -112,9 +114,9 @@ function selectCatFp($catfp)
 
 /**
  *
- * @global type $JanoControl
- * @param type $modalidad
- * @return type
+ * @global \PDO $JanoControl
+ * @param string $modalidad
+ * @return int
  */
 function selectModalidad($modalidad)
 {
@@ -140,9 +142,7 @@ function selectModalidad($modalidad)
 
 /**
  *
- * @global type $ERROR
- * @global type $sdterr
- * @param type $datosConexion
+ * @param array $datosConexion
  * @return \PDO
  */
 function conexionPDO($datosConexion)
@@ -209,9 +209,9 @@ function jano_ctrl()
 
 /**
  *
- * @global type $JanoControl
- * @param type $tipo
- * @return type
+ * @global \PDO $JanoControl
+ * @param string $tipo
+ * @return array
  */
 function selectBaseDatosAreas($tipo)
 {
@@ -232,7 +232,7 @@ function selectBaseDatosAreas($tipo)
 		$query = $JanoControl->prepare($sql);
 		$params = [":tipo" => $tipo];
 		$query->execute($params);
-		$resultSet = $query->fetchALL(PDO::FETCH_ASSOC);
+		$resultSet = $query->fetchAll(PDO::FETCH_ASSOC);
 	} catch (PDOException $ex) {
 		$error = $ex->getMessage();
 		echo $error . " \n";
@@ -243,10 +243,10 @@ function selectBaseDatosAreas($tipo)
 
 /**
  *
- * @global type $JanoControl
- * @param type $tipo
- * @param type $areas
- * @return type
+ * @global \PDO $JanoControl
+ * @param string $tipo
+ * @param string $areas
+ * @return array|null
  */
 function selectBaseDatos($tipo, $areas)
 {
@@ -259,7 +259,7 @@ function selectBaseDatos($tipo, $areas)
 		$query = $JanoControl->prepare($sql);
 		$params = [":tipo" => $tipo,
 			":areas" => $areas];
-		$res = $query->execute($params);
+		$query->execute($params);
 		$resultSet = $query->fetch(PDO::FETCH_ASSOC);
 		if (count($resultSet) == 0) {
 			return null;
@@ -275,10 +275,10 @@ function selectBaseDatos($tipo, $areas)
 
 /**
  *
- * @global type $JanoControl
+ * @global \PDO $JanoControl
  * @param string $tipo
  * @param string $edificio
- * @return type
+ * @return array
  */
 function selectBaseDatosEdificio($tipo, $edificio)
 {
@@ -337,7 +337,7 @@ function selectEdificioId($edificio)
 
 /**
  *
- * @global type $JanoControl
+ * @global \PDO $JanoControl
  * @param integer $ceco_id
  * @return \CostesBundle\Entity\Ceco;
  */
@@ -366,9 +366,9 @@ function selectCeco($ceco_id)
 
 /**
  *
- * @global type $JanoControl
- * @param type $codigo
- * @return type
+ * @global \PDO $JanoControl
+ * @param string $codigo
+ * @return array
  */
 function SelectCecobyCodigo($codigo)
 {
@@ -395,8 +395,8 @@ function SelectCecobyCodigo($codigo)
 
 /**
  *
- * @global type $JanoInte
- * @param type $codigo_uni
+ * @global \PDO $JanoInteid
+ * @param string $codigo_uni
  * @return boolean
  */
 function insertEqCeco($codigo_uni)
@@ -425,8 +425,8 @@ function insertEqCeco($codigo_uni)
 
 /**
  *
- * @global type $JanoInte
- * @param type $codigo_uni
+ * @global \PDO $JanoInteid
+ * @param string $codigo_uni
  * @return boolean
  */
 function deleteEqCeco($codigo_uni)
@@ -451,9 +451,9 @@ function deleteEqCeco($codigo_uni)
 
 /**
  *
- * @global type $JanoControl
- * @param type $edificio
- * @return type
+ * @global \PDO $JanoControl
+ * @param int $edificio
+ * @return int
  */
 function selectEdificio($edificio)
 {
@@ -476,9 +476,9 @@ function selectEdificio($edificio)
 
 /**
  *
- * @global type $JanoControl
- * @param type $da
- * @return type
+ * @global \PDO $JanoControl
+ * @param string $da
+ * @return int
  */
 function selectDa($da)
 {
@@ -507,9 +507,9 @@ function selectDa($da)
 
 /**
  *
- * @global type $JanoUnif
- * @param type $codigo
- * @return type
+ * @global \PDO $JanoUnif
+ * @param string $codigo
+ * @return array
  */
 function selectCentro($codigo)
 {
@@ -533,9 +533,9 @@ function selectCentro($codigo)
 
 /**
  *
- * @global type $JanoControl
- * @param type $codigoUni
- * @return type
+ * @global \PDO $JanoControl
+ * @param string $codigoUni
+ * @return int
  */
 function existeCentro($codigoUni)
 {
@@ -560,9 +560,9 @@ function existeCentro($codigoUni)
 
 /**
  *
- * @global type $JanoControl
- * @param type $catgen
- * @return type
+ * @global \PDO $JanoControl
+ * @param string $catgen
+ * @return array
  */
 function selectCatGen($catgen)
 {
@@ -589,9 +589,9 @@ function selectCatGen($catgen)
 
 /**
  *
- * @global type $JanoControl
- * @param type $catanexo
- * @return type
+ * @global \PDO $JanoControl
+ * @param string $catanexo
+ * @return int
  */
 function selectCatAnexo($catanexo)
 {
@@ -618,9 +618,9 @@ function selectCatAnexo($catanexo)
 
 /**
  *
- * @global type $JanoControl
- * @param type $codigo
- * @return type
+ * @global \PDO $JanoControl
+ * @param string $codigo
+ * @return int|null
  */
 function selectEpiAcc($codigo)
 {
@@ -649,9 +649,9 @@ function selectEpiAcc($codigo)
 
 /**
  *
- * @global type $JanoControl
- * @param type $codigo
- * @return type
+ * @global \PDO $JanoControl
+ * @param string $codigo
+ * @return int
  */
 function selectTipoIlt($codigo)
 {
@@ -681,9 +681,9 @@ function selectTipoIlt($codigo)
 
 /**
  *
- * @global type $JanoControl
- * @param type $codigo
- * @return type
+ * @global \PDO $JanoControl
+ * @param string $codigo
+ * @return int
  */
 function selectFco($codigo)
 {
@@ -710,6 +710,10 @@ function selectFco($codigo)
 	}
 }
 
+/**
+ * @param $ocupacion
+ * @return int|null
+ */
 function selectOcupacion($ocupacion)
 {
 	global $JanoControl;
@@ -735,6 +739,10 @@ function selectOcupacion($ocupacion)
 	}
 }
 
+/**
+ * @param string $grupocot
+ * @return integer|null
+ */
 function selectGrupoCot($grupocot)
 {
 	global $JanoControl;
@@ -758,6 +766,10 @@ function selectGrupoCot($grupocot)
 	}
 }
 
+/**
+ * @param string $grupoProf
+ * @return int|null
+ */
 function selectGrupoProf($grupoProf)
 {
 	global $JanoControl;
@@ -781,6 +793,10 @@ function selectGrupoProf($grupoProf)
 	}
 }
 
+/**
+ * @param string $grupoCobro
+ * @return int|null
+ */
 function selectGrupoCobro($grupoCobro)
 {
 	global $JanoControl;
@@ -804,6 +820,10 @@ function selectGrupoCobro($grupoCobro)
 	}
 }
 
+/**
+ * @param int $grupoCobro_id
+ * @return array|null
+ */
 function selectGrupoCobroById($grupoCobro_id)
 {
 	global $JanoControl;
@@ -833,6 +853,10 @@ function selectGrupoCobroById($grupoCobro_id)
 	}
 }
 
+/**
+ * @param $uf
+ * @return array|null
+ */
 
 function selectUf($uf)
 {
@@ -969,6 +993,10 @@ function selectPa($pa)
 	}
 }
 
+/**
+ * @param int $id
+ * @return array|null
+ */
 function selectPaById($id)
 {
 	global $JanoControl;
@@ -994,6 +1022,10 @@ function selectPaById($id)
 	}
 }
 
+/**
+ * @param int $categ_id
+ * @return array|null
+ */
 function selectCateg($categ_id)
 {
 	global $JanoControl;
@@ -1024,6 +1056,10 @@ function selectCateg($categ_id)
 	}
 }
 
+/**
+ * @param string $codigo
+ * @return int|null
+ */
 function selectCategId($codigo)
 {
 	global $JanoControl;
@@ -1046,6 +1082,10 @@ function selectCategId($codigo)
 	}
 }
 
+/**
+ * @param int $id
+ * @return array|null
+ */
 function selectPlazaById($id)
 {
 	global $JanoControl;
@@ -1083,9 +1123,9 @@ function selectPlazaById($id)
 
 /**
  *
- * @global type $JanoControl
- * @param type $id
- * @return type
+ * @global \PDO $JanoControl
+ * @param int $id
+ * @return array
  */
 function selectAusenciaById($id)
 {
@@ -1113,6 +1153,11 @@ function selectAusenciaById($id)
 	}
 }
 
+/**
+ * @param string $codigo
+ * @param string $tipo
+ * @return \PDO|null
+ */
 function conexionEdificio($codigo, $tipo)
 {
 	$BasesDatos = selectBaseDatosEdificio($tipo, $codigo);
@@ -1131,6 +1176,10 @@ function conexionEdificio($codigo, $tipo)
 	}
 }
 
+/**
+ * @param string $cias
+ * @return array|null
+ */
 function selectPlazabyCias($cias)
 {
 	global $JanoControl;
@@ -1164,6 +1213,11 @@ function selectPlazabyCias($cias)
 	}
 }
 
+/**
+ * @param int $altas_id
+ * @param int $edificio_id
+ * @return string|null
+ */
 function selectEqAltas($altas_id, $edificio_id)
 {
 	global $JanoControl;
@@ -1187,6 +1241,11 @@ function selectEqAltas($altas_id, $edificio_id)
 	}
 }
 
+/**
+ * @param int $ausencia_id
+ * @param int $edificio_id
+ * @return string|null
+ */
 function selectEqAusencia($ausencia_id, $edificio_id)
 {
 	global $JanoControl;
@@ -1210,6 +1269,11 @@ function selectEqAusencia($ausencia_id, $edificio_id)
 	}
 }
 
+/**
+ * @param int $categ_id
+ * @param int $edificio_id
+ * @return string|null
+ */
 function selectEqCateg($categ_id, $edificio_id)
 {
 	global $JanoControl;
@@ -1235,9 +1299,9 @@ function selectEqCateg($categ_id, $edificio_id)
 
 /**
  *
- * @global type $JanoControl
- * @param type $id
- * @return type
+ * @global \PDO $JanoControl
+ * @param int $id
+ * @return array
  */
 function selectEqAltasById($id)
 {
@@ -1268,9 +1332,9 @@ function selectEqAltasById($id)
 
 /**
  *
- * @global type $JanoControl
- * @param type $id
- * @return type
+ * @global \PDO $JanoControl
+ * @param int $id
+ * @return array
  */
 function selectEqAusenciaById($id)
 {
@@ -1301,9 +1365,9 @@ function selectEqAusenciaById($id)
 
 /**
  *
- * @global type $JanoControl
- * @param type $id
- * @return type
+ * @global \PDO $JanoControl
+ * @param int $id
+ * @return array
  */
 function selectEqCategById($id)
 {
@@ -1332,6 +1396,12 @@ function selectEqCategById($id)
 	}
 }
 
+/**
+ * @param string $codigo
+ * @param string $edificio
+ * @param string $vista
+ * @return string|null
+ */
 function selectEqCentro($codigo, $edificio, $vista)
 {
 	global $JanoInte;
@@ -1356,6 +1426,11 @@ function selectEqCentro($codigo, $edificio, $vista)
 	}
 }
 
+/**
+ * @param int $catgen_id
+ * @param int $edificio_id
+ * @return string|null
+ */
 function selectEqCatGen($catgen_id, $edificio_id)
 {
 	global $JanoControl;
@@ -1379,6 +1454,11 @@ function selectEqCatGen($catgen_id, $edificio_id)
 	}
 }
 
+/**
+ * @param int $catfp_id
+ * @param int $edificio_id
+ * @return string|null
+ */
 function selectEqCatFp($catfp_id, $edificio_id)
 {
 	global $JanoControl;
@@ -1464,6 +1544,11 @@ function selectEqCatAnexo($catanexo_id, $edificio_id)
 	}
 }
 
+/**
+ * @param int $grupocot_id
+ * @param int $edificio_id
+ * @return string|null
+ */
 function selectEqGrupoCot($grupocot_id, $edificio_id)
 {
 	global $JanoControl;
@@ -1487,6 +1572,11 @@ function selectEqGrupoCot($grupocot_id, $edificio_id)
 	}
 }
 
+/**
+ * @param int $grupocobro_id
+ * @param int $edificio_id
+ * @return string|null
+ */
 function selectEqGrupoCobro($grupocobro_id, $edificio_id)
 {
 	global $JanoControl;
@@ -1571,6 +1661,11 @@ function selectEqGrupoProf($grupoprof_id, $edificio_id)
 	}
 }
 
+/**
+ * @param int $ocupacion_id
+ * @param int $edificio_id
+ * @return string|null
+ */
 function selectEqOcupacion($ocupacion_id, $edificio_id)
 {
 	global $JanoControl;
@@ -1596,6 +1691,11 @@ function selectEqOcupacion($ocupacion_id, $edificio_id)
 	}
 }
 
+/**
+ * @param int $tipo_ilt_id
+ * @param int $edificio_id
+ * @return string|null
+ */
 function selectEqTipoIlt($tipo_ilt_id, $edificio_id)
 {
 	global $JanoControl;
@@ -1621,6 +1721,11 @@ function selectEqTipoIlt($tipo_ilt_id, $edificio_id)
 	}
 }
 
+/**
+ * @param int $epiacc_id
+ * @param int $edificio_id
+ * @return string|null
+ */
 function selectEqEpiAcc($epiacc_id, $edificio_id)
 {
 	global $JanoControl;
@@ -1646,6 +1751,10 @@ function selectEqEpiAcc($epiacc_id, $edificio_id)
 	}
 }
 
+/**
+ * @param string $codigo
+ * @return int|null
+ */
 function selectMoviPat($codigo)
 {
 	global $JanoControl;
@@ -1665,6 +1774,10 @@ function selectMoviPat($codigo)
 	}
 }
 
+/**
+ * @param string $codigo
+ * @return int|null
+ */
 function selectModOcupa($codigo)
 {
 	global $JanoControl;
@@ -1683,6 +1796,10 @@ function selectModOcupa($codigo)
 	}
 }
 
+/**
+ * @param string $codigo
+ * @return int|null
+ */
 function selectModoPago($codigo)
 {
 	global $JanoControl;
@@ -1699,6 +1816,11 @@ function selectModoPago($codigo)
 	}
 }
 
+/**
+ * @param int $modocupa_id
+ * @param int $edificio_id
+ * @return string|null
+ */
 function selectEqModOcupa($modocupa_id, $edificio_id)
 {
 	global $JanoControl;
@@ -1724,6 +1846,11 @@ function selectEqModOcupa($modocupa_id, $edificio_id)
 	}
 }
 
+/**
+ * @param int $fco_id
+ * @param int $edificio_id
+ * @return string|null
+ */
 function selectEqFco($fco_id, $edificio_id)
 {
 	global $JanoControl;
@@ -1749,6 +1876,11 @@ function selectEqFco($fco_id, $edificio_id)
 	}
 }
 
+/**
+ * @param int $movipat_id
+ * @param int $edificio_id
+ * @return string|null
+ */
 function selectEqMoviPat($movipat_id, $edificio_id)
 {
 	global $JanoControl;
@@ -1774,6 +1906,11 @@ function selectEqMoviPat($movipat_id, $edificio_id)
 	}
 }
 
+/**
+ * @param int $modopago_id
+ * @param int $edificio_id
+ * @return string|null
+ */
 function selectEqModoPago($modopago_id, $edificio_id)
 {
 	global $JanoControl;
@@ -1797,6 +1934,10 @@ function selectEqModoPago($modopago_id, $edificio_id)
 	}
 }
 
+/**
+ * @param int $id
+ * @return array|null
+ */
 function selectCecoCiasById($id)
 {
 	global $JanoControl;

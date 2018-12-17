@@ -2,7 +2,92 @@
 
 include_once __DIR__ . '/../funcionesDAO.php';
 
-function crearCentroUnif($PA) {
+/**
+ * @param $Pa
+ * @param $enuso
+ * @return null
+ */
+function updateEqCentrosPa($Pa, $enuso)
+{
+	global $JanoInte;
+	try {
+		$sentencia = " update eq_centros set enuso = :enuso  "
+			. "where codigo_uni = :codigo_uni"
+			. " and edificio = :edificio "
+			. " and codigo_loc = :codigo_loc "
+			. " and vista = 'P'";
+		$update = $JanoInte->prepare($sentencia);
+		$params = [":enuso" => $enuso,
+			":codigo_uni" => $Pa["pa"],
+			":codigo_loc" => $Pa["codigoLoc"],
+			":edificio" => $Pa["edificio"]];
+		$res = $update->execute($params);
+		if ($res == 0) {
+			echo "**ERROR EN UPDATE EQ_CENTROS(U) CODIGO_UNI =(" . $Pa["pa"] . ") "
+				. " CODIGO_LOC =(" . $Pa["codigoLoc"] . ") "
+				. " EDIFICIO =(" . $Pa["edificio"] . ") "
+				. "\n";
+			return null;
+		}
+		echo "**MODIFICADO EQ_CENTROS(U) ENUSO =(" . $enuso . ") "
+			. " CODIGO_UNI =(" . $Pa["pa"] . ") "
+			. " CODIGO_LOC =(" . $Pa["codigoLoc"] . ") "
+			. " EDIFICIO =(" . $Pa["edificio"] . ") "
+			. "\n";
+
+	} catch (PDOException $exception) {
+		echo "**ERROR EN UPDATE EQ_CENTROS(U) CODIGO_UNI =(" . $Pa["pa"] . ") "
+			. " CODIGO_LOC =(" . $Pa["codigoLoc"] . ") "
+			. " EDIFICIO =(" . $Pa["edificio"] . ") "
+			. $exception->getMessage()
+			. "\n";
+		return null;
+	}
+}
+
+/**
+ * @param $Pa
+ * @param $eqpa_id
+ * @param $enuso
+ * @return null
+ */
+function updateEqPa($Pa,$eqpa_id, $enuso)
+{
+	global $JanoControl;
+
+	try {
+		$sentencia = " update ccap_eq_pa set enuso = :enuso  "
+			. "where id = :id ";
+		$update = $JanoControl->prepare($sentencia);
+		$params = [":enuso" => $enuso,
+			":id" => $eqpa_id];
+		$res = $update->execute($params);
+
+		if ($res == 0) {
+			echo "**ERROR EN UPDATE CCAP_EQ_PA CODIGO_UNI =(" . $Pa["pa"] . ") "
+				. " ID =(" . $eqpa_id. ") "
+				. "\n";
+			return null;
+		}
+		echo "**MODIFICADO CCAP_EQ_PA ENUSO =(" . $enuso . ") "
+			. " CODIGO_UNI =(" . $Pa["pa"] . ") "
+			. " ID =(" . $eqpa_id. ") "
+			. "\n";
+
+	} catch (PDOException $exception) {
+		echo "**PDOERROR EN UPDATE CCAP_EQ_PA CODIGO_UNI =(" . $Pa["pa"] . ") "
+			. " ID =(" . $eqpa_id. ") "
+			. $exception->getMessage()
+			. "\n";
+	}
+}
+
+/**
+ * @param $Pa
+ * @return bool|null
+ */
+
+function crearCentroUnif($Pa) {
     global $JanoUnif, $gblError;
     /*
      * Se genera el registro en la tabla centros de la base de datos unificada 
@@ -11,74 +96,94 @@ function crearCentroUnif($PA) {
         $query = " insert into centros (codigo, descrip, vista, enuso, f_creacion, oficial, da, gerencia ) "
                 . " values (:codigo, :descrip, :vista, :enuso, :f_creacion, :oficial, :da, :gerencia )";
         $query = $JanoUnif->prepare($query);
-        $paramsCentros = array(":codigo" => $PA["pa"],
-            ":descrip" => $PA["descripcion"],
-            ":vista" => 'U',
+        $paramsCentros = [":codigo" => $Pa["pa"],
+            ":descrip" => $Pa["descripcion"],
+            ":vista" => 'P',
             ":enuso" => 'S',
-            ":f_creacion" => $PA["fecha_creacion"],
-            ":oficial" => $PA["oficial"],
-            ":da" => $PA["da"],
-            ":gerencia" => $PA["gerencia"]);
+            ":f_creacion" => $Pa["fecha_creacion"],
+            ":oficial" => $Pa["oficial"],
+            ":da" => $Pa["da"],
+            ":gerencia" => $Pa["gerencia"]];
         $insert = $query->execute($paramsCentros);
         if ($insert == 0) {
-            echo "**ERROR EN INSERT CENTROS BD. UNIFICADA " . $PA["pa"] . "\n";
+            echo "**ERROR EN INSERT CENTROS BD. UNIFICADA " . $Pa["pa"] . "\n";
             $gblError = 1;
         } else {
             echo "==>GENERADO CENTRO =" .
-            $PA["pa"] . " " .
-            $PA["descripcion"] .
+            $Pa["pa"] . " " .
+            $Pa["descripcion"] .
             " EN LA BASE DE DATOS UNIFICADA " . "\n";
         }
         return true;
     } catch (PDOException $ex) {
-        echo " *** PDOERROR CENTROS BD UNIFICADA CODIGO= " . $PA["pa"] . "  \n" . $ex->getMessage() . "\n";
-        $gblError01;
+        echo " *** PDOERROR CENTROS BD UNIFICADA CODIGO= " . $Pa["pa"] . "  \n" . $ex->getMessage() . "\n";
+        $gblError=1;
         return null;
     }
 }
 
-function crearEqCentroInte($PA) {
-    global $JanoInte, $gblError;
+/**
+ * @param $Pa
+ * @return bool
+ */
+function crearEqCentroInte($Pa) {
+    global $JanoInte, $gblError,$JanoControl;
     /*
      * Se genera el registro en la tabla de equivalencias de centros de la base de datos intermedia 
      */
     try {
-        $query = " insert into eq_centros (edificio, codigo_loc, codigo_uni, oficial, da, vista) "
-                . " values (:edificio, :codigo_loc, :codigo_uni, :oficial, :da, :vista)";
+        $query = " insert into eq_centros (edificio, codigo_loc, codigo_uni, oficial, da, vista,enuso) "
+                . " values (:edificio, :codigo_loc, :codigo_uni, :oficial, :da, :vista, :enuso)";
         $query = $JanoInte->prepare($query);
-        $params = array(":edificio" => $PA["edificio"],
-            ":codigo_loc" => $PA["codigoLoc"],
-            ":codigo_uni" => $PA["pa"],
-            ":oficial" => $PA["oficial"],
-            ":da" => $PA["da"],
-            ":vista" => 'U');
+        $params = [":edificio" => $Pa["edificio"],
+            ":codigo_loc" => $Pa["codigoLoc"],
+            ":codigo_uni" => $Pa["pa"],
+            ":oficial" => $Pa["oficial"],
+            ":da" => $Pa["da"],
+            ":vista" => 'P',
+	        ":enuso" => 'S'];
         $insert = $query->execute($params);
         if (!$insert) {
-            echo "***ERROR EN INSERT EQ_CENTROS BD. INTERMEDIA " . $PA["codigoUnif"] . "\n";
+            echo "***ERROR EN INSERT EQ_CENTROS BD. INTERMEDIA " . $Pa["codigoUnif"] . "\n";
             $gblError = 1;
         }
-        echo " GENERADO EQ_CENTRO EDIF=" . $PA["edificio"]
-        . " CODIGO_LOC= " . $PA["codigoLoc"]
-        . " CODIGO_UNI= " . $PA["pa"]
-        . " OFICIAL= " . $PA["oficial"]
-        . " DA= " . $PA["da"] . "\n";
+        echo " GENERADO EQ_CENTRO EDIF=" . $Pa["edificio"]
+        . " CODIGO_LOC= " . $Pa["codigoLoc"]
+        . " CODIGO_UNI= " . $Pa["pa"]
+        . " OFICIAL= " . $Pa["oficial"]
+        . " DA= " . $Pa["da"] . "\n";
 
-        return true;
+        $edificio_id = selectEdificio($Pa["edificio"]);
+
+	    $query = " insert into ccap_eq_pa (edificio_id, codigo_loc, pa_id,enuso) "
+		    . " values (:edificio_id, :codigo_loc, :pa_id, :enuso)";
+	    $query = $JanoInte->prepare($query);
+	    $params = [":edificio_id" => $edificio_id,
+		    ":codigo_loc" => $Pa["codigoLoc"],
+		    ":pa_id" => $Pa["id"],
+		    ":enuso" => 'S'];
+	    $query->execute($params);
+
+	    return true;
     } catch (PDOException $ex) {
-        echo "PDOERROR EN EQ_CENTROS BD INTERMEDIA " . $PA["codigoUnif"] . $ex->getMessage() . "\n";
+        echo "PDOERROR EN EQ_CENTROS BD INTERMEDIA " . $Pa["codigoUnif"] . $ex->getMessage() . "\n";
         $gblError = 1;
         return false;
     }
 }
 
-function crearCentroArea($PA) {
+/**
+ * @param $Pa
+ * @return bool|null
+ */
+function crearCentroArea($Pa) {
     global $tipobd, $gblError;
     /*
      * Se genera el registro en la tabla centros de la base de datos del edificio correspondiente  
      */
-    $conexion = conexionEdificio($PA["edificio"], $tipobd);
+    $conexion = conexionEdificio($Pa["edificio"], $tipobd);
     if ($conexion == null) {
-        echo "*** ERROR NO EXISTE CONEXION PARA EDIFICIO: " . $PA["edificio"] . " TIPO BD=" . $tipobd;
+        echo "*** ERROR NO EXISTE CONEXION PARA EDIFICIO: " . $Pa["edificio"] . " TIPO BD=" . $tipobd;
         $gblError = 1;
         return null;
     }
@@ -87,31 +192,35 @@ function crearCentroArea($PA) {
         $query = " insert into centros (codigo, descrip, vista, enuso, f_creacion ) "
                 . " values (:codigo,:descrip, :vista, :enuso, :f_creacion )";
         $query = $conexion->prepare($query);
-        $paramsCentros = array(":codigo" => $PA["codigoLoc"],
-            ":descrip" => $PA["descripcion"],
+        $paramsCentros = array(":codigo" => $Pa["codigoLoc"],
+            ":descrip" => $Pa["descripcion"],
             ":vista" => 'P',
             ":enuso" => 'S',
-            ":f_creacion" => $PA["fecha_creacion"]
+            ":f_creacion" => $Pa["fecha_creacion"]
         );
         $insert = $query->execute($paramsCentros);
         if ($insert == 0) {
-            echo "***ERROR INSERT CENTROS BD. AREA " . $PA["edificio"] . " " . $PA["pa"] . "\n";
+            echo "***ERROR INSERT CENTROS BD. AREA " . $Pa["edificio"] . " " . $Pa["pa"] . "\n";
             $gblError = 1;
         }
         echo "==>GENERADO CENTRO =" .
-        $PA["codigoLoc"] . " " .
-        $PA["descripcion"] .
-        " EN LA BASE DE DATOS AREA " . $PA["edificio"] . "\n";
+        $Pa["codigoLoc"] . " " .
+        $Pa["descripcion"] .
+        " EN LA BASE DE DATOS AREA " . $Pa["edificio"] . "\n";
 
         return true;
     } catch (PDOException $ex) {
-        echo "***PDOERROR CENTROS BD AREA " . $PA["edificio"] . " " . $PA["pa"] . $ex->getMessage() . "\n";
+        echo "***PDOERROR CENTROS BD AREA " . $Pa["edificio"] . " " . $Pa["pa"] . $ex->getMessage() . "\n";
         $gblError = 1;
         return false;
     }
 }
 
-function updateCentroUnif($PA) {
+/**
+ * @param $Pa
+ * @return null
+ */
+function updateCentroUnif($Pa) {
     global $JanoUnif, $gblError;
     /*
      * Se genera el registro en la tabla centros de la base de datos unificada 
@@ -126,42 +235,46 @@ function updateCentroUnif($PA) {
                 . " ,gerencia = :gerencia "
                 . " where codigo = :codigo ";
         $query = $JanoUnif->prepare($sentencia);
-        $paramsCentros = array(":codigo" => $PA["pa"],
-            ":descrip" => $PA["descripcion"],
-            ":enuso" => $PA["enuso"],
-            ":f_creacion" => $PA["fechaCreacion"],
-            ":oficial" => $PA["oficial"],
-            ":da" => $PA["da"],
-            ":gerencia" => $PA["gerencia"]);
+        $paramsCentros = array(":codigo" => $Pa["pa"],
+            ":descrip" => $Pa["descripcion"],
+            ":enuso" => $Pa["enuso"],
+            ":f_creacion" => $Pa["fechaCreacion"],
+            ":oficial" => $Pa["oficial"],
+            ":da" => $Pa["da"],
+            ":gerencia" => $Pa["gerencia"]);
         $insert = $query->execute($paramsCentros);
         if ($insert == 0) {
-            echo "**ERROR EN UPDATE CENTROS BD. UNIFICADA " . $PA["pa"] . "\n";
+            echo "**ERROR EN UPDATE CENTROS BD. UNIFICADA " . $Pa["pa"] . "\n";
             $gblError = 1;
             return null;
         }
         echo " MODIFICADO CENTRO =" .
-        $PA["pa"] . " " .
-        $PA["descripcion"] .
+        $Pa["pa"] . " " .
+        $Pa["descripcion"] .
         " EN LA BASE DE DATOS UNIFICADA " . "\n";
 
-        return $PA["pa"];
+        return $Pa["pa"];
     } catch (PDOException $ex) {
-        echo " *** PDOERROR UPDATE CENTROS BD UNIFICADA CODIGO= " . $PA["pa"] . "  \n" . $ex->getMessage() . "\n";
+        echo " *** PDOERROR UPDATE CENTROS BD UNIFICADA CODIGO= " . $Pa["pa"] . "  \n" . $ex->getMessage() . "\n";
         $gblError = 1;
         return null;
     }
 }
 
-function updateCentroArea($PA) {
+/**
+ * @param $Pa
+ * @return bool|null
+ */
+function updateCentroArea($Pa) {
     global $tipobd, $gblError;
     /*
      * Se genera el registro en la tabla centros de la base de datos del edificio correspondiente  
      */
-    $codigoLoc = selectEqCentro($PA["pa"], $PA["edificio"], 'P');
-    $conexion = conexionEdificio($PA["edificio"], $tipobd);
+    $codigoLoc = selectEqCentro($Pa["pa"], $Pa["edificio"], 'P');
+    $conexion = conexionEdificio($Pa["edificio"], $tipobd);
 
     if ($conexion == null) {
-        echo "***ERROR EN LA CONEXIÓN EDIFICIO= " . $PA["edificio"] . " TIPO BD=" . $tipobd . "\n";
+        echo "***ERROR EN LA CONEXIÓN EDIFICIO= " . $Pa["edificio"] . " TIPO BD=" . $tipobd . "\n";
         $gblError = 1;
         return null;
     }
@@ -174,24 +287,24 @@ function updateCentroArea($PA) {
                 . " where codigo = :codigo ";
         $query = $conexion->prepare($query);
         $paramsCentros = array(":codigo" => $codigoLoc,
-            ":descrip" => $PA["descripcion"],
-            ":enuso" => $PA["enuso"],
-            ":f_creacion" => $PA["fechaCreacion"]
+            ":descrip" => $Pa["descripcion"],
+            ":enuso" => $Pa["enuso"],
+            ":f_creacion" => $Pa["fechaCreacion"]
         );
         $insert = $query->execute($paramsCentros);
         if ($insert == 0) {
-            echo "***ERROR  UPDATE CENTROS BD. AREA " . $PA["edificio"] . " " . $codigoLoc . "\n";
+            echo "***ERROR  UPDATE CENTROS BD. AREA " . $Pa["edificio"] . " " . $codigoLoc . "\n";
             $gblError = 1;
             return null;
         }
         echo " MODIFICADO CENTRO =" .
         $codigoLoc . " " .
-        $PA["descripcion"] .
-        " EN LA BASE DE DATOS AREA " . $PA["edificio"] . "\n";
+        $Pa["descripcion"] .
+        " EN LA BASE DE DATOS AREA " . $Pa["edificio"] . "\n";
 
         return true;
     } catch (PDOException $ex) {
-        echo "PDOERROR CENTROS BD AREA " . $PA["edificio"] . " " . $codigoLoc . $ex->getMessage() . "\n";
+        echo "PDOERROR CENTROS BD AREA " . $Pa["edificio"] . " " . $codigoLoc . $ex->getMessage() . "\n";
         $gblError = 1;
         return false;
     }
@@ -210,53 +323,65 @@ if (!$JanoControl) {
 
 $tipo = $argv[1];
 $pa_id = $argv[2];
-$actuacion = $argv[3];
+$eqpa_id = $argv[3];
+$actuacion = $argv[4];
+
 $gblError = 0;
 
 if ($tipo == 'REAL') {
     echo "==> ENTORNO : PRODUCCIÓN  \n";
-    $JanoInte = conexionPDO(SelectBaseDatos(2, 'I'));
-    $JanoUnif = conexionPDO(SelectBaseDatos(2, 'U'));
+    $JanoInte = conexionPDO(selectBaseDatos(2, 'I'));
+    $JanoUnif = conexionPDO(selectBaseDatos(2, 'U'));
     $tipobd = 2;
 } else {
     echo "==> ENTORNO : VALIDACIÓN  \n";
-    $JanoInte = conexionPDO(SelectBaseDatos(1, 'I'));
-    $JanoUnif = conexionPDO(SelectBaseDatos(1, 'U'));
+    $JanoInte = conexionPDO(selectBaseDatos(1, 'I'));
+    $JanoUnif = conexionPDO(selectBaseDatos(1, 'U'));
     $tipobd = 1;
 }
 
-$PA = selectPaById($pa_id);
-if ($PA== null ) {
+$Pa = selectPaById($pa_id);
+if ($Pa== null ) {
     echo "****ERROR NO EXISTE PA ID=". $pa_id. "\n";
     echo "** TERMINA EN ERROR n";
     exit(1);
 }
 
-$PA["codigoLoc"] = substr($PA["oficial"], 4, 4);
+$Pa["codigoLoc"] = substr($Pa["oficial"], 4, 4);
 
-echo "==> PUNTO ASISTENCIAL ID=" . $PA["id"]
- . " PA= " . $PA["pa"]
- . " OFICIAL= " . $PA["oficial"]
- . " CODIGO LOCAL= " . $PA["codigoLoc"]
- . " DESCRIPCION= " . $PA["descripcion"]
- . " EDIFICIO= " . $PA["edificio"]
- . " DA= " . $PA["da"]
- . " USO= " . $PA["enuso"]
+echo "==> PUNTO ASISTENCIAL ID=" . $Pa["id"]
+ . " PA= " . $Pa["pa"]
+ . " OFICIAL= " . $Pa["oficial"]
+ . " CODIGO LOCAL= " . $Pa["codigoLoc"]
+ . " DESCRIPCION= " . $Pa["descripcion"]
+ . " EDIFICIO= " . $Pa["edificio"]
+ . " DA= " . $Pa["da"]
+ . " USO= " . $Pa["enuso"]
  . " \n";
 
 echo "==> ACTUACION : " . $actuacion . "\n";
 
 if ($actuacion == 'INSERT') {
-    if (crearCentroUnif($PA)) {
-        if (crearCentroArea($PA)) {
-            crearEqCentroInte($PA);
+    if (crearCentroUnif($Pa)) {
+        if (crearCentroArea($Pa)) {
+            crearEqCentroInte($Pa);
         }
     }
 }
 
 if ($actuacion == 'UPDATE') {
-    updateCentroUnif($PA);
-    updateCentroArea($PA);
+    updateCentroUnif($Pa);
+    updateCentroArea($Pa);
+}
+
+if ($actuacion == 'ACTIVAR') {
+	updateEqCentrosPa($Pa, 'S');
+	updateEqPa($Pa, $eqpa_id,'S');
+}
+
+if ($actuacion == 'DESACTIVAR') {
+	updateEqCentrosPa($Pa, 'N');
+	updateEqPa($Pa,$eqpa_id, 'N');
 }
 
 echo "  +++++++++++ TERMINA PROCESO ACTUALIZACIÓN PUNTO ASISTENCIAL +++++++++++++ \n";

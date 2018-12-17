@@ -48,6 +48,7 @@ var_dump($Uf);
 
 /**
  * @param $Uf
+ * @param $equf_id
  * @param $enuso
  * @return null
  */
@@ -83,6 +84,10 @@ function updateEqUf($Uf,$equf_id, $enuso)
 	}
 }
 
+/**
+ * @param $Uf
+ * @return bool|null
+ */
 function crearCentroUnif($Uf)
 {
 	global $JanoUnif, $gblError;
@@ -118,6 +123,10 @@ function crearCentroUnif($Uf)
 	}
 }
 
+/**
+ * @param $Uf
+ * @return bool
+ */
 function crearEqCentroInte($Uf)
 {
 	global $JanoInte, $gblError;
@@ -153,6 +162,10 @@ function crearEqCentroInte($Uf)
 	}
 }
 
+/**
+ * @param $Uf
+ * @return bool|null
+ */
 function crearCentroArea($Uf)
 {
 	global $tipobd, $gblError;
@@ -194,6 +207,10 @@ function crearCentroArea($Uf)
 	}
 }
 
+/**
+ * @param $Uf
+ * @return null
+ */
 function updateCentroUnif($Uf)
 {
 	global $JanoUnif, $gblError;
@@ -236,6 +253,10 @@ function updateCentroUnif($Uf)
 	}
 }
 
+/**
+ * @param $Uf
+ * @return bool|null
+ */
 function updateCentroArea($Uf)
 {
 	global $tipobd, $gblError;
@@ -301,13 +322,13 @@ $gblError = 0;
 
 if ($tipo == 'REAL') {
 	echo "==> ENTORNO : PRODUCCIÓN  \n";
-	$JanoInte = conexionPDO(SelectBaseDatos(2, 'I'));
-	$JanoUnif = conexionPDO(SelectBaseDatos(2, 'U'));
+	$JanoInte = conexionPDO(selectBaseDatos(2, 'I'));
+	$JanoUnif = conexionPDO(selectBaseDatos(2, 'U'));
 	$tipobd = 2;
 } else {
 	echo "==> ENTORNO : VALIDACIÓN  \n";
-	$JanoInte = conexionPDO(SelectBaseDatos(1, 'I'));
-	$JanoUnif = conexionPDO(SelectBaseDatos(1, 'U'));
+	$JanoInte = conexionPDO(selectBaseDatos(1, 'I'));
+	$JanoUnif = conexionPDO(selectBaseDatos(1, 'U'));
 	$tipobd = 1;
 }
 

@@ -3,7 +3,7 @@
 namespace ComunBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use ComunBundle\Entity\Usuario;
+use DateTime;
 
 /**
  * Acceso
@@ -46,7 +46,7 @@ class Acceso {
     private $usuario;
 
     public function __construct() {
-        $this->fecha = new \DateTime('now');
+        $this->fecha = new DateTime('now');
     }
     /**
      * Get id
@@ -65,7 +65,7 @@ class Acceso {
      *
      * @return Acceso
      */
-    public function setUsuario(\ComunBundle\Entity\Usuario $usuario = null)
+    public function setUsuario(Usuario $usuario = null)
     {
         $this->usuario = $usuario;
 

@@ -1,8 +1,9 @@
 <?php
 
-include_once __DIR__ . '../../funcionesDAO.php';
+include_once __DIR__ . '../funcionesDAO.php';
 
 /**
+ * @param array $EqGrupoCobro
  * @return null
  */
 function updateEqGrupoCobroControl($EqGrupoCobro)
@@ -61,6 +62,12 @@ function updateGrupoCobro($GrupoCobro, $conexion, $codigo, $edificio)
 	}
 }
 
+/**
+ * @param array $GrupoCobro
+ * @param \PDO $conexion
+ * @param string $edificio
+ * @return bool
+ */
 function insertGrupoCobro($GrupoCobro, $conexion, $edificio)
 {
 	try {
@@ -192,13 +199,13 @@ $eqGrupoCobro_id = $argv[4];
 
 if ($tipo == 'REAL') {
 	echo " ++++ PRODUCCIÓN ++++ \n";
-	$JanoInte = conexionPDO(SelectBaseDatos(2, 'I'));
-	$JanoUnif = conexionPDO(SelectBaseDatos(2, 'U'));
+	$JanoInte = conexionPDO(selectBaseDatos(2, 'I'));
+	$JanoUnif = conexionPDO(selectBaseDatos(2, 'U'));
 	$tipobd = 2;
 } else {
 	echo " ++++ VALIDACIÓN ++++ \n";
-	$JanoInte = conexionPDO(SelectBaseDatos(1, 'I'));
-	$JanoUnif = conexionPDO(SelectBaseDatos(1, 'U'));
+	$JanoInte = conexionPDO(selectBaseDatos(1, 'I'));
+	$JanoUnif = conexionPDO(selectBaseDatos(1, 'U'));
 	$tipobd = 1;
 }
 

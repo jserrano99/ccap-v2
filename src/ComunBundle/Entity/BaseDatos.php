@@ -344,7 +344,7 @@ class BaseDatos {
      *
      * @return BaseDatos
      */
-    public function setTipoBaseDatos(\ComunBundle\Entity\TipoBaseDatos $tipoBaseDatos = null)
+    public function setTipoBaseDatos(TipoBaseDatos $tipoBaseDatos = null)
     {
         $this->tipoBaseDatos = $tipoBaseDatos;
 
@@ -368,7 +368,7 @@ class BaseDatos {
      *
      * @return BaseDatos
      */
-    public function setEdificio(\ComunBundle\Entity\Edificio $edificio = null)
+    public function setEdificio(Edificio $edificio = null)
     {
         $this->edificio = $edificio;
 

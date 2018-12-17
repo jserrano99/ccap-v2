@@ -72,7 +72,35 @@ class EqPaDatatable extends AbstractDatatable
 					'cancel_button' => false
 				],
 				],
-			]);
+			])
+			->add(null, ActionColumn::class, ['title' => 'Acciones',
+				'actions' => [
+					['route' => 'activarEqPa',
+						'route_parameters' => ['eqpa_id' => 'id'],
+						'label' => 'Activar',
+						'icon' => 'glyphicon glyphicon-ok-sign',
+						'render_if' => function($row) {
+							if ($row['enuso'] === 'N')
+								return true;
+						},
+						'attributes' => ['rel' => 'tooltip',
+							'title' => 'Activar',
+							'class' => 'btn btn-info btn-xs',
+							'role' => 'button']],
+					['route' => 'desActivarEqPa',
+						'route_parameters' => ['eqpa_id' => 'id'],
+						'label' => 'Desactivar',
+						'icon' => 'glyphicon glyphicon-remove-sign',
+						'render_if' => function($row) {
+							if ($row['enuso'] === 'S')
+								return true;
+						},
+						'attributes' => ['rel' => 'tooltip',
+							'title' => 'Desactivar',
+							'class' => 'btn btn-danger btn-xs',
+							'role' => 'button']],
+				]])
+		;
 	}
 
 	/**

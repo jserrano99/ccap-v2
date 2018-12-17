@@ -3,10 +3,10 @@
 namespace CostesBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\AbstractDatatable;
-use Sg\DatatablesBundle\Datatable\Style;
-use Sg\DatatablesBundle\Datatable\Column\Column;
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
+use Sg\DatatablesBundle\Datatable\Column\Column;
 use Sg\DatatablesBundle\Datatable\Filter\SelectFilter;
+use Sg\DatatablesBundle\Datatable\Style;
 
 /**
  * Class PaDatatable
@@ -33,7 +33,7 @@ class PaDatatable extends AbstractDatatable
 			'stripe_classes' => ['strip1', 'strip2', 'strip3'],
 			'individual_filtering' => true,
 			'individual_filtering_position' => 'head',
-			'order' => [[0, 'asc']],
+			'order' => [[1, 'asc']],
 			'order_cells_top' => true,
 			'search_in_non_visible_columns' => true,
 		]);
@@ -135,7 +135,7 @@ class PaDatatable extends AbstractDatatable
 						},
 						'attributes' => ['rel' => 'tooltip',
 							'title' => 'Logs',
-							'class' => 'btn btn-primary btn-xs',
+							'class' => 'btn btn-warning btn-xs',
 							'role' => 'button']]
 				]
 			]);

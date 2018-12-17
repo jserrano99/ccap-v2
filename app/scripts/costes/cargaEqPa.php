@@ -21,7 +21,7 @@ echo " +++++++++++ COMIENZA PROCESOCARGA  EQUIVALENCIAS PUNTOS ASISTENCIALES +++
 $JanoControl = jano_ctrl();
 
 if (!$JanoControl) {
-    exit(1);
+	exit(1);
 }
 /*
  * recogemos el parametro para ver si estamos en pruebas en validación o en producción
@@ -29,15 +29,15 @@ if (!$JanoControl) {
 $tipo = $argv[1];
 
 if ($tipo == 'REAL') {
-    echo "==> ENTORNO: PRODUCCIÓN **** \n";
-    $JanoInte = conexionPDO(SelectBaseDatos(2, 'I'));
-    $JanoUnif = conexionPDO(SelectBaseDatos(2, 'U'));
-    $tipobd = 2;
+	echo "==> ENTORNO: PRODUCCIÓN **** \n";
+	$JanoInte = conexionPDO(selectBaseDatos(2, 'I'));
+	$JanoUnif = conexionPDO(selectBaseDatos(2, 'U'));
+	$tipobd = 2;
 } else {
-    echo "==> ENTORNO: VALIDACIÓN **** \n";
-    $JanoInte = conexionPDO(SelectBaseDatos(1, 'I'));
-    $JanoUnif = conexionPDO(SelectBaseDatos(1, 'U'));
-    $tipobd = 1;
+	echo "==> ENTORNO: VALIDACIÓN **** \n";
+	$JanoInte = conexionPDO(selectBaseDatos(1, 'I'));
+	$JanoUnif = conexionPDO(selectBaseDatos(1, 'U'));
+	$tipobd = 1;
 }
 
 $sentencia = " select * from eq_centros where vista = 'P'";
@@ -51,35 +51,33 @@ $resultSet = $query->fetchAll(PDO::FETCH_ASSOC);
  * en la base de datos de control 
  */
 foreach ($resultSet as $row) {
-	var_dump($row);
-    $Pa = selectPaByCodigo(trim($row['CODIGO_UNI']));
-	if ($Pa==null) continue;
-    $edificio_id = selectEdificioId($row["EDIFICIO"]);
+	$Pa = selectPaByCodigo(trim($row['CODIGO_UNI']));
+	if ($Pa == null) continue;
+	$edificio_id = selectEdificioId($row["EDIFICIO"]);
 
-    try {
-        $sentencia = " insert into ccap_eq_pa "
-                . " ( pa_id, edificio_id, codigo_loc, enuso) "
-                . " values  "
-                . " ( :pa_id,:edificio_id,:codigo_loc, :enuso)";
+	try {
+		$sentencia = " insert into ccap_eq_pa "
+			. " ( pa_id, edificio_id, codigo_loc, enuso) "
+			. " values  "
+			. " ( :pa_id,:edificio_id,:codigo_loc, :enuso)";
 
-        $insert = $JanoControl->prepare($sentencia);
+		$insert = $JanoControl->prepare($sentencia);
 
-        $params = [":pa_id" => $Pa["id"],
-            ":edificio_id" => $edificio_id,
-	        ":codigo_loc" => $row["CODIGO_LOC"],
-            ":enuso" => $row["ENUSO"]];
+		$params = [":pa_id" => $Pa["id"],
+			":edificio_id" => $edificio_id,
+			":codigo_loc" => $row["CODIGO_LOC"],
+			":enuso" => $row["ENUSO"]];
 
-        $res = $insert->execute($params);
-        if ($res == 0) {
-            echo "**ERROR EN INSERT ccap_eq_pa \n";
-        } else {
-            echo " CREADA EQUIVALENCIA PA:" . $row["CODIGO_UNI"] . " "
-            . " OFICIAL:" . $row["OFICIAL"] . " EDIFICIO:" . $row["EDIFICIO"] . "\n";
-        }
-    } catch (PDOException $ex) {
-        echo "***PDOERROR EN INSERT PUNTOS ASISTENCIALES ERROR=" . $ex->getMessage()."\n";
-    }
+		$res = $insert->execute($params);
+		if ($res == 0) {
+			echo "**ERROR EN INSERT ccap_eq_pa \n";
+		} else {
+			echo " CREADA EQUIVALENCIA PA:" . $row["CODIGO_UNI"] . " "
+				. " OFICIAL:" . $row["OFICIAL"] . " EDIFICIO:" . $row["EDIFICIO"] . "\n";
+		}
+	} catch (PDOException $ex) {
+		echo "***PDOERROR EN INSERT PUNTOS ASISTENCIALES ERROR=" . $ex->getMessage() . "\n";
+	}
 }
 echo "  +++++++++++ TERMINA PROCESO CARGA INIICAL DE  PUNTOS ASISTENCIALES +++++++++++++ \n";
-
 exit();

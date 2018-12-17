@@ -1,32 +1,31 @@
-
 <script>
-
     $(document).ready(function () {
         $("#appbundle_pa_oficial").change(function () {
-            var valor = $("#appbundle_pa_oficial").val();
-            var recurso = Routing.generate("ajaxCalculaCodigoPa", {"codigo": valor}, true);
+            let valor;
+            let recurso;
+            $("#procesando").show();
+            valor = $("#appbundle_pa_oficial").val();
+            recurso = Routing.generate("ajaxCalculaCodigoPa", {"codigo": valor}, true);
             $.ajax({
                 type: "POST",
                 url: recurso,
                 dataType: 'json',
-                success: function (data, status, xhr) {
+                success: function ok(data) {
+                    $('.modal-backdrop').remove();
+                    $("#procesando").hide();
                     $("#appbundle_pa_pa").val(data.codigo);
-                    $("#appbundle_pa_edificio").val(data.edificio);
-                    
+                    $("#appbundle_pa_edificio").val(data.edificio_id);
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert(xhr);
+                error: function err(xhr) {
+                    bootbox.alert(xhr);
                 }
             });
-
         });
-
     });
-</script> 
+</script>
 
 <div class="container">
-        {{form_start (form,{'action':'','method':'POST'})}}
-        {{form_end (form)}}
-    </div>
-    <div class="clearfix"> </div>
+    {{ form_start (form,{'action':'','method':'POST'}) }}
+    {{ form_end (form) }}
 </div>
+<div class="clearfix"></div>

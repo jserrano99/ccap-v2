@@ -1,14 +1,17 @@
 <?php
 
 include_once __DIR__ . '/../funcionesDAO.php';
-
+/**
+ * @param int $id
+ * @return array|null
+ */
 function selectCatGenById($id) {
-    global $JanoControl;
+    global $JanoControl, $gblError;
     try {
         $sentencia = " select * from gums_catgen where "
                 . " id = :id";
         $query = $JanoControl->prepare($sentencia);
-        $params = array(":id" => $id);
+        $params = [":id" => $id];
         $query->execute($params);
         $res = $query->fetch(PDO::FETCH_ASSOC);
         if ($res) {
@@ -25,6 +28,9 @@ function selectCatGenById($id) {
     }
 }
 
+/**
+ * @return array|null
+ */
 function selectEqCatGenAll() {
     global $CatGen, $JanoControl, $gblError;
     try {
@@ -33,7 +39,7 @@ function selectEqCatGenAll() {
                 . " inner join comun_edificio as t2 on t1.edificio_id = t2.id "
                 . " where t1.catgen_id = :id and t1.enuso = 'S' ";
         $query = $JanoControl->prepare($sentencia);
-        $params = array(":id" => $CatGen["id"]);
+        $params = [":id" => $CatGen["id"]];
         $query->execute($params);
         $EqCatGenAll = $query->fetchAll(PDO::FETCH_ASSOC);
         return $EqCatGenAll;
@@ -45,6 +51,10 @@ function selectEqCatGenAll() {
     }
 }
 
+/**
+ * @param $eqcatgen_id
+ * @return array|null
+ */
 function selectEqCatGenById($eqcatgen_id) {
     global $JanoControl, $gblError;
     try {
@@ -53,36 +63,39 @@ function selectEqCatGenById($eqcatgen_id) {
                 . " inner join comun_edificio as t2 on t1.edificio_id = t2.id "
                 . " where t1.id = :id";
         $query = $JanoControl->prepare($sentencia);
-        $params = array(":id" => $eqcatgen_id);
+        $params = [":id" => $eqcatgen_id];
         $query->execute($params);
         $EqCatGenAll = $query->fetch(PDO::FETCH_ASSOC);
         return $EqCatGenAll;
     } catch (PDOException $ex) {
-        echo "***PDOERROR EN SELECT gums_eq_catgen ID = " . $CatGen["id"] . " CODIGO_UNI = " . $CatGen["codigo"] . "\n"
+        echo "***PDOERROR EN SELECT gums_eq_catgen ID = " . $eqcatgen_id . " CODIGO_UNI = " . "\n"
         . $ex->getMessage() . "\n";
         $gblError = 1;
         return null;
     }
 }
 
+/**
+ * @return boolean
+ */
 function insertEqCatGen() {
-    global $JanoControl, $CatGen, $JanoInte, $EqCatGen;
+    global $JanoControl, $CatGen, $JanoInte, $EqCatGen,$gblError;
     try {
         $sentencia = " insert into eq_catgen (edificio, codigo_loc, codigo_uni ) values (:edificio, :codigo_loc, :codigo_uni)";
         $query = $JanoInte->prepare($sentencia);
-        $params = array(":edificio" => $EqCatGen["edificio"],
+        $params = [":edificio" => $EqCatGen["edificio"],
             "codigo_loc" => $CatGen["codigo"],
-            "codigo_uni" => $CatGen["codigo"]);
+            "codigo_uni" => $CatGen["codigo"]];
         $ins = $query->execute($params);
         if ($ins) {
             try {
-                $setencia = " update gums_eq_catgen set codigo_loc = :codigo_loc "
+                $sentencia = " update gums_eq_catgen set codigo_loc = :codigo_loc, "
                         . " enuso = 'S' "
                         . " where catgen_id = :catgen_id "
                         . " and edificio_id = :edificio_id ";
                 $query = $JanoControl->prepare($sentencia);
-                $params = array(":catgen_id" => $CatGen["id"],
-                    ":edificio_id" => $EqCatGen["edificio_id"]);
+                $params = [":catgen_id" => $CatGen["id"],
+                    ":edificio_id" => $EqCatGen["edificio_id"]];
                 $res = $query->execute($params);
                 if ($res == 0) {
                     echo "**ERROR EN UPDATE CCAP_EQ_CATGP CATGEN_ID=" . $CatGen["id"] . " EDIFICIO_ID= " . $EqCatGen["edificio_id"] . "\n";
@@ -102,16 +115,21 @@ function insertEqCatGen() {
         . $ex->getMessage() . "\n";
         $gblError = 1;
     }
+    return true;
 }
 
+/**
+ * @param \PDO $conexion
+ * @return bool|null
+ */
 function insertCatGen($conexion) {
-    global $CatGen;
+    global $CatGen,$gblError;
     try {
         $sentencia = " insert into catgen "
                 . " ( codigo, descrip, btc_tbol_codigo, enuso, plan_org, cod_insalud, des_insalud, especialidad, codigo_sms) values "
                 . " ( :codigo, :descrip, :btc_tbol_codigo, :enuso, :plan_org, :cod_insalud, :des_insalud, :especialidad, :codigo_sms)";
         $query = $conexion->prepare($sentencia);
-        $params = array(":codigo" => $CatGen["codigo"],
+        $params = [":codigo" => $CatGen["codigo"],
             ":descrip" => $CatGen["descripcion"],
             ":btc_tbol_codigo" => $CatGen["btc_tbol_codigo"],
             ":enuso" => $CatGen["enuso"],
@@ -119,7 +137,7 @@ function insertCatGen($conexion) {
             ":cod_insalud" => $CatGen["cod_insalud"],
             ":des_insalud" => $CatGen["des_insalud"],
             ":especialidad" => $CatGen["especialidad"],
-            ":codigo_sms" => $CatGen["codigo_sms"]);
+            ":codigo_sms" => $CatGen["codigo_sms"]];
         $ins = $query->execute($params);
         if ($ins == 0) {
             echo "**ERROR EN INSERT CATGEN  : ID= " . $CatGen["id"] . " CODIGO= " . $CatGen["codigo"] . " DESCRIPCION= " . $CatGen["descripcion"] . "\n";
@@ -136,8 +154,13 @@ function insertCatGen($conexion) {
     }
 }
 
+/**
+ * @param $conexion
+ * @param $codigo
+ * @return bool|null
+ */
 function updateCatGen($conexion, $codigo) {
-    global $CatGen;
+    global $CatGen,$gblError;
     try {
         $sentencia = " update catgen set "
                 . "  descrip = :descrip"
@@ -150,7 +173,7 @@ function updateCatGen($conexion, $codigo) {
                 . ", codigo_sms = :codigo_sms"
                 . " where codigo = :codigo";
         $query = $conexion->prepare($sentencia);
-        $params = array(":codigo" => $CatGen["codigo"],
+        $params = [":codigo" => $CatGen["codigo"],
             ":descrip" => $CatGen["descripcion"],
             ":btc_tbol_codigo" => $CatGen["btc_tbol_codigo"],
             ":enuso" => $CatGen["enuso"],
@@ -158,7 +181,7 @@ function updateCatGen($conexion, $codigo) {
             ":cod_insalud" => $CatGen["cod_insalud"],
             ":des_insalud" => $CatGen["des_insalud"],
             ":especialidad" => $CatGen["especialidad"],
-            ":codigo_sms" => $CatGen["codigo_sms"]);
+            ":codigo_sms" => $CatGen["codigo_sms"]];
 
         $ins = $query->execute($params);
         if ($ins == 0) {
@@ -176,16 +199,19 @@ function updateCatGen($conexion, $codigo) {
     }
 }
 
+/**
+ * @return bool|null
+ */
 function updateEqCatGenControl() {
-    global $CatGen, $EqCatGen, $JanoControl;
+    global $CatGen, $EqCatGen, $JanoControl,$gblError;
     try {
         $sentencia = " update gums_eq_catgen set enuso = :enuso where id = :id";
         $query = $JanoControl->prepare($sentencia);
-        $params = array("id" => $EqCatGen["id"],
-            ":enuso" => $EqCatGen["enuso"]);
+        $params = ["id" => $EqCatGen["id"],
+            ":enuso" => $EqCatGen["enuso"]];
         $ins = $query->execute($params);
         if ($ins == 0) {
-            echo "**ERROR EN UPDATE gums_eq_catgen : ID= " . $EqCatGen["id"] . " CODIGO= " . $codigo . " DESCRIPCION= " . $CatGen["descripcion"] . "\n";
+            echo "**ERROR EN UPDATE gums_eq_catgen : ID= " . $EqCatGen["id"] . " CODIGO= " . $EqCatGen["codigo"] . " DESCRIPCION= " . $CatGen["descripcion"] . "\n";
             $gblError = 1;
             return null;
         }
@@ -196,7 +222,7 @@ function updateEqCatGenControl() {
         . " ENUSO= " . $EqCatGen["enuso"] . "\n";
         return true;
     } catch (PDOException $ex) {
-        echo "**PDOERROR EN UPDATE gums_catgen : ID= " . $CatGen["id"] . " CODIGO= " . $codigo . " DESCRIPCION= " . $CatGen["descripcion"] . "\n"
+        echo "**PDOERROR EN UPDATE gums_catgen : ID= " . $CatGen["id"] . " CODIGO= " . $EqCatGen["codigo"] . " DESCRIPCION= " . $CatGen["descripcion"] . "\n"
         . $ex->getMessage() . "\n";
         $gblError = 1;
         return null;
@@ -222,13 +248,13 @@ $gblError = 0;
 
 if ($tipo == 'REAL') {
     echo "==> ENTORNO : PRODUCCIÓN  \n";
-    $JanoInte = conexionPDO(SelectBaseDatos(2, 'I'));
-    $JanoUnif = conexionPDO(SelectBaseDatos(2, 'U'));
+    $JanoInte = conexionPDO(selectBaseDatos(2, 'I'));
+    $JanoUnif = conexionPDO(selectBaseDatos(2, 'U'));
     $tipobd = 2;
 } else {
     echo "==> ENTORNO : VALIDACIÓN  \n";
-    $JanoInte = conexionPDO(SelectBaseDatos(1, 'I'));
-    $JanoUnif = conexionPDO(SelectBaseDatos(1, 'U'));
+    $JanoInte = conexionPDO(selectBaseDatos(1, 'I'));
+    $JanoUnif = conexionPDO(selectBaseDatos(1, 'U'));
     $tipobd = 1;
 }
 

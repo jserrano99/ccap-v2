@@ -351,3 +351,9 @@ desActivarEqPa:
   defaults: {_controller: CostesBundle:Pa:desActivarEqPa}
   options:
     expose: true
+ajaxCalculaCodigoPa:
+  path:   /pa/ajaxCalculaCodigo/{codigo}
+  defaults: { _controller: CostesBundle:Pa:ajaxCalculaCodigo}
+  options:
+    expose: true
+

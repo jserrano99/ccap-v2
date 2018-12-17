@@ -10,7 +10,11 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use CostesBundle\Datatables\PaDatatable;
 use Symfony\Component\HttpFoundation\Response;
 use CostesBundle\Datatables\EqPaDatatable;
+use Doctrine\DBAL\DBALException;
+use CostesBundle\Form\PaType;
+use DateTime;
 
+use ComunBundle\Entity\SincroLog;
 /**
  * Class PaController
  * @package CostesBundle\Controller
@@ -36,7 +40,7 @@ class PaController extends Controller {
         $entityManager = $this->getDoctrine()->getManager();
         $Pa_repo = $entityManager->getRepository("CostesBundle:Pa");
         $Pa = $Pa_repo->find($id);
-        $params = array("pa" => $Pa);
+        $params = ["pa" => $Pa];
         return $this->render("costes/pa/verPa.html.twig", $params);
     }
 
@@ -50,28 +54,28 @@ class PaController extends Controller {
         $Pa_repo = $EM->getRepository("CostesBundle:Pa");
         $Pa = $Pa_repo->find($id);
 
-        $form = $this->createForm(\CostesBundle\Form\PaType::class, $Pa);
+        $form = $this->createForm(PaType::class, $Pa);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             try {
                 $EM->persist($Pa);
                 $EM->flush();
-                $params = array("id" => $Pa->getId(), "actuacion" => "UPDATE");
+                $params = ["id" => $Pa->getId(), "actuacion" => "UPDATE"];
                 return $this->redirectToRoute("sincroPa", $params);
             } catch (UniqueConstraintViolationException $ex) {
                 $status = " YA EXISTE UNA PUNTO ASISTENCIAL CON ESTE CÓDIGO: " . $Pa->getPa();
                 $this->sesion->getFlashBag()->add("status", $status);
                 return $this->redirectToRoute("queryPa");
-            } catch (Doctrine\DBAL\DBALException $ex) {
+            } catch (DBALException $ex) {
                 $status = "ERROR GENERAL=" . $ex->getMessage();
                 $this->sesion->getFlashBag()->add("status", $status);
                 return $this->redirectToRoute("queryPa");
             }
         }
 
-        $params = array("pa" => $Pa, "accion" => "MODIFICACIÓN",
-            "form" => $form->createView());
+        $params = ["pa" => $Pa, "accion" => "MODIFICACIÓN",
+            "form" => $form->createView()];
         return $this->render("costes/pa/edit.html.twig", $params);
     }
 
@@ -98,10 +102,9 @@ class PaController extends Controller {
 	 */
     public function addAction(Request $request) {
         $EM = $this->getDoctrine()->getManager();
-        $Pa_repo = $EM->getRepository("CostesBundle:Pa");
         $Pa = new Pa();
 
-        $form = $this->createForm(\CostesBundle\Form\PaType::class, $Pa);
+        $form = $this->createForm(PaType::class, $Pa);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -115,15 +118,15 @@ class PaController extends Controller {
                 $status = " YA EXISTE UNA PUNTO ASISTENCIAL CON ESTE CÓDIGO: " . $Pa->getPa();
                 $this->sesion->getFlashBag()->add("status", $status);
                 return $this->redirectToRoute("queryPa");
-            } catch (Doctrine\DBAL\DBALException $ex) {
+            } catch (DBALException $ex) {
                 $status = "ERROR GENERAL=" . $ex->getMessage();
                 $this->sesion->getFlashBag()->add("status", $status);
                 return $this->redirectToRoute("queryPa");
             }
         }
 
-        $params = array("pa" => $Pa, "accion" => "NUEVO",
-            "form" => $form->createView());
+        $params = ["pa" => $Pa, "accion" => "NUEVO",
+            "form" => $form->createView()];
         return $this->render("costes/pa/edit.html.twig", $params);
     }
 
@@ -158,9 +161,8 @@ class PaController extends Controller {
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
     public function ajaxCalculaCodigoAction($codigo) {
-        $edificio = (int) substr($codigo, 2, 2);
+        $gerencia = (int) substr($codigo, 2, 2);
         $areaZona = substr($codigo, 2, 4);
-
 
         $entityManager = $this->getDoctrine()->getManager();
         $Equivalencia_repo = $entityManager->getRepository("CostesBundle:Equivalencia");
@@ -177,17 +179,17 @@ class PaController extends Controller {
 
         $Edificio_repo = $entityManager->getRepository("ComunBundle:Edificio");
         $EdificioAll = $Edificio_repo->createQueryBuilder('u')
-                        ->where("u.codigo = :codigo")
-                        ->setParameter("codigo", $edificio)
+                        ->where("u.gerencia = :gerencia")
+                        ->setParameter("gerencia", $gerencia)
                         ->getQuery()->getResult();
 
         IF ($EdificioAll == null) {
-            $codigoSaint["codigo"] = "ERROR-";
-            $codigoSaint["edificio"] = $edificio;
+            $codigoSaint["codigo"] = "ERROR-".$gerencia;
         } else {
             $Edificio = $EdificioAll[0];
             $codigoSaint["codigo"] = $codigo12 . substr($codigo, 6, 4);
-            $codigoSaint["edificio"] = $Edificio->getId();
+	        $codigoSaint["gerencia"] = $gerencia;
+	        $codigoSaint["edificio_id"] = $Edificio->getId();
         }
         $response = new Response();
         $response->setContent(json_encode($codigoSaint));
@@ -226,7 +228,7 @@ class PaController extends Controller {
         $php = $this->getParameter('php');
         $php_script = $php." " . $root . "/scripts/costes/actualizacionPa.php " . $modo . "  " . $Pa->getId() . " " . $actuacion;
 
-        $mensaje = exec($php_script, $SALIDA, $resultado);
+        exec($php_script, $SALIDA, $resultado);
         if ($resultado == 0) {
             $Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(2);
         } else {
@@ -246,12 +248,11 @@ class PaController extends Controller {
         $em->persist($SincroLog);
         $em->flush();
 
-        $params = array("SincroLog" => $SincroLog,
-            "resultado" => $resultado);
+        $params = ["SincroLog" => $SincroLog,
+            "resultado" => $resultado];
         $view = $this->renderView("finSincro.html.twig", $params);
 
         $response = new Response($view);
-
         $response->headers->set('Content-Disposition', 'inline');
         $response->headers->set('Content-Type', 'text/html');
         $response->headers->set('target', '_blank');
@@ -266,7 +267,7 @@ class PaController extends Controller {
     public function descargaLogAction($id) {
         $em = $this->getDoctrine()->getManager();
         $Pa = $em->getRepository("CostesBundle:Pa")->find($id);
-        $params = array("id" => $Pa->getSincroLog()->getId());
+        $params = ["id" => $Pa->getSincroLog()->getId()];
         return $this->redirectToRoute("descargaSincroLog", $params);
     }
 
