@@ -114,8 +114,6 @@ function existeCecoCias($conexion, $cias)
         echo "**PDOERROR EN SELECT CECOCIAS  CIAS=" . $cias . $ex->getMessage() . " \n";
         return false;
     }
-
-    return true;
 }
 
 /**
@@ -128,8 +126,8 @@ function main()
     echo "==> CECOCIAS CIAS= (" . $Plaza["cias"] . ") CECO= (" . $Plaza["ceco"] . ") FECHA INICIO= (" . $CecoCias["f_inicio"] . ") EDIFICIO=" . $Plaza["edificio"] . "\n";
 
     $BasesDatos = [];
-    $BasesDatos[] = SelectBaseDatosEdificio($tipobd, $Plaza["edificio"]);
-    $BasesDatos[] = SelectBaseDatos($tipobd, 'U');
+    $BasesDatos[] = selectBaseDatosEdificio($tipobd, $Plaza["edificio"]);
+    $BasesDatos[] = selectBaseDatos($tipobd, 'U');
 
     foreach ($BasesDatos as $baseDatos) {
         $datosConexion["maquina"] = $baseDatos["maquina"];
@@ -181,13 +179,13 @@ echo "==> CECOCIAS A TRATAR id =(" . $cecocias_id . ") \n";
 
 if ($modo == 'REAL') {
     echo "==>ENTORNO: PRODUCCIÓN \n";
-    $JanoInte = conexionPDO(SelectBaseDatos(2, 'I'));
-    $JanoUnif = conexionPDO(SelectBaseDatos(2, 'U'));
+    $JanoInte = conexionPDO(selectBaseDatos(2, 'I'));
+    $JanoUnif = conexionPDO(selectBaseDatos(2, 'U'));
     $tipobd = 2;
 } else {
     echo "==>ENTORNO: VALIDACIÓN \n";
-    $JanoInte = conexionPDO(SelectBaseDatos(1, 'I'));
-    $JanoUnif = conexionPDO(SelectBaseDatos(1, 'U'));
+    $JanoInte = conexionPDO(selectBaseDatos(1, 'I'));
+    $JanoUnif = conexionPDO(selectBaseDatos(1, 'U'));
     $tipobd = 1;
 }
 

@@ -30,17 +30,17 @@ $tipo = $argv[1];
 
 if ($tipo == 'REAL') {
     echo "==> ENTORNO: PRODUCCIÓN **** \n";
-    $JanoInte = conexionPDO(SelectBaseDatos(2, 'I'));
-    $JanoUnif = conexionPDO(SelectBaseDatos(2, 'U'));
+    $JanoInte = conexionPDO(selectBaseDatos(2, 'I'));
+    $JanoUnif = conexionPDO(selectBaseDatos(2, 'U'));
     $tipobd = 2;
 } else {
     echo "==> ENTORNO: VALIDACIÓN **** \n";
-    $JanoInte = conexionPDO(SelectBaseDatos(1, 'I'));
-    $JanoUnif = conexionPDO(SelectBaseDatos(1, 'U'));
+    $JanoInte = conexionPDO(selectBaseDatos(1, 'I'));
+    $JanoUnif = conexionPDO(selectBaseDatos(1, 'U'));
     $tipobd = 1;
 }
 
-$sentencia = " delete from ccap_uf";
+$sentencia = " delete from ccap_uf where 1";
 $query = $JanoControl->prepare($sentencia);
 $query->execute();
 
@@ -84,7 +84,7 @@ foreach ($resultSet as $row) {
             echo "**ERROR EN INSERT ccap_UF \n";
             $gblError = 1;
         } else {
-            echo " CREADA UF:" . $row["CODIGO_UNI"] . " " . $desc
+            echo " CREADA UF:" . $row["CODIGO_UNI"] . " " . $CentroUnif["DESCRIP"]
             . " OFICIAL:" . $row["OFICIAL"] . " EDIFICIO:" . $row["EDIFICIO"] . "\n";
         }
     } catch (PDOException $ex) {
