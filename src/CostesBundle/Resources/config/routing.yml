@@ -37,14 +37,6 @@ editPlaza:
 queryPlaza:
   path:   /plaza/query
   defaults: { _controller: CostesBundle:Plaza:query}
-queryCecos:
-  path:   /plaza/verCecos/{plaza_id}
-  defaults: { _controller: CostesBundle:Plaza:verCecos}
-verPlazaSinCeco:
-  path:   /plaza/verPlazaSinCeco
-  defaults: { _controller: CostesBundle:Plaza:verPlazaSinCeco}
-  options:
-    expose: true
 sincroPlaza:
   path:   /plaza/sincro/{id}/{actuacion}/{cias}
   defaults: { _controller: CostesBundle:Plaza:sincro}
@@ -125,16 +117,6 @@ amortizacionMasiva:
   defaults: { _controller: CostesBundle:Plaza:amortizacionMasiva}
   options:
     expose: true
-ajaxCompruebaAmortizacionPlaza:
-  path:   /plaza/compruebaAmortizacion/{cias}/{fecha}
-  defaults: { _controller: CostesBundle:Plaza:ajaxCompruebaAmortizacion}
-  options:
-    expose: true
-comprobacionAsignacion:
-  path:   /plaza/ceco/comprobacion
-  defaults: { _controller: CostesBundle:Plaza:comprobacionAsignacion}
-  options:
-    expose: true
 importaCecoCias:
   path:   /plaza/importaCeco
   defaults: { _controller: CostesBundle:Plaza:importarCeco}
@@ -155,15 +137,9 @@ desAmortizacion:
   defaults: { _controller: CostesBundle:Plaza:desAmortizacion}
   options:
     expose: true
-
 verCecoCias:
   path:   /plaza/cecocias/query/{plaza_id}
   defaults: { _controller: CostesBundle:Plaza:verCecoCias}
-  options:
-    expose: true
-addCecoCias:
-  path:   /plaza/cecocias/add/{plaza_id}
-  defaults: { _controller: CostesBundle:Plaza:addCecoCias}
   options:
     expose: true
 sincroCecoCias:
@@ -171,7 +147,6 @@ sincroCecoCias:
   defaults: { _controller: CostesBundle:Plaza:sincroCecoCias}
   options:
     expose: true
-
 #
 # CECO CENTROS DE COSTE
 #
@@ -183,9 +158,6 @@ editCeco:
   defaults: { _controller: CostesBundle:Ceco:edit}
   options:
     expose: true
-verCeco:
-  path:   /ceco/verCeco/{ceco_id}
-  defaults: { _controller: CostesBundle:Ceco:verCeco}
 deleteCeco:
   path:   /ceco/delete/{ceco_id}
   defaults: { _controller: CostesBundle:Ceco:delete}
@@ -205,9 +177,6 @@ addCeco:
 importaCeco:
   path:   /ceco/importa
   defaults: { _controller: CostesBundle:Ceco:importa}
-verCias:
-  path:   /ceco/verCias/{ceco_id}
-  defaults: { _controller: CostesBundle:Ceco:verCias}
 descargaLogCeco:
   path:   /ceco/descargaLog/{id}
   defaults: { _controller: CostesBundle:Ceco:descargaLog}
@@ -218,18 +187,12 @@ comprobacionCeco:
   defaults: { _controller: CostesBundle:Ceco:comprobacion}
   options:
     expose: true
-
 #
 # UNIDADES FUNCIONALES 
 #
 editUf:
   path:   /uf/edit/{id}
   defaults: { _controller: CostesBundle:Uf:edit}
-  options:
-    expose: true
-verCecoCiasUf:
-  path:   /uf/verCecoCias/{id}
-  defaults: { _controller: CostesBundle:Uf:verCecoCias}
   options:
     expose: true
 queryUf:
@@ -262,11 +225,6 @@ descargaLogUf:
   defaults: { _controller: CostesBundle:Uf:descargaLog}
   options:
     expose: true
-verGerencia:
-  path:   /uf/verGerencia/{id}
-  defaults: { _controller: CostesBundle:Uf:verGerencia}
-  options:
-    expose: true
 ajaxCalculaCodigoUf:
   path:   /uf/ajaxCalculaCodigo/{codigo}
   defaults: { _controller: CostesBundle:Uf:ajaxCalculaCodigo}
@@ -287,18 +245,12 @@ desActivarEqUf:
   defaults: {_controller: CostesBundle:Uf:desActivar}
   options:
     expose: true
-
 #
 # PUNTOS ASISTENCIALES 
 #
 editPa:
   path:   /pa/edit/{id}
   defaults: { _controller: CostesBundle:Pa:edit}
-  options:
-    expose: true
-verCecoCiasPa:
-  path:   /pa/verCecoCias/{id}
-  defaults: { _controller: CostesBundle:Pa:verCecoCias}
   options:
     expose: true
 queryPa:
@@ -322,18 +274,13 @@ deletePa:
   options:
     expose: true
 sincroPa:
-  path:   /pa/sincro/{id}/{actuacion}
+  path:   /pa/sincro/{id}/{actuacion}/{eqpa_id}
   defaults: { _controller: CostesBundle:Pa:sincro}
   options:
     expose: true
 descargaLogPa:
   path:   /pa/descargaLog/{id}
   defaults: { _controller: CostesBundle:Pa:descargaLog}
-  options:
-    expose: true
-verZonaBasica:
-  path:   /pa/verZonaBasica/{id}
-  defaults: { _controller: CostesBundle:Pa:verZonaBasica}
   options:
     expose: true
 queryEqPa:
@@ -343,12 +290,12 @@ queryEqPa:
     expose: true
 activarEqPa:
   path: /pa/equivalencias/activar/{eqpa_id}
-  defaults: {_controller: CostesBundle:Pa:activarEqPa}
+  defaults: {_controller: CostesBundle:Pa:activar}
   options:
     expose: true
 desActivarEqPa:
   path: /pa/equivalencias/desactivar/{eqpa_id}
-  defaults: {_controller: CostesBundle:Pa:desActivarEqPa}
+  defaults: {_controller: CostesBundle:Pa:desActivar}
   options:
     expose: true
 ajaxCalculaCodigoPa:

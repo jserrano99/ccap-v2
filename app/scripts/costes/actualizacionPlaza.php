@@ -241,15 +241,14 @@ function equivalenciasPlaza($Plaza)
 	$Equi["catgen"] = selectEqCatGen($Plaza["catgen_id"], $Plaza["edificio_id"]);
 	$Equi["catfp"] = selectEqCatFp($Plaza["catfp_id"], $Plaza["edificio_id"]);
 	$Equi["turno"] = selectEqTurno($Plaza["turno_id"], $Plaza["edificio_id"]);
-	//$Equi["turno"] = $Plaza["turno"];
 
-	echo "**EQUIVALENCIAS (UNIF)/(AREA)**\n";
-	echo "**-------------**\n";
-	echo " UNIDAD FUNCIONAL= (" . $Plaza["uf"] . ") / (" . $Equi["uf"] . ")\n";
-	echo " PUNTO ASISTENCIAL= (" . $Plaza["pa"] . ") / (" . $Equi["p_asist"] . ")\n";
-	echo " CATEGORIA GENERAL= (" . $Plaza["catgen"] . ") / (" . $Equi["catgen"] . ")\n";
-	echo " CATEGORIA FP= (" . $Plaza["catfp"] . ") / (" . $Equi["catfp"] . ")\n";
-	echo " TURNO = (" . $Plaza["turno"] . ") / (" . $Equi["turno"] . ")\n";
+	echo "EQUIVALENCIAS (UNIF)/(AREA)\n";
+	echo "---------------------------\n";
+	echo "   UNIDAD FUNCIONAL= (" . $Plaza["uf"] . ") / (" . $Equi["uf"] . ")\n";
+	echo "   PUNTO ASISTENCIAL= (" . $Plaza["pa"] . ") / (" . $Equi["p_asist"] . ")\n";
+	echo "   CATEGORIA GENERAL= (" . $Plaza["catgen"] . ") / (" . $Equi["catgen"] . ")\n";
+	echo "   CATEGORIA FP= (" . $Plaza["catfp"] . ") / (" . $Equi["catfp"] . ")\n";
+	echo "   TURNO = (" . $Plaza["turno"] . ") / (" . $Equi["turno"] . ")\n";
 
 	return $Equi;
 }
@@ -326,7 +325,7 @@ function insertPlazaArea($Plaza)
 {
 	global $tipobd, $gblError, $tipo;
 
-	$baseDatos = SelectBaseDatosEdificio($tipobd, $Plaza["edificio"]);
+	$baseDatos = selectBaseDatosEdificio($tipobd, $Plaza["edificio"]);
 	if ($baseDatos == null) {
 		echo "***ERROR EN NO EXISTE DEFINICIÓN PARA LA BASE DE DATOS EDIFICIO=" . $Plaza["edificio"] . " ENTORNO = " . $tipo . " \n";
 		$gblError = 1;
@@ -438,7 +437,7 @@ function deletePlazaUnif($Plaza)
 }
 
 /**
- * @param $Plaza
+ * @param array $Plaza
  * @return bool
  */
 
@@ -574,7 +573,7 @@ function updatePlazaArea($Plaza)
 			$gblError = 1;
 			return false;
 		}
-		echo "==> PLAZA CIAS= (" . $Plaza["cias"] . ") MODIFICADA EN LA BASE DE DATOS AREA \n";
+		echo "==> PLAZA CIAS= (" . $Plaza["cias"] . ") MODIFICADA EN LA BASE DE DATOS AREA (".$Plaza["edificio"].")  \n";
 
 		if ($Plaza["ceco"] != null) {
 			procesoCecoCias($conexionArea, $Plaza["cias"], $Plaza["ceco"]);
@@ -610,7 +609,7 @@ function deletePlazaArea($Plaza)
 			$gblError = 1;
 			return false;
 		}
-		echo "==> PLAZA CIAS= (" . $Plaza["cias"] . ") ELIMINADA EN LA BASE DE DATOS AREA \n";
+		echo "==> PLAZA CIAS= (" . $Plaza["cias"] . ") ELIMINADA EN LA BASE DE DATOS AREA (".$Plaza["edificio"].") \n";
 		return true;
 
 	} catch (PDOException $ex) {
@@ -653,43 +652,40 @@ $Plaza = selectPlazaById($id);
 
 if ($Plaza == null) {
 	echo " No existe plaza id=" . $id . "\n";
-	echo " +++ TERMINA EN ERROR(1) +++ \n";
+	echo " ***** TERMINA EN ERROR(1) ********\n";
 	exit(1);
 }
 
-echo " ==> PLAZA: ID = " . $Plaza["id"]
-	. " CIAS = " . $Plaza["cias"]
-	. " UF =" . $Plaza["uf"]
-	. " modalidad =" . $Plaza["modalidad"]
-	. " p_asist=" . $Plaza["pa"]
-	. " catgen=" . $Plaza["catgen"]
-	. " ficticia=" . $Plaza["ficticia"] . "\n"
-	. " refuerzo=" . $Plaza["refuerzo"]
-	. " catfp=" . $Plaza["catfp"]
-	. " cupequi=" . $Plaza["cupequi"]
-	. " plantilla=" . $Plaza["plantilla"]
-	. " f_amortiza=" . $Plaza["f_amortiza"]
-	. " colaboradora=" . $Plaza["colaboradora"]
-	. " fcreacion=" . $Plaza["f_creacion"]
-	. " edificion=" . $Plaza["edificio"]
-	. " turno= " . $Plaza["turno"]
-	. " ceco= " . $Plaza["ceco"]
-	. "== ACTUACIÓN = (" . $actuacion . ") \n\n";
+echo " ==> PLAZA: ID =(" . $Plaza["id"]. ") CIAS =(" . $Plaza["cias"].") "."\n";
+echo "          UF =(" . $Plaza["uf"]. ") \n";
+echo "          MODALIDAD =(" . $Plaza["modalidad"]. ") \n";
+echo "          P_ASIST =(" . $Plaza["pa"]. ") \n";
+echo "          CATGEN =(" . $Plaza["catgen"]. ") \n";
+echo "          FICTICIA = (" . $Plaza["ficticia"]. ") \n";
+echo "          REFUERZO =(" . $Plaza["refuerzo"]. ") \n";
+echo "          CATFP =(" . $Plaza["catfp"]. ") \n";
+echo "          CUPEQUI =(" . $Plaza["cupequi"]. ") \n";
+echo "          PLANTILLA =(" . $Plaza["plantilla"]. ") \n";
+echo "          F_AMORTIZA =(" . $Plaza["f_amortiza"]. ") \n";
+echo "          COLABORADA =(" . $Plaza["colaboradora"]. ") \n";
+echo "          F_CREACIÓN =(" . $Plaza["f_creacion"]. ") \n";
+echo "          EDIFICIO =(" . $Plaza["edificio"]. ") \n";
+echo "          TURNO =(" . $Plaza["turno"]. ") \n";
+echo "          CECO ACTUAL =(" . $Plaza["ceco"]. ") \n";
+echo " ==> ACTUACIÓN =(" . $actuacion . ") \n\n";
 
 if ($actuacion == 'INSERT') {
 	procesoInsert($Plaza);
 }
-
 if ($actuacion == 'UPDATE') {
 	procesoUpdate($Plaza);
 }
 if ($actuacion == 'DELETE') {
 	procesoDelete($Plaza);
 }
-if ($actuacion == 'AMORTIZACION') {
-	procesoAmortizacion($Plaza);
-}
-
+//if ($actuacion == 'AMORTIZACION') {
+//	procesoAmortizacion($Plaza);
+//}
 
 echo "  +++++++++++ TERMINA PROCESO ACTUALIZACIÓN PLAZA +++++++++++++ \n";
 exit($gblError);

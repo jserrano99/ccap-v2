@@ -157,7 +157,7 @@ function crearEqCentroInte($Pa) {
 
 	    $query = " insert into ccap_eq_pa (edificio_id, codigo_loc, pa_id,enuso) "
 		    . " values (:edificio_id, :codigo_loc, :pa_id, :enuso)";
-	    $query = $JanoInte->prepare($query);
+	    $query = $JanoControl->prepare($query);
 	    $params = [":edificio_id" => $edificio_id,
 		    ":codigo_loc" => $Pa["codigoLoc"],
 		    ":pa_id" => $Pa["id"],
@@ -192,12 +192,12 @@ function crearCentroArea($Pa) {
         $query = " insert into centros (codigo, descrip, vista, enuso, f_creacion ) "
                 . " values (:codigo,:descrip, :vista, :enuso, :f_creacion )";
         $query = $conexion->prepare($query);
-        $paramsCentros = array(":codigo" => $Pa["codigoLoc"],
+        $paramsCentros = [":codigo" => $Pa["codigoLoc"],
             ":descrip" => $Pa["descripcion"],
             ":vista" => 'P',
             ":enuso" => 'S',
             ":f_creacion" => $Pa["fecha_creacion"]
-        );
+        ];
         $insert = $query->execute($paramsCentros);
         if ($insert == 0) {
             echo "***ERROR INSERT CENTROS BD. AREA " . $Pa["edificio"] . " " . $Pa["pa"] . "\n";
@@ -235,13 +235,13 @@ function updateCentroUnif($Pa) {
                 . " ,gerencia = :gerencia "
                 . " where codigo = :codigo ";
         $query = $JanoUnif->prepare($sentencia);
-        $paramsCentros = array(":codigo" => $Pa["pa"],
+        $paramsCentros = [":codigo" => $Pa["pa"],
             ":descrip" => $Pa["descripcion"],
             ":enuso" => $Pa["enuso"],
             ":f_creacion" => $Pa["fechaCreacion"],
             ":oficial" => $Pa["oficial"],
             ":da" => $Pa["da"],
-            ":gerencia" => $Pa["gerencia"]);
+            ":gerencia" => $Pa["gerencia"]];
         $insert = $query->execute($paramsCentros);
         if ($insert == 0) {
             echo "**ERROR EN UPDATE CENTROS BD. UNIFICADA " . $Pa["pa"] . "\n";
@@ -286,11 +286,11 @@ function updateCentroArea($Pa) {
                 . " f_creacion = :f_creacion"
                 . " where codigo = :codigo ";
         $query = $conexion->prepare($query);
-        $paramsCentros = array(":codigo" => $codigoLoc,
+        $paramsCentros = [":codigo" => $codigoLoc,
             ":descrip" => $Pa["descripcion"],
             ":enuso" => $Pa["enuso"],
             ":f_creacion" => $Pa["fechaCreacion"]
-        );
+        ];
         $insert = $query->execute($paramsCentros);
         if ($insert == 0) {
             echo "***ERROR  UPDATE CENTROS BD. AREA " . $Pa["edificio"] . " " . $codigoLoc . "\n";
@@ -323,8 +323,8 @@ if (!$JanoControl) {
 
 $tipo = $argv[1];
 $pa_id = $argv[2];
-$eqpa_id = $argv[3];
-$actuacion = $argv[4];
+$actuacion = $argv[3];
+$eqpa_id = $argv[4];
 
 $gblError = 0;
 

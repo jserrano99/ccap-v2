@@ -1,6 +1,6 @@
 <?php
 
-include_once __DIR__ . '../../../vendor/autoload.php';
+include_once __DIR__ . '/../../vendor/autoload.php';
 /**
  * @return array|null
  */
@@ -24,9 +24,8 @@ function selectEdificioAll()
  * ***************************************** */
 
 /**
- *
  * @global \PDO $JanoControl
- * @param int $id
+ * @param int   $id
  * @return array
  */
 function selectAltasById($id)
@@ -55,9 +54,8 @@ function selectAltasById($id)
 }
 
 /**
- *
  * @global \PDO $JanoControl
- * @param int $id
+ * @param int   $id
  * @return array
  */
 function selectCatFpById($id)
@@ -83,8 +81,7 @@ function selectCatFpById($id)
 }
 
 /**
- *
- * @global $JanoControl
+ * @global       $JanoControl
  * @param string $catfp
  * @return \MaestrosBundle\Entity\CatFp;
  */
@@ -113,8 +110,7 @@ function selectCatFp($catfp)
 }
 
 /**
- *
- * @global \PDO $JanoControl
+ * @global \PDO  $JanoControl
  * @param string $modalidad
  * @return int
  */
@@ -141,7 +137,6 @@ function selectModalidad($modalidad)
 }
 
 /**
- *
  * @param array $datosConexion
  * @return \PDO
  */
@@ -177,7 +172,6 @@ function conexionPDO($datosConexion)
  */
 
 /**
- *
  * @return \PDO
  */
 function jano_ctrl()
@@ -208,8 +202,7 @@ function jano_ctrl()
 }
 
 /**
- *
- * @global \PDO $JanoControl
+ * @global \PDO  $JanoControl
  * @param string $tipo
  * @return array
  */
@@ -242,8 +235,7 @@ function selectBaseDatosAreas($tipo)
 }
 
 /**
- *
- * @global \PDO $JanoControl
+ * @global \PDO  $JanoControl
  * @param string $tipo
  * @param string $areas
  * @return array|null
@@ -274,8 +266,7 @@ function selectBaseDatos($tipo, $areas)
 }
 
 /**
- *
- * @global \PDO $JanoControl
+ * @global \PDO  $JanoControl
  * @param string $tipo
  * @param string $edificio
  * @return array
@@ -308,8 +299,7 @@ function selectBaseDatosEdificio($tipo, $edificio)
 }
 
 /**
- *
- * @global  $JanoControl
+ * @global       $JanoControl
  * @param string $edificio
  * @return int
  */
@@ -336,8 +326,7 @@ function selectEdificioId($edificio)
 }
 
 /**
- *
- * @global \PDO $JanoControl
+ * @global \PDO   $JanoControl
  * @param integer $ceco_id
  * @return \CostesBundle\Entity\Ceco;
  */
@@ -365,8 +354,7 @@ function selectCeco($ceco_id)
 }
 
 /**
- *
- * @global \PDO $JanoControl
+ * @global \PDO  $JanoControl
  * @param string $codigo
  * @return array
  */
@@ -394,8 +382,7 @@ function SelectCecobyCodigo($codigo)
 }
 
 /**
- *
- * @global \PDO $JanoInteid
+ * @global \PDO  $JanoInteid
  * @param string $codigo_uni
  * @return boolean
  */
@@ -424,8 +411,7 @@ function insertEqCeco($codigo_uni)
 }
 
 /**
- *
- * @global \PDO $JanoInteid
+ * @global \PDO  $JanoInteid
  * @param string $codigo_uni
  * @return boolean
  */
@@ -450,9 +436,8 @@ function deleteEqCeco($codigo_uni)
 }
 
 /**
- *
  * @global \PDO $JanoControl
- * @param int $edificio
+ * @param int   $edificio
  * @return int
  */
 function selectEdificio($edificio)
@@ -475,8 +460,7 @@ function selectEdificio($edificio)
 }
 
 /**
- *
- * @global \PDO $JanoControl
+ * @global \PDO  $JanoControl
  * @param string $da
  * @return int
  */
@@ -506,8 +490,7 @@ function selectDa($da)
  */
 
 /**
- *
- * @global \PDO $JanoUnif
+ * @global \PDO  $JanoUnif
  * @param string $codigo
  * @return array
  */
@@ -532,8 +515,7 @@ function selectCentro($codigo)
 }
 
 /**
- *
- * @global \PDO $JanoControl
+ * @global \PDO  $JanoControl
  * @param string $codigoUni
  * @return int
  */
@@ -559,8 +541,7 @@ function existeCentro($codigoUni)
 }
 
 /**
- *
- * @global \PDO $JanoControl
+ * @global \PDO  $JanoControl
  * @param string $catgen
  * @return array
  */
@@ -588,8 +569,7 @@ function selectCatGen($catgen)
 }
 
 /**
- *
- * @global \PDO $JanoControl
+ * @global \PDO  $JanoControl
  * @param string $catanexo
  * @return int
  */
@@ -617,8 +597,7 @@ function selectCatAnexo($catanexo)
 }
 
 /**
- *
- * @global \PDO $JanoControl
+ * @global \PDO  $JanoControl
  * @param string $codigo
  * @return int|null
  */
@@ -648,8 +627,7 @@ function selectEpiAcc($codigo)
 }
 
 /**
- *
- * @global \PDO $JanoControl
+ * @global \PDO  $JanoControl
  * @param string $codigo
  * @return int
  */
@@ -680,8 +658,7 @@ function selectTipoIlt($codigo)
 }
 
 /**
- *
- * @global \PDO $JanoControl
+ * @global \PDO  $JanoControl
  * @param string $codigo
  * @return int
  */
@@ -1064,8 +1041,7 @@ function selectCategId($codigo)
 {
 	global $JanoControl;
 	try {
-		$sentencia = " select id from gums_categ as t1  "
-			. " where t1.codigo = :codigo ";
+		$sentencia = " select id from gums_categ as t1  where t1.codigo = :codigo ";
 		$query = $JanoControl->prepare($sentencia);
 		$params = [":codigo" => $codigo];
 		$query->execute($params);
@@ -1122,9 +1098,8 @@ function selectPlazaById($id)
 }
 
 /**
- *
  * @global \PDO $JanoControl
- * @param int $id
+ * @param int   $id
  * @return array
  */
 function selectAusenciaById($id)
@@ -1298,9 +1273,8 @@ function selectEqCateg($categ_id, $edificio_id)
 }
 
 /**
- *
  * @global \PDO $JanoControl
- * @param int $id
+ * @param int   $id
  * @return array
  */
 function selectEqAltasById($id)
@@ -1331,9 +1305,8 @@ function selectEqAltasById($id)
 }
 
 /**
- *
  * @global \PDO $JanoControl
- * @param int $id
+ * @param int   $id
  * @return array
  */
 function selectEqAusenciaById($id)
@@ -1364,9 +1337,8 @@ function selectEqAusenciaById($id)
 }
 
 /**
- *
  * @global \PDO $JanoControl
- * @param int $id
+ * @param int   $id
  * @return array
  */
 function selectEqCategById($id)

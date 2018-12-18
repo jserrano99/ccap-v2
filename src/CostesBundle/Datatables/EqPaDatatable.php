@@ -7,7 +7,7 @@ use Sg\DatatablesBundle\Datatable\Style;
 use Sg\DatatablesBundle\Datatable\Column\Column;
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Filter\SelectFilter;
-use Sg\DatatablesBundle\Datatable\Editable\TextEditable;
+
 
 /**
  * Class EqPaDatatable
