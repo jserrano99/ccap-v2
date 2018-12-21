@@ -304,3 +304,35 @@ ajaxCalculaCodigoPa:
   options:
     expose: true
 
+queryEstructura:
+  path: /unidad/query
+  defaults: { _controller: CostesBundle:Unidad:queryEstructura}
+  options:
+    expose: true
+
+ajaxGetEstructura:
+  path: /unidad/estructura
+  defaults: { _controller: CostesBundle:Unidad:ajaxGetEstructura}
+  options:
+    expose: true
+addUnidad:
+  path: /unidad/add
+  defaults: { _controller: CostesBundle:Unidad:add}
+  options:
+    expose: true
+editUnidad:
+  path: /unidad/edit/{id}
+  defaults: { _controller: CostesBundle:Unidad:edit}
+  options:
+    expose: true
+deleteUnidad:
+  path: /unidad/delete/{id}
+  defaults: { _controller: CostesBundle:Unidad:delete}
+  options:
+    expose: true
+ajaxGetUnidad:
+  path: /unidad/getunidad/{id}
+  defaults: { _controller: CostesBundle:Unidad:ajaxGetUnidad}
+  options:
+    expose: true
+

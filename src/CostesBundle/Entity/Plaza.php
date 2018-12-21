@@ -8,10 +8,12 @@
 
 namespace CostesBundle\Entity;
 
+use ComunBundle\Entity\SincroLog;
 use Doctrine\ORM\Mapping as ORM;
-use CostesBundle\Entity\Uf;
-use CostesBundle\Entity\Pa;
-use Symfony\Component\Validator\Constraints as Assert;
+use MaestrosBundle\Entity\CatFp;
+use MaestrosBundle\Entity\CatGen;
+use MaestrosBundle\Entity\Modalidad;
+use MaestrosBundle\Entity\Turno;
 
 /**
  * Plaza
@@ -62,7 +64,7 @@ class Plaza
 	private $pa;
 
 	/**
-	 * @var MaestrosBundle\Entity\CatGen|null
+	 * @var \MaestrosBundle\Entity\CatGen|null
 	 *
 	 * @ORM\ManyToOne(targetEntity="MaestrosBundle\Entity\CatGen")
 	 * @ORM\JoinColumn(name="catgen_id", referencedColumnName="id")
@@ -70,7 +72,7 @@ class Plaza
 	private $catGen;
 
 	/**
-	 * @var MaestrosBundle\Entity\Modalidad|null
+	 * @var \MaestrosBundle\Entity\Modalidad|null
 	 *
 	 * @ORM\ManyToOne(targetEntity="MaestrosBundle\Entity\Modalidad")
 	 * @ORM\JoinColumn(name="moa_id", referencedColumnName="id")
@@ -78,7 +80,7 @@ class Plaza
 	private $modalidad;
 
 	/**
-	 * @var MaestrosBundle\Entity\CatFp|null
+	 * @var \MaestrosBundle\Entity\CatFp|null
 	 *
 	 * @ORM\ManyToOne(targetEntity="MaestrosBundle\Entity\CatFp")
 	 * @ORM\JoinColumn(name="catfp_id", referencedColumnName="id")
@@ -121,14 +123,14 @@ class Plaza
 	private $refuerzo;
 
 	/**
-	 * @var date
+	 * @var \DateTime
 	 *
 	 * @ORM\Column(name="f_amortiza", type="date", nullable=true)
 	 */
 	private $fAmortiza;
 
 	/**
-	 * @var date
+	 * @var \DateTime
 	 *
 	 * @ORM\Column(name="f_creacion", type="date", nullable=true)
 	 */
@@ -170,7 +172,7 @@ class Plaza
 	private $amortizada;
 
 	/**
-	 * @var ComunBundle\Entity\SincroLog|null
+	 * @var \ComunBundle\Entity\SincroLog|null
 	 *
 	 * @ORM\ManyToOne(targetEntity="ComunBundle\Entity\SincroLog")
 	 * @ORM\JoinColumns({
@@ -190,25 +192,25 @@ class Plaza
 	private $cecoActual;
 
 	/**
-	 * @var time
+	 * @var \DateTime
 	 *
 	 * @ORM\Column(name="h1ini", type="time", nullable=true)
 	 */
 	private $h1ini;
 	/**
-	 * @var time
+	 * @var \Datetime
 	 *
 	 * @ORM\Column(name="h1fin", type="time", nullable=true)
 	 */
 	private $h1fin;
 	/**
-	 * @var time
+	 * @var \Datetime
 	 *
 	 * @ORM\Column(name="h2ini", type="time", nullable=true)
 	 */
 	private $h2ini;
 	/**
-	 * @var time
+	 * @var \Datetime
 	 *
 	 * @ORM\Column(name="h2fin", type="time", nullable=true)
 	 */
@@ -223,6 +225,16 @@ class Plaza
 	 * })
 	 */
 	private $turnof;
+
+	/**
+	 * @var \CostesBundle\Entity\UnidadOrganizativa
+	 *php
+	 * @ORM\ManyToOne(targetEntity="CostesBundle\Entity\UnidadOrganizativa")
+	 * @ORM\JoinColumns({
+	 *   @ORM\JoinColumn(name="unidad_organizativa_id", referencedColumnName="id")
+	 * })
+	 */
+	private $unidadOrganizativa;
 
 
 	/**
@@ -404,7 +416,7 @@ class Plaza
 	/**
 	 * Get fAmortiza.
 	 *
-	 * @return date|\DateTime|null
+	 * @return \DateTime|null
 	 */
 	public function getFAmortiza()
 	{
@@ -562,7 +574,7 @@ class Plaza
 	 *
 	 * @return Plaza
 	 */
-	public function setUf(\CostesBundle\Entity\Uf $uf = null)
+	public function setUf(Uf $uf = null)
 	{
 		$this->uf = $uf;
 
@@ -586,7 +598,7 @@ class Plaza
 	 *
 	 * @return Plaza
 	 */
-	public function setPa(\CostesBundle\Entity\Pa $pa = null)
+	public function setPa(Pa $pa = null)
 	{
 		$this->pa = $pa;
 
@@ -610,7 +622,7 @@ class Plaza
 	 *
 	 * @return Plaza
 	 */
-	public function setCatGen(\MaestrosBundle\Entity\CatGen $catGen = null)
+	public function setCatGen(CatGen $catGen = null)
 	{
 		$this->catGen = $catGen;
 
@@ -634,7 +646,7 @@ class Plaza
 	 *
 	 * @return Plaza
 	 */
-	public function setModalidad(\MaestrosBundle\Entity\Modalidad $modalidad = null)
+	public function setModalidad(Modalidad $modalidad = null)
 	{
 		$this->modalidad = $modalidad;
 
@@ -658,7 +670,7 @@ class Plaza
 	 *
 	 * @return Plaza
 	 */
-	public function setCatFp(\MaestrosBundle\Entity\CatFp $catFp = null)
+	public function setCatFp(CatFp $catFp = null)
 	{
 		$this->catFp = $catFp;
 
@@ -668,35 +680,11 @@ class Plaza
 	/**
 	 * Get catFp
 	 *
-	 * @return MaestrosBundle\Entity\CatFp|\MaestrosBundle\Entity\CatFp|null
+	 * @return \MaestrosBundle\Entity\CatFp|\MaestrosBundle\Entity\CatFp|null
 	 */
 	public function getCatFp()
 	{
 		return $this->catFp;
-	}
-
-	/**
-	 * Set ceco.
-	 *
-	 * @param \CostesBundle\Entity\Ceco|null $ceco
-	 *
-	 * @return Plaza
-	 */
-	public function setCeco(\CostesBundle\Entity\Ceco $ceco = null)
-	{
-		$this->ceco = $ceco;
-
-		return $this;
-	}
-
-	/**
-	 * Get ceco.
-	 *
-	 * @return \CostesBundle\Entity\Ceco|null
-	 */
-	public function getCeco()
-	{
-		return $this->ceco;
 	}
 
 	/**
@@ -706,7 +694,7 @@ class Plaza
 	 *
 	 * @return Plaza
 	 */
-	public function setSincroLog(\ComunBundle\Entity\SincroLog $sincroLog = null)
+	public function setSincroLog(SincroLog $sincroLog = null)
 	{
 		$this->sincroLog = $sincroLog;
 
@@ -731,7 +719,7 @@ class Plaza
 	 *
 	 * @return Plaza
 	 */
-	public function setCecoActual(\CostesBundle\Entity\Ceco $cecoActual = null)
+	public function setCecoActual(Ceco $cecoActual = null)
 	{
 		$this->cecoActual = $cecoActual;
 
@@ -851,7 +839,7 @@ class Plaza
      *
      * @return Plaza
      */
-    public function setTurnof(\MaestrosBundle\Entity\Turno $turnof = null)
+    public function setTurnof(Turno $turnof = null)
     {
         $this->turnof = $turnof;
 
@@ -866,5 +854,29 @@ class Plaza
     public function getTurnof()
     {
         return $this->turnof;
+    }
+
+    /**
+     * Set unidadOrganizativa.
+     *
+     * @param \CostesBundle\Entity\UnidadOrganizativa|null $unidadOrganizativa
+     *
+     * @return Plaza
+     */
+    public function setUnidadOrganizativa(UnidadOrganizativa $unidadOrganizativa = null)
+    {
+        $this->unidadOrganizativa = $unidadOrganizativa;
+
+        return $this;
+    }
+
+    /**
+     * Get unidadOrganizativa.
+     *
+     * @return \CostesBundle\Entity\UnidadOrganizativa|null
+     */
+    public function getUnidadOrganizativa()
+    {
+        return $this->unidadOrganizativa;
     }
 }

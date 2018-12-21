@@ -1,0 +1,35 @@
+<script>
+    $(document).ready(function () {
+        $("#costesbundle_unidadorganizativa_dependencia").change(function () {
+            let valor, recurso;
+            let codigo;
+            $("#procesando").show();
+            valor = $("#costesbundle_unidadorganizativa_dependencia").val();
+            if ( valor == '')  {
+                $("#costesbundle_unidadorganizativa_codigo").val('');
+            }
+            recurso = Routing.generate("ajaxGetUnidad", {"id": valor}, true);
+            $.ajax({
+                type: "POST",
+                url: recurso,
+                dataType: 'json',
+                success: function (data) {
+                    $('.modal-backdrop').remove();
+                    $("#procesando").hide();
+                    codigo = data.codigo + "." ;
+                    $("#costesbundle_unidadorganizativa_codigo").val(codigo);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    return null;
+                }
+            });
+        });
+
+        });
+
+</script>
+<div class="container">
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    {{ form_end(form) }}
+</div>

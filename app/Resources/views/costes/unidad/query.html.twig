@@ -1,0 +1,80 @@
+{% extends "layout.html.twig" %} 
+{% block titulo %} ** ESTRUCTURA ORGANIZATIVA **
+    <a href="{{ path("addUnidad") }}"
+       class="btn btn-success">
+        <span class="glyphicon glyphicon-new-window"></span> Nueva Unidad</a>
+
+{% endblock %}
+
+{% block contenido %}
+    <script>
+        function editarUnidad() {
+            let nodo, recurso, id;
+            nodo = $('#tree').treeview('getSelected');
+            console.log(nodo["0"]);
+            console.log(nodo["0"]["unidad"]);
+            console.log(nodo["0"]["nodes"])
+            id = nodo["0"]["unidad"];
+            recurso = Routing.generate("editUnidad",{"id":id}, true);
+            window.location = recurso;
+        }
+
+        function eliminarUnidad() {
+            let nodo, recurso, id;
+            nodo = $('#tree').treeview('getSelected');
+            id = nodo["0"]["unidad"];
+            if (nodo["0"]["nodes"] != "" )
+                bootbox.alert('ERROR NO SE PUEDEN ELIMINAR UNIDADES CON DEPENDENCIAS');
+            else {
+                recurso = Routing.generate("deleteUnidad", {"id": id}, true);
+                window.location = recurso;
+            }
+        }
+
+
+        $(document).ready(function () {
+            let recurso;
+            recurso = Routing.generate("ajaxGetEstructura", true);
+            $.ajax({
+                type: "POST",
+                url: recurso,
+                dataType: 'json',
+                success: function ok (data) {
+                    $('.modal-backdrop').remove();
+                    $("#procesando").hide();
+                    $('#tree').treeview({data: data});
+                    $('#tree').treeview('expandAll', {levels: 5, silent: true});
+                    $('#tree').on('nodeSelected', function (event, data) {
+
+                    })
+                },
+                error: function err () {
+                    return null;
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript" src="{{ asset('js/bootstrap-treeview.js') }}"></script>
+
+    <div id="tree" class="container"></div>
+
+    <div class="container">
+        <button type="button"
+                id="btnAsignacion"
+                class="btn btn-default btn-success btn-t"
+                onclick="editarUnidad()"
+                data-toggle="tooltip"
+                data-placement="bottom"
+                title="Editar"> Editar Unidad
+        </button>
+        <button type="button"
+                id="btnAsignacion"
+                class="btn btn-default btn-danger btn-t"
+                onclick="eliminarUnidad()"
+                data-toggle="tooltip"
+                data-placement="bottom"
+                title="Eliminar"> Eliminar Unidad
+        </button>
+    </div>
+
+{% endblock %}
