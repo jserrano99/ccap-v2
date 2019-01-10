@@ -109,6 +109,9 @@ class PlazaDatatable extends AbstractDatatable
 			->orderBy('u.descripcion', 'ASC')
 			->where("u.enuso = 'S'")
 			->getQuery()->getResult();
+		$UnidadOrganizativaAll = $this->getEntityManager()->getRepository('CostesBundle:UnidadOrganizativa')->createQueryBuilder('u')
+			->orderBy('u.descripcion', 'ASC')
+			->getQuery()->getResult();
 
 		$this->columnBuilder
 			->add('id', Column::class, [
@@ -116,27 +119,23 @@ class PlazaDatatable extends AbstractDatatable
 				'width' => '25px'])
 			->add('cias', Column::class, [
 				'title' => 'CIAS',
-				'width' => '95px',
+				'width' => '35px',
 				'filter' => [TextFilter::class, [
 					'cancel_button' => false
 				]]])
-			->add('uf.oficial', Column::class, [
-				'title' => 'Código',
-				'width' => '65px'])
+//			->add('uf.oficial', Column::class, [
+//				'title' => 'Código'])
 			->add('uf.descripcion', Column::class, [
 				'title' => 'Unidad Funcional',
-				'width' => '220px',
 				'filter' => [SelectFilter::class,
 					[
 						'multiple' => false,
 						'select_options' => ['' => 'Todo'] + $this->getOptionsArrayFromEntities($UfAll, 'descripcion', 'descripcion'),
 						'search_type' => 'eq']]])
-			->add('pa.oficial', Column::class, [
-				'title' => 'Código',
-				'width' => '65px'])
+//			->add('pa.oficial', Column::class, [
+//				'title' => 'Código'])
 			->add('pa.descripcion', Column::class, [
 				'title' => 'Punto Asistencial',
-				'width' => '220px',
 				'filter' => [SelectFilter::class,
 					[
 						'multiple' => false,
@@ -144,11 +143,10 @@ class PlazaDatatable extends AbstractDatatable
 						'search_type' => 'eq']]])
 			->add('cecoActual.codigo', Column::class, [
 				'title' => 'Ceco Actual',
-				'width' => '65px',
+				'width' =>'30px',
 				'default_content' => ''])
 			->add('catGen.descripcion', Column::class, [
 				'title' => 'Cat. General',
-				'width' => '220px',
 				'filter' => [SelectFilter::class,
 					[
 						'multiple' => false,
@@ -156,7 +154,7 @@ class PlazaDatatable extends AbstractDatatable
 						'search_type' => 'eq']]])
 			->add('amortizada', Column::class, [
 				'title' => 'Amortizada',
-				'width' => '45px',
+				'width' => '25px',
 				'filter' => [SelectFilter::class,
 					[
 						'search_type' => 'eq',
@@ -171,17 +169,26 @@ class PlazaDatatable extends AbstractDatatable
 					],
 				],
 			])
-			->add('fAmortiza', DateTimeColumn::class, ['title' => 'Fecha Amortización', 'width' => '150px',
-				'date_format' => 'DD/MM/YYYY',
+//			->add('fAmortiza', DateTimeColumn::class, ['title' => 'Fecha Amortización', 'width' => '150px',
+//				'date_format' => 'DD/MM/YYYY',
+//				'default_content' => '',
+//				'filter' => [DateRangeFilter::class, [
+//					'cancel_button' => false,
+//				]],
+//			])
+			->add('unidadOrganizativa.descripcion', Column::class, [
+				'title' => 'Unidad Organizativa',
 				'default_content' => '',
-				'filter' => [DateRangeFilter::class, [
-					'cancel_button' => false,
-				]],
-			])
+				'filter' => [SelectFilter::class,
+					[
+						'multiple' => false,
+						'select_options' => ['' => 'Todo'] + $this->getOptionsArrayFromEntities($UnidadOrganizativaAll, 'descripcion', 'descripcion'),
+						'search_type' => 'eq']]])
 			->add('sincroLog.estado.descripcion', Column::class, [
 				'title' => 'Estado Sincronización',
-				'width' => '220px',
+				'visible' => false,
 				'default_content' => ''])
+
 			->add(null, ActionColumn::class, [
 				'title' => 'Acciones',
 				'actions' => [

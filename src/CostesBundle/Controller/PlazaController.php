@@ -136,6 +136,17 @@ class PlazaController extends Controller
 	}
 
 	/**
+	 * @param $cias
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+	public function editByCiasAction ($cias) {
+		$em = $this->getDoctrine()->getManager();
+		$Plaza = $em->getRepository("CostesBundle:Plaza")->findPlazaByCias($cias);
+
+		$params = ['id' => $Plaza->getId()];
+		return $this->redirectToRoute("editPlaza", $params);
+	}
+	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 * @param $id
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
@@ -1475,4 +1486,33 @@ class PlazaController extends Controller
 		return $this->render("costes/plaza/consultaAltas.html.twig", $params);
 	}
 
+	/**
+	 * @param $cias
+	 * @param $unidadOrganizativa_id
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+	public function cambiarUnidadOrganizativaAction($cias, $unidadOrganizativa_id){
+		$entityManager = $this->getDoctrine()->getManager();
+
+		$Plaza = $entityManager->getRepository("CostesBundle:Plaza")->findPlazaByCias($cias);
+		$UnidadOrganizativa = $entityManager->getRepository("CostesBundle:UnidadOrganizativa")->find($unidadOrganizativa_id);
+		$Plaza->setUnidadOrganizativa($UnidadOrganizativa);
+		$entityManager->persist($Plaza);
+		$entityManager->flush();
+
+		$params = ['id' => $Plaza->getId()];
+		return $this->redirectToRoute("editPlaza", $params);
+	}
+
+	public function quitarUnidadOrganizativaAction($cias){
+		$entityManager = $this->getDoctrine()->getManager();
+
+		$Plaza = $entityManager->getRepository("CostesBundle:Plaza")->findPlazaByCias($cias);
+		$Plaza->setUnidadOrganizativa(null);
+		$entityManager->persist($Plaza);
+		$entityManager->flush();
+
+		$params = ['id' => $Plaza->getId()];
+		return $this->redirectToRoute("editPlaza", $params);
+	}
 }

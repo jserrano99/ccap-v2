@@ -84,7 +84,7 @@ function amortizaPlazaUnif($Plaza)
 function selectCecoCias($conexion, $cias)
 {
 	try {
-		$sentencia = "select * from cecocias where cias =  :cias";
+		$sentencia = "select * from cecocias where cias = :cias";
 		$query = $conexion->prepare($sentencia);
 		$params = [":cias" => $cias];
 		$query->execute($params);

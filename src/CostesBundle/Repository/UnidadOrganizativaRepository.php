@@ -17,5 +17,9 @@ use Doctrine\ORM\EntityRepository;
  */
 class UnidadOrganizativaRepository extends EntityRepository
 {
+	public function createAlphabeticalQueryBuilder() {
+		return $this->createQueryBuilder('u')
+			->orderBy('u.descripcion', 'ASC');
+	}
 
 }

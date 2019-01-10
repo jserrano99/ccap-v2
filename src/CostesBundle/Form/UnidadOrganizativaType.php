@@ -22,39 +22,44 @@ class UnidadOrganizativaType extends AbstractType
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder
+			->add('id', TextType::class, [
+				"label" => 'id',
+				'required' => true,
+				'disabled' => true,
+				"attr" => ["class" => "form-control muycorto"]])
 			->add('descripcion', TextType::class, [
 				"label" => 'Descripción',
 				'required' => true,
 				'disabled' => false,
-				"attr" => ["class" => "form-control"]])
+				"attr" => ["class" => "form-control largo"]])
 			->add('dependencia', EntityType::class, [
 				"label" => 'Unidad de Dependencia',
 				'class' => 'CostesBundle\Entity\UnidadOrganizativa',
 				'placeholder' => 'Seleccione Unidad de Dependencia',
 				'required' => false,
 				'disabled' => false,
-				"attr" => ["class" => " form-control"]])
+				"attr" => ["class" => " form-control medio "]])
 			->add('codigo', TextType::class, [
 				"label" => 'Código',
 				'required' => true,
 				'disabled' => false,
-				"attr" => ["class" => "form-control"]])
+				"attr" => ["class" => "form-control corto"]])
 			->add('orden', TextType::class, [
 				"label" => 'Orden',
 				'required' => false,
 				'disabled' => false,
 				"attr" => ["class" => "corto form-control"]])
 			->add('responsable', TextType::class, [
-				"label" => 'Responsable de Unidad (CIAS) ',
+				"label" => 'Responsable de Unidad (??) ',
 				'required' => false,
 				'disabled' => false,
 				"attr" => ["class" => "medio form-control"]])
 			->add('responsableDs', TextType::class, [
-				"label" => 'Plaza',
+				"label" => '??',
 				"mapped" => false,
 				'required' => false,
 				'disabled' => true,
-				"attr" => ["class" => " form-control"]])
+				"attr" => ["class" => " form-control largo"]])
 
 			->add('tipoUnidad', EntityType::class, [
 				"label" => 'Tipo de Unidad ',
@@ -62,7 +67,7 @@ class UnidadOrganizativaType extends AbstractType
 				'placeholder' => 'Seleccione Tipo de Unidad',
 				'required' => false,
 				'disabled' => false,
-				"attr" => ["class" => "form-control"]])
+				"attr" => ["class" => "form-control largo"]])
 			->add('Guardar', SubmitType::class, [
 				"attr" => ["class" => "form-submit btn btn-t btn-success"
 				]]);

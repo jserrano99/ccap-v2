@@ -34,6 +34,11 @@ addPlaza:
 editPlaza:
   path:   /plaza/edit/{id}
   defaults: { _controller: CostesBundle:Plaza:edit}
+editPlazaByCias:
+  path:   /plaza/editbycias/{cias}
+  defaults: { _controller: CostesBundle:Plaza:editByCias}
+  options:
+    expose: true
 queryPlaza:
   path:   /plaza/query
   defaults: { _controller: CostesBundle:Plaza:query}
@@ -147,6 +152,17 @@ sincroCecoCias:
   defaults: { _controller: CostesBundle:Plaza:sincroCecoCias}
   options:
     expose: true
+cambiarUnidadOrganizativa:
+  path:   /plaza/unidad/cambiar/{cias}/{unidadOrganizativa_id}
+  defaults: { _controller: CostesBundle:Plaza:cambiarUnidadOrganizativa}
+  options:
+    expose: true
+quitarUnidadOrganizativa:
+  path:   /plaza/unidad/quitar/{cias}
+  defaults: { _controller: CostesBundle:Plaza:quitarUnidadOrganizativa}
+  options:
+    expose: true
+
 #
 # CECO CENTROS DE COSTE
 #
@@ -216,7 +232,7 @@ deleteUf:
   options:
     expose: true
 sincroUf:
-  path:   /uf/sincro/{id}/{actuacion}
+  path:   /uf/sincro/{id}/{actuacion}/{equf_id}
   defaults: { _controller: CostesBundle:Uf:sincro}
   options:
     expose: true
@@ -309,7 +325,6 @@ queryEstructura:
   defaults: { _controller: CostesBundle:Unidad:queryEstructura}
   options:
     expose: true
-
 ajaxGetEstructura:
   path: /unidad/estructura
   defaults: { _controller: CostesBundle:Unidad:ajaxGetEstructura}
@@ -333,6 +348,16 @@ deleteUnidad:
 ajaxGetUnidad:
   path: /unidad/getunidad/{id}
   defaults: { _controller: CostesBundle:Unidad:ajaxGetUnidad}
+  options:
+    expose: true
+ajaxVerDependencia:
+  path: /unidad/dependencia/{id}
+  defaults: { _controller: CostesBundle:Unidad:ajaxVerDependencia}
+  options:
+    expose: true
+ajaxConsultaResposable:
+  path: /unidad/responsable/{cias}/{fecha}
+  defaults: { _controller: CostesBundle:Unidad:ajaxConsultaResposable}
   options:
     expose: true
 

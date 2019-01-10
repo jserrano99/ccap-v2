@@ -33,19 +33,15 @@ function selectMovialtaByCias()
 function main()
 {
 	global $JanoControl, $cias;
-
-	var_dump($cias);
 	$Plaza = selectPlazabyCias($cias);
-
 	$MovialtaAll = selectMovialtaByCias($cias);
 
 	try {
 		$sql = "delete from ccap_temp_altas";
-
 		$query = $JanoControl->prepare($sql);
 		$query->execute();
 	}catch (PDOException $ex) {
-		echo "error en delete ";
+		echo "error en delete \n";
 		exit(1);
 	}
 

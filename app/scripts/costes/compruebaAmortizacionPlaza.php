@@ -4,10 +4,10 @@ include_once __DIR__ . '/../funcionesDAO.php';
 
 /**
  * 
- * @global type $JanoUnif
- * @global type $cias
- * @global type $fecha
- * @return type
+ * @global \PDO $JanoUnif
+ * @global string $cias
+ * @global string $fecha
+ * @return array
  */
 function selectMovialtaByCias (){
         global $JanoUnif, $cias, $fecha;
@@ -15,7 +15,7 @@ function selectMovialtaByCias (){
         $sentencia = " select t3.cip, t3.dni, t3.ape12, t3.nombre, t2.codigo, t2.falta, t2.fbaja, t2.cip "
                    . " from movialta as t2 "
                    . " inner join trab as t3 on t3.cip = t2.cip "
-                   ." where t2.cias = :cias and t2.fbaja >= :fecha ";
+                   ." where t2.cias = :cias and ( t2.fbaja >= :fecha or t2.fbaja is null)";
         $query = $JanoUnif->prepare($sentencia);
         $params = [":cias" => $cias,
                         ":fecha" => $fecha];
@@ -31,10 +31,10 @@ function selectMovialtaByCias (){
 }
 /**
  * 
- * @global type $JanoUnif
- * @global type $cias
- * @global type $fecha
- * @return type
+ * @global \PDO $JanoUnif
+ * @global string $cias
+ * @global string $fecha
+ * @return array
  */
 function selectCcaByCias() {
     global $JanoUnif, $cias, $fecha;
@@ -45,8 +45,8 @@ function selectCcaByCias() {
                    . " inner join trab as t3 on t3.cip = t2.cip "
                    . " where t1.cias = :cias and t1.ffin >= :fecha ";
         $query = $JanoUnif->prepare($sentencia);
-        $params = array(":cias" => $cias,
-                        ":fecha" => $fecha );
+        $params = [":cias" => $cias,
+                        ":fecha" => $fecha];
         $query->execute($params);
         $res = $query->fetchAll(PDO::FETCH_ASSOC);
         return $res;
@@ -60,13 +60,12 @@ function selectCcaByCias() {
 
 /**
  * 
- * @global type $JanoUnif
- * @global type $cias
- * @global type $fecha
- * @return type
+ * @global string $cias
+ * @global string $fecha
+ * @return int
  */
 function main() {
-    global $JanoUnif, $cias, $fecha;
+    global $cias, $fecha;
     
     $resCca = selectCcaByCias();
     if ($resCca != null) {

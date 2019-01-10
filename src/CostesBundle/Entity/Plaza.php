@@ -228,7 +228,7 @@ class Plaza
 
 	/**
 	 * @var \CostesBundle\Entity\UnidadOrganizativa
-	 *php
+	 *
 	 * @ORM\ManyToOne(targetEntity="CostesBundle\Entity\UnidadOrganizativa")
 	 * @ORM\JoinColumns({
 	 *   @ORM\JoinColumn(name="unidad_organizativa_id", referencedColumnName="id")

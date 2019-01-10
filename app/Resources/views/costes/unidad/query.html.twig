@@ -8,6 +8,20 @@
 
 {% block contenido %}
     <script>
+        function verPlaza() {
+            let nodo, recurso, tipo, cias;
+            nodo = $('#tree').treeview('getSelected');
+            tipo = nodo["0"]["tipo"];
+            if (tipo !== 'cias') {
+                bootbox.alert('SOLO SE PUEDE EDITAR CIAS');
+            } else {
+                cias = nodo["0"]["text"];
+                recurso = Routing.generate("editPlazaByCias", {"cias": cias}, true);
+                // bootbox.alert(recurso);
+                window.location = recurso;
+            }
+        }
+
         function editarUnidad() {
             let nodo, recurso, id;
             nodo = $('#tree').treeview('getSelected');
@@ -15,44 +29,52 @@
             console.log(nodo["0"]["unidad"]);
             console.log(nodo["0"]["nodes"])
             id = nodo["0"]["unidad"];
-            recurso = Routing.generate("editUnidad",{"id":id}, true);
+            recurso = Routing.generate("editUnidad", {"id": id}, true);
             window.location = recurso;
         }
 
         function eliminarUnidad() {
+            let msj, tipo;
             let nodo, recurso, id;
             nodo = $('#tree').treeview('getSelected');
             id = nodo["0"]["unidad"];
-            if (nodo["0"]["nodes"] != "" )
-                bootbox.alert('ERROR NO SE PUEDEN ELIMINAR UNIDADES CON DEPENDENCIAS');
-            else {
-                recurso = Routing.generate("deleteUnidad", {"id": id}, true);
-                window.location = recurso;
+            tipo = nodo["0"]["tipo"];
+            msj = nodo["0"]["nodes"];
+            if (tipo === 'cias') {
+                bootbox.alert('ERROR NO SE PUEDEN ELIMINAR PLAZAS');
+            } else {
+
+                if (typeof msj !== 'undefined')
+                    bootbox.alert('ERROR NO SE PUEDEN ELIMINAR UNIDADES CON DEPENDENCIAS/CIAS');
+                else {
+                    recurso = Routing.generate("deleteUnidad", {"id": id}, true);
+                    window.location = recurso;
+                }
             }
         }
 
 
-        $(document).ready(function () {
-            let recurso;
-            recurso = Routing.generate("ajaxGetEstructura", true);
-            $.ajax({
-                type: "POST",
-                url: recurso,
-                dataType: 'json',
-                success: function ok (data) {
-                    $('.modal-backdrop').remove();
-                    $("#procesando").hide();
-                    $('#tree').treeview({data: data});
-                    $('#tree').treeview('expandAll', {levels: 5, silent: true});
-                    $('#tree').on('nodeSelected', function (event, data) {
+            $(document).ready(function () {
+                let recurso;
+                recurso = Routing.generate("ajaxGetEstructura", true);
+                $.ajax({
+                    type: "POST",
+                    url: recurso,
+                    dataType: 'json',
+                    success: function ok(data) {
+                        $('.modal-backdrop').remove();
+                        $("#procesando").hide();
+                        $('#tree').treeview({data: data});
+                        $('#tree').treeview('expandAll', {levels: 5, silent: true});
+                        $('#tree').on('nodeSelected', function (event, data) {
 
-                    })
-                },
-                error: function err () {
-                    return null;
-                }
+                        })
+                    },
+                    error: function err() {
+                        return null;
+                    }
+                });
             });
-        });
     </script>
     <script type="text/javascript" src="{{ asset('js/bootstrap-treeview.js') }}"></script>
 
@@ -60,7 +82,6 @@
 
     <div class="container">
         <button type="button"
-                id="btnAsignacion"
                 class="btn btn-default btn-success btn-t"
                 onclick="editarUnidad()"
                 data-toggle="tooltip"
@@ -68,12 +89,19 @@
                 title="Editar"> Editar Unidad
         </button>
         <button type="button"
-                id="btnAsignacion"
                 class="btn btn-default btn-danger btn-t"
                 onclick="eliminarUnidad()"
                 data-toggle="tooltip"
                 data-placement="bottom"
                 title="Eliminar"> Eliminar Unidad
+        </button>
+        <button type="button"
+                id="btnAsignacion"
+                class="btn btn-default btn-info btn-t"
+                onclick="verPlaza()"
+                data-toggle="tooltip"
+                data-placement="bottom"
+                title="Editar la plaza">Editar Plaza
         </button>
     </div>
 

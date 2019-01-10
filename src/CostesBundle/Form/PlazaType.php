@@ -2,6 +2,7 @@
 
 namespace CostesBundle\Form;
 
+use CostesBundle\Repository\UnidadOrganizativaRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -45,6 +46,17 @@ class PlazaType extends AbstractType
 				'required' => false,
 				'disabled' => false,
 				"attr" => ["class" => "form-control"]])
+			->add('unidadOrganizativa', EntityType::class, [
+				"label" => 'Unidad Organizativa',
+				'class' => 'CostesBundle\Entity\UnidadOrganizativa',
+				'placeholder' => 'Seleccione Unidad Organizativa...',
+				'query_builder' => function (UnidadOrganizativaRepository $er) {
+					return $er->createAlphabeticalQueryBuilder();
+				},
+				'required' => false,
+				'disabled' => true,
+				"attr" => ["class" => "form-control"]])
+
 			->add('observaciones', TextType::class, [
 				"label" => 'Observaciones ',
 				'required' => false,

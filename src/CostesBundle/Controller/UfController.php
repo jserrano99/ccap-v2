@@ -63,7 +63,7 @@ class UfController extends Controller {
             try {
                 $EM->persist($Uf);
                 $EM->flush();
-                $params = ["id" => $Uf->getId(), "actuacion" => "UPDATE"];
+                $params = ["id" => $Uf->getId(), "actuacion" => "UPDATE","equf_id" =>99];
                 return $this->redirectToRoute("sincroUf", $params);
             } catch (UniqueConstraintViolationException $ex) {
                 $status = " YA EXISTE UNA UNIDAD FUNCIONAL CON ESTE CÓDIGO: " . $Uf->getUf();
@@ -114,7 +114,7 @@ class UfController extends Controller {
             try {
                 $EM->persist($Uf);
                 $EM->flush();
-                $params = ["id" => $Uf->getId(), "actuacion" => "INSERT"];
+                $params = ["id" => $Uf->getId(), "actuacion" => "INSERT","equf_id" =>99];
                 return $this->redirectToRoute("sincroUf", $params);
             } catch (UniqueConstraintViolationException $ex) {
                 $status = " YA EXISTE UNA UNIDAD FUNCIONAL CON ESTE CÓDIGO: " . $Uf->getUf();
@@ -206,7 +206,7 @@ class UfController extends Controller {
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 * @throws \Exception
 	 */
-    public function sincroAction($id, $actuacion) {
+    public function sincroAction($id, $actuacion,$equf_id) {
         $em = $this->getDoctrine()->getManager();
         $usuario_id = $this->sesion->get('usuario_id');
         $Usuario = $em->getRepository("ComunBundle:Usuario")->find($usuario_id);
@@ -230,7 +230,7 @@ class UfController extends Controller {
         $root = $this->get('kernel')->getRootDir();
         $modo = $this->getParameter('modo');
         $php = $this->getParameter('php');
-        $php_script = $php." " . $root . "/scripts/costes/actualizacionUf.php " . $modo . "  " . $Uf->getId() . " " . $actuacion;
+        $php_script = $php." " . $root . "/scripts/costes/actualizacionUf.php " . $modo . "  " . $Uf->getId() . " " . $actuacion.' '.$equf_id;
 
         exec($php_script, $SALIDA, $resultado);
         if ($resultado == 0) {
@@ -316,7 +316,6 @@ class UfController extends Controller {
 		$EqUf = $em->getRepository("CostesBundle:EqUf")->find($equf_id);
 		$params = ["id" => $EqUf->getUf()->getId(),
 			"actuacion" => 'ACTIVAR',
-			"edificio" => $EqUf->getEdificio()->getCodigo(),
 			"equf_id" => $EqUf->getId()];
 		return $this->redirectToRoute("sincroUf", $params);
 	}
@@ -331,7 +330,6 @@ class UfController extends Controller {
 		$EqUf = $em->getRepository("CostesBundle:EqUf")->find($equf_id);
 		$params = ["id" => $EqUf->getUf()->getId(),
 			"actuacion" => 'DESACTIVAR',
-			"edificio" => $EqUf->getEdificio()->getCodigo(),
 			"equf_id" => $EqUf->getId()];
 		return $this->redirectToRoute("sincroUf", $params);
 	}
