@@ -2,8 +2,7 @@
 {% block titulo %} ** ESTRUCTURA ORGANIZATIVA **
     <a href="{{ path("addUnidad") }}"
        class="btn btn-success">
-        <span class="glyphicon glyphicon-new-window"></span> Nueva Unidad</a>
-
+        <span class="glyphicon glyphicon-new-window"></span> Nueva Unidad </a>
 {% endblock %}
 
 {% block contenido %}
@@ -12,13 +11,13 @@
             let nodo, recurso, tipo, cias;
             nodo = $('#tree').treeview('getSelected');
             tipo = nodo["0"]["tipo"];
-            if (tipo !== 'cias') {
-                bootbox.alert('SOLO SE PUEDE EDITAR CIAS');
-            } else {
-                cias = nodo["0"]["text"];
+            if (tipo === 'cias') {
+                cias = nodo["0"]["cias"];
                 recurso = Routing.generate("editPlazaByCias", {"cias": cias}, true);
                 // bootbox.alert(recurso);
                 window.location = recurso;
+            } else {
+                bootbox.alert('SOLO SE PUEDE EDITAR CIAS');
             }
         }
 
@@ -27,7 +26,7 @@
             nodo = $('#tree').treeview('getSelected');
             console.log(nodo["0"]);
             console.log(nodo["0"]["unidad"]);
-            console.log(nodo["0"]["nodes"])
+            console.log(nodo["0"]["nodes"]);
             id = nodo["0"]["unidad"];
             recurso = Routing.generate("editUnidad", {"id": id}, true);
             window.location = recurso;
@@ -43,39 +42,37 @@
             if (tipo === 'cias') {
                 bootbox.alert('ERROR NO SE PUEDEN ELIMINAR PLAZAS');
             } else {
-
-                if (typeof msj !== 'undefined')
-                    bootbox.alert('ERROR NO SE PUEDEN ELIMINAR UNIDADES CON DEPENDENCIAS/CIAS');
-                else {
+                if (typeof msj === 'undefined') {
                     recurso = Routing.generate("deleteUnidad", {"id": id}, true);
                     window.location = recurso;
+                } else {
+                    bootbox.alert('ERROR NO SE PUEDEN ELIMINAR UNIDADES CON DEPENDENCIAS/CIAS');
                 }
             }
         }
 
-
-            $(document).ready(function () {
-                let recurso;
-                recurso = Routing.generate("ajaxGetEstructura", true);
-                $.ajax({
-                    type: "POST",
-                    url: recurso,
-                    dataType: 'json',
-                    success: function ok(data) {
-                        $('.modal-backdrop').remove();
-                        $("#procesando").hide();
-                        $('#tree').treeview({data: data});
-                        $('#tree').treeview('expandAll', {levels: 5, silent: true});
-                        $('#tree').on('nodeSelected', function (event, data) {
-
-                        })
-                    },
-                    error: function err() {
-                        return null;
-                    }
-                });
+        $(document).ready(function () {
+            let recurso;
+            recurso = Routing.generate("ajaxGetEstructura", true);
+            $.ajax({
+                type: "POST",
+                url: recurso,
+                dataType: 'json',
+                success: function ok(data) {
+                    $('.modal-backdrop').remove();
+                    $("#procesando").hide();
+                    $('#tree').treeview({data: data});
+                    $('#tree').treeview('expandAll', {levels: 5, silent: true});
+                    $('#tree').on('nodeSelected', function (event, data) {
+                    })
+                },
+                error: function err() {
+                    return null;
+                }
             });
+        });
     </script>
+
     <script type="text/javascript" src="{{ asset('js/bootstrap-treeview.js') }}"></script>
 
     <div id="tree" class="container"></div>
@@ -104,5 +101,4 @@
                 title="Editar la plaza">Editar Plaza
         </button>
     </div>
-
 {% endblock %}

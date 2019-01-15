@@ -9,7 +9,7 @@
             type: "POST",
             url: recurso,
             dataType: 'json',
-            success: function ok(data) {
+            success: function ok (data) {
                 $('.modal-backdrop').remove();
                 $("#procesando").hide();
                 $('#tree').treeview({data: data});
@@ -17,7 +17,7 @@
                 $('#tree').on('nodeSelected', function (event, data) {
                 })
             },
-            error: function err() {
+            error: function err () {
                 return null;
             }
         });
@@ -31,13 +31,13 @@
                 type: "POST",
                 url: recurso,
                 dataType: 'json',
-                success: function ok(data) {
+                success: function ok (data) {
                     $('.modal-backdrop').remove();
                     $("#procesando").hide();
                     $("#costesbundle_plaza_descripcionUf").val(data.descripcion);
                     $("#costesbundle_plaza_uf").val(data.id);
                 },
-                error: function err() {
+                error: function err () {
                     return null;
                 }
             });
@@ -141,7 +141,7 @@
                 type: "POST",
                 url: recurso,
                 dataType: 'json',
-                success: function ok (data, status, xhr) {
+                success: function ok (data) {
                     $('.modal-backdrop').remove();
                     $("#procesando").hide();
                     $("#costesbundle_plaza_h1ini").val('00:00');
@@ -157,7 +157,7 @@
                     $("#costesbundle_plaza_h2ini").val("00:00");
                     $("#costesbundle_plaza_h2fin").val("00:00");
                 },
-                error: function err (xhr, ajaxOptions, thrownError) {
+                error: function err () {
                     return null;
                 }
             });

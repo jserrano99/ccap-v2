@@ -22,7 +22,7 @@ descargaLogCatFp:
   options:
     expose: true
 sincroCatFp:
-  path: /catfp/sincro/{id}/{actuacion}/{eqcatfp_id}/{edificio}
+  path: /catfp/sincro/{id}/{actuacion}/{eqcatfp_id}
   defaults: { _controller: MaestrosBundle:CatFp:sincro}
   options:
     expose: true

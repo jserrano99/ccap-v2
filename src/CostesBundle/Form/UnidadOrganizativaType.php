@@ -31,7 +31,7 @@ class UnidadOrganizativaType extends AbstractType
 				"label" => 'Descripción',
 				'required' => true,
 				'disabled' => false,
-				"attr" => ["class" => "form-control largo"]])
+				"attr" => ["class" => "form-control"]])
 			->add('dependencia', EntityType::class, [
 				"label" => 'Unidad de Dependencia',
 				'class' => 'CostesBundle\Entity\UnidadOrganizativa',
@@ -53,21 +53,20 @@ class UnidadOrganizativaType extends AbstractType
 				"label" => 'Responsable de Unidad (??) ',
 				'required' => false,
 				'disabled' => false,
-				"attr" => ["class" => "medio form-control"]])
+				"attr" => ["class" => "form-control"]])
 			->add('responsableDs', TextType::class, [
 				"label" => '??',
 				"mapped" => false,
 				'required' => false,
 				'disabled' => true,
-				"attr" => ["class" => " form-control largo"]])
-
+				"attr" => ["class" => " form-control"]])
 			->add('tipoUnidad', EntityType::class, [
 				"label" => 'Tipo de Unidad ',
 				'class' => 'CostesBundle\Entity\TipoUnidad',
 				'placeholder' => 'Seleccione Tipo de Unidad',
 				'required' => false,
 				'disabled' => false,
-				"attr" => ["class" => "form-control largo"]])
+				"attr" => ["class" => "form-control"]])
 			->add('Guardar', SubmitType::class, [
 				"attr" => ["class" => "form-submit btn btn-t btn-success"
 				]]);

@@ -5,7 +5,7 @@
             let codigo;
             $("#procesando").show();
             valor = $("#costesbundle_unidadorganizativa_dependencia").val();
-            if (valor == '') {
+            if (valor === '') {
                 $("#costesbundle_unidadorganizativa_codigo").val('');
             }
             recurso = Routing.generate("ajaxGetUnidad", {"id": valor}, true);
@@ -28,12 +28,11 @@
         $("#costesbundle_unidadorganizativa_responsable").change(function () {
         });
     });
-
 </script>
 <div class="containe-fluid">
     {{ form_start(form) }}
     <div class="form-row mismalinea">{{ form_row(form.id) }}</div>
-    <div class="form-row mismalinea">{{ form_row(form.descripcion) }}</div>
+    <div class="form-row">{{ form_row(form.descripcion) }}</div>
     <div class="clearfix"></div>
     <div class="form-row">{{ form_row(form.dependencia) }}</div>
     <div class="clearfix"></div>
@@ -41,7 +40,7 @@
     <div class="form-row mismalinea">{{ form_row(form.orden) }}</div>
     <div class="clearfix"></div>
     <div class="form-row mismalinea">{{ form_row(form.responsable) }}</div>
-    <div class="form-row mismalinea">{{ form_row(form.responsableDs) }}</div>
+    {#<div class="form-row mismalinea">{{ form_row(form.responsableDs) }}</div>#}
     <div class="clearfix"></div>
     <div class="form-row mismalinea">{{ form_row(form.tipoUnidad) }}</div>
     {{ form_end(form) }}

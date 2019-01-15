@@ -175,31 +175,43 @@ class UnidadController extends Controller
 	{
 		$em = $this->getDoctrine()->getManager();
 		$dependiente = $em->getRepository("CostesBundle:UnidadOrganizativa")->find($id);
+		$data = [];
 
-
+		if ($dependiente->getResponsable() != null ) {
+			$tabla = $this->consultaResposable($dependiente->getResponsable()->getCias(),"2019-01-01");
+			$sub_data["text"] = $dependiente->getResponsable()->getCias()." ".$tabla[0]["nombre"];
+			$sub_data["tipo"] = "cias";
+			$sub_data["cias"] = $dependiente->getResponsable()->getCias();
+			$sub_data["icon"] = "glyphicon glyphicon-registration-mark";
+			$sub_data["color"] = "#ff0000";
+			$data[] = $sub_data;
+		}
 		$UnidadOrganizativaAll = $em->getRepository("CostesBundle:UnidadOrganizativa")->createQueryBuilder('u')
 			->where('u.dependencia = :dependencia ')
 			->setParameter('dependencia', $dependiente)
 			->orderBy('u.codigo', 'asc')
 			->getQuery()->getResult(Query::HYDRATE_ARRAY);
-		$data = [];
 		$PlazaAll = $em->getRepository("CostesBundle:Plaza")->createQueryBuilder('u')
 			->where('u.unidadOrganizativa = :unidadOrganizativa ')
 			->setParameter('unidadOrganizativa', $dependiente)
 			->getQuery()->getResult(Query::HYDRATE_ARRAY);
 		foreach ($PlazaAll as $Plaza) {
 			$sub_data["text"] = $Plaza["cias"];
+			$sub_data["cias"] = $Plaza["cias"];
 			$sub_data["tipo"] = "cias";
 			$sub_data["icon"] = "glyphicon glyphicon-user";
+			$sub_data["color"] = "#000000";
 			$data[] = $sub_data;
 		}
 
 		foreach ($UnidadOrganizativaAll as $row) {
 			$sub_data["unidad"] = $row["id"];
 			$sub_data["tipo"] = "";
+			$sub_data["cias"] = "";
 			$sub_data["name"] = $row["codigo"];
 			$sub_data["text"] = $row["codigo"] . " " . $row["descripcion"];
 			$sub_data["icon"] = "";
+			$sub_data["color"] = "#000000";
 			$sub_data["nodes"] = $this->verDependientes($row["id"]);
 			if (count($sub_data["nodes"]) == 0) unset($sub_data["nodes"]);
 			$data[] = $sub_data;
@@ -227,7 +239,6 @@ class UnidadController extends Controller
 		$response->setContent(json_encode($data));
 		$response->headers->set("Content-type", "application/json");
 		return $response;
-
 
 	}
 
@@ -259,22 +270,31 @@ class UnidadController extends Controller
 	 */
 	public function ajaxConsultaResposableAction($cias, $fecha)
 	{
-		$root = $this->get('kernel')->getRootDir();
-		$modo = $this->getParameter('modo');
-		$php = $this->getParameter('php');
-		$php_script = $php . " " . $root . "/scripts/costes/consultaPersonaByCias.php " . $modo . " " . $cias. " ".$fecha;
-
-		exec($php_script, $SALIDA, $resultado);
-
-		$em = $this->getDoctrine()->getManager();
-
-		$TempAltas = $em->getRepository("CostesBundle:TempAltas")->createQueryBuilder('u')
-			->getQuery()->getResult(Query::HYDRATE_ARRAY);;
-
+		$TempAltas = $this->consultaResposable($cias,$fecha);
 		$response = new Response();
 		$response->setContent(json_encode($TempAltas));
 		$response->headers->set("Content-type", "application/json");
 		return $response;
+	}
+
+	/**
+	 * @param string $cias
+	 * @param string $fecha
+	 * @return array
+	 */
+	public function consultaResposable($cias, $fecha)
+	{
+		$root = $this->get('kernel')->getRootDir();
+		$modo = $this->getParameter('modo');
+		$php = $this->getParameter('php');
+		$php_script = $php . " " . $root . "/scripts/costes/consultaPersonaByCias.php " . $modo . " " . $cias. " ".$fecha;
+		exec($php_script, $SALIDA, $resultado);
+
+		$TempAltas = $this->getDoctrine()->getManager()
+			->getRepository("CostesBundle:TempAltas")->createQueryBuilder('u')
+			->getQuery()->getResult(Query::HYDRATE_ARRAY);;
+
+		return $TempAltas;
 
 	}
 }
