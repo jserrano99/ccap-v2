@@ -112,6 +112,12 @@ consultarAltas:
   defaults: { _controller: CostesBundle:Plaza:consultaAltas}
   options:
     expose: true
+consultarAltasActivas:
+  path:   /plaza/consultarAltasActivas/{cias}/{fecha}
+  defaults: { _controller: CostesBundle:Plaza:consultaAltasActivas}
+  options:
+    expose: true
+
 deletePlaza:
   path:   /plaza/delete/{cias}
   defaults: { _controller: CostesBundle:Plaza:delete}
@@ -340,6 +346,16 @@ editUnidad:
   defaults: { _controller: CostesBundle:Unidad:edit}
   options:
     expose: true
+agregarUnidad:
+  path: /unidad/agregar/{id}
+  defaults: { _controller: CostesBundle:Unidad:agregar}
+  options:
+    expose: true
+agregarPlaza:
+  path: /unidad/agregarplaza/{id}
+  defaults: { _controller: CostesBundle:Unidad:agregarPlaza}
+  options:
+    expose: true
 deleteUnidad:
   path: /unidad/delete/{id}
   defaults: { _controller: CostesBundle:Unidad:delete}
@@ -353,6 +369,11 @@ ajaxGetUnidad:
 ajaxVerDependencia:
   path: /unidad/dependencia/{id}
   defaults: { _controller: CostesBundle:Unidad:ajaxVerDependencia}
+  options:
+    expose: true
+ajaxVerDependenciaCias:
+  path: /unidad/dependenciacias/{cias}
+  defaults: { _controller: CostesBundle:Unidad:ajaxVerDependenciaCias}
   options:
     expose: true
 ajaxConsultaResposable:

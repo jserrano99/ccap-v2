@@ -310,7 +310,8 @@ class PlazaController extends Controller
 		$Ceco = $Ceco_repo->createQueryBuilder('u')
 			->where('u.codigo = :codigo')
 			->setParameter('codigo', $codigo)
-			->getQuery()->getResult(Query::HYDRATE_ARRAY);;
+			->getQuery()->getResult(Query::HYDRATE_ARRAY);
+
 		if ($Ceco) {
 			$Ceco = $Ceco[0];
 		} else {
@@ -422,8 +423,8 @@ class PlazaController extends Controller
 	}
 
 	/**
-	 * @param $CargaFichero
-	 * @param $PHPExcel
+	 * @param CargaFichero $CargaFichero
+	 * @param  $PHPExcel
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 * @throws \Exception
 	 */
@@ -611,7 +612,6 @@ class PlazaController extends Controller
 	}
 
 	/**
-	 * @param $datatable
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 * @throws \PhpOffice\PhpSpreadsheet\Exception
 	 */
@@ -994,7 +994,7 @@ class PlazaController extends Controller
 
 	/**
 	 * @param $CargaFichero
-	 * @param $PHPExcel
+	 * @param Spreadsheet $PHPExcel
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
 	public function amortizaPlazaFichero($CargaFichero, $PHPExcel)
@@ -1327,6 +1327,12 @@ class PlazaController extends Controller
 		return $this->render("costes/plaza/cambio.adscripcion.html.twig", $params);
 	}
 
+	/**
+	 * @param $fichero
+	 * @return \PhpOffice\PhpSpreadsheet\Spreadsheet
+	 * @throws \PhpOffice\PhpSpreadsheet\Exception
+	 * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+	 */
 	public function validarFicheroCambioAds($fichero)
 	{
 		$Cabecera = ["A" => "CIAS",
@@ -1348,6 +1354,11 @@ class PlazaController extends Controller
 		return $PHPExcel;
 	}
 
+	/**
+	 * @param $CargaFichero
+	 * @param $PHPExcel
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
 	public function cambiaAdscripcionPlaza($CargaFichero, $PHPExcel)
 	{
 		$em = $this->getDoctrine()->getManager();
@@ -1457,12 +1468,54 @@ class PlazaController extends Controller
 		return $this->render("finCarga.html.twig", $params);
 	}
 
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @param                                           $cias
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
+	 * @throws \Exception
+	 */
 	public function consultaAltasAction(Request $request, $cias)
 	{
 		$root = $this->get('kernel')->getRootDir();
 		$modo = $this->getParameter('modo');
 		$php = $this->getParameter('php');
 		$php_script = $php . " " . $root . "/scripts/costes/consultaAltasByCias.php " . $modo . " " . $cias;
+
+		exec($php_script, $SALIDA, $resultado);
+
+		$Plaza = $this->getDoctrine()->getManager()->getRepository("CostesBundle:Plaza")->findPlazaByCias($cias);
+
+		$isAjax = $request->isXmlHttpRequest();
+		$datatableAltas = $this->get('sg_datatables.factory')->create(TempAltasDatatable::class);
+		$datatableAltas->buildDatatable();
+
+		if ($isAjax) {
+			$responseService = $this->get('sg_datatables.response');
+			$responseService->setDatatable($datatableAltas);
+			$datatableQueryBuilder = $responseService->getDatatableQueryBuilder();
+			$datatableQueryBuilder->buildQuery();
+
+			return $responseService->getResponse();
+		}
+
+		$params = ["plaza" => $Plaza,
+			"datatable" => $datatableAltas];
+		return $this->render("costes/plaza/consultaAltas.html.twig", $params);
+	}
+
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @param                                           $cias
+	 * @param                                           $fecha
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
+	 * @throws \Exception
+	 */
+	public function consultaAltasActivasAction(Request $request, $cias, $fecha)
+	{
+		$root = $this->get('kernel')->getRootDir();
+		$modo = $this->getParameter('modo');
+		$php = $this->getParameter('php');
+		$php_script = $php . " " . $root . "/scripts/costes/consultaAltasActivasByCias.php " . $modo . " " . $cias." ".$fecha;
 
 		exec($php_script, $SALIDA, $resultado);
 
@@ -1504,6 +1557,10 @@ class PlazaController extends Controller
 		return $this->redirectToRoute("editPlaza", $params);
 	}
 
+	/**
+	 * @param $cias
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
 	public function quitarUnidadOrganizativaAction($cias){
 		$entityManager = $this->getDoctrine()->getManager();
 

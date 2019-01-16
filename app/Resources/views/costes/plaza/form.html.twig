@@ -146,7 +146,7 @@
                     $("#procesando").hide();
                     $("#costesbundle_plaza_h1ini").val('00:00');
                     $("#costesbundle_plaza_h1fin").val('00:00');
-                    if ('M' === data.codigo) {
+                    if (data.codigo === 'M') {
                         $("#costesbundle_plaza_h1ini").val('08:00');
                         $("#costesbundle_plaza_h1fin").val('15:00');
                     }
@@ -177,8 +177,7 @@
     }
 
     function asignarUnidad() {
-
-        let unidadOrganizativa_id;
+        let unidadOrganizativaId;
         let recurso;
         let nodo;
         let cias = $("#costesbundle_plaza_cias").val();
@@ -186,17 +185,17 @@
         nodo = $('#tree').treeview('getSelected');
         console.log(nodo["0"]);
         console.log(nodo["0"]["unidad"]);
-        console.log(nodo["0"]["nodes"])
-        unidadOrganizativa_id = nodo["0"]["unidad"];
-        recurso = Routing.generate("cambiarUnidadOrganizativa",{"cias":cias,"unidadOrganizativa_id":unidadOrganizativa_id},true);
+        console.log(nodo["0"]["nodes"]);
+        unidadOrganizativaId = nodo["0"]["unidad"];
+        recurso = Routing.generate("cambiarUnidadOrganizativa",{"cias":cias,"unidadOrganizativa_id":unidadOrganizativaId},true);
         // bootbox.alert(recurso)
         window.location = recurso;
     }
 
     function cambiarAsignacion() {
         let cias, cecoAnterior, nuevoCeco, fInicio, recurso;
-        if ($("#costesbundle_plaza_nuevoCecoInf").val() == '' ||
-            $("#costesbundle_plaza_fInicio").val() == '') {
+        if ($("#costesbundle_plaza_nuevoCecoInf").val() === '' ||
+            $("#costesbundle_plaza_fInicio").val() === '') {
             bootbox.alert("OBLIGATORIO INFORMAR NUEVO CECO  Y FECHA DE INICIO",
                 function () {
                 });
@@ -222,7 +221,7 @@
         let uf = $("#costesbundle_plaza_uf").val();
         let catgen = $("#costesbundle_plaza_catGen").val();
         let recurso;
-        if (uf == '' || catgen == '') {
+        if (uf === '' || catgen === '') {
             bootbox.alert("Unidad Funcional, Punto Asistencia y Categoría Obligatorios");
         } else {
             $("#procesando").show();
@@ -255,13 +254,13 @@
     function calcularLetra() {
         let cadena, letra, resto;
         let cias = $("#costesbundle_plaza_cias").val();
-        if (cias != '') {
+        if (cias === '') {
+            bootbox.alert(' ERROR NO EXISTE CIAS');
+        } else {
             cadena = 'TRWAGMYFPDXBNJZSQVHLCKE';
             resto = cias % 23;
             letra = cadena.substr(resto, 1);
             $("#costesbundle_plaza_cias").val(cias + letra);
-        } else {
-            bootbox.alert(' ERROR NO EXISTE CIAS');
         }
     }
 
@@ -287,7 +286,7 @@
         let uf = $("#costesbundle_plaza_uf").val();
         let pa = $("#costesbundle_plaza_pa").val();
         let cias = $("#costesbundle_plaza_cias").val();
-        if (uf == '' || pa == '' || cias == '') {
+        if (uf === '' || pa === '' || cias === '') {
             bootbox.alert("Unidad Funcional, Punto Asistencial y Cias Obligatorios");
         } else {
             $("#procesando").show();

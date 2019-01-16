@@ -2,6 +2,7 @@
 
 namespace ComunBundle\Controller;
 
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
@@ -122,20 +123,20 @@ class LoginController extends Controller {
             return null;
         }
     }
-    /**
-     * 
-     * @param type $LdapAll
-     * @param type $username
-     * @return \ComunBundle\Controller\Usuario
-     */
+
+	/**
+	 * @param $LdapAll
+	 * @param $username
+	 * @return \ComunBundle\Entity\Usuario
+	 * @throws \Exception
+	 */
     public function creaUsuario($LdapAll, $username) {
         $EM = $this->getDoctrine()->getManager();
         $EstadoUsuario_repo = $EM->getRepository("ComunBundle:EstadoUsuario");
         $EstadoUsuario = $EstadoUsuario_repo->find(1);
-
-        $Usuario = new Usuario();
+		$Usuario = new Usuario();
         $Usuario->setCodigo($username);
-        $fecha = new \DateTime();
+        $fecha = new DateTime();
         $fecha->setDate(date('Y'), date('m'), date('d'));
         $Usuario->setFcAlta($fecha);
         

@@ -4,6 +4,7 @@ namespace CostesBundle\Controller;
 
 
 use CostesBundle\Entity\UnidadOrganizativa;
+use CostesBundle\Form\AsignarPlazaType;
 use CostesBundle\Form\UnidadOrganizativaType;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\Query;
@@ -73,6 +74,36 @@ class UnidadController extends Controller
 	 * @param                                           $id
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
+	public function agregarAction(Request $request, $id)
+	{
+		$EM = $this->getDoctrine()->getManager();
+		$UnidadOrganizativaDep = $EM->getRepository("CostesBundle:UnidadOrganizativa")->find($id);
+		$UnidadOrganizativa = new UnidadOrganizativa();
+		$UnidadOrganizativa->setDependencia($UnidadOrganizativaDep);
+		$UnidadOrganizativa->setCodigo($UnidadOrganizativaDep->getCodigo());
+		$form = $this->createForm(UnidadOrganizativaType::class, $UnidadOrganizativa);
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted()) {
+			try {
+				$EM->persist($UnidadOrganizativa);
+				$EM->flush();
+				return $this->redirectToRoute("queryEstructura");
+			} catch (DBALException $ex) {
+				$status = "ERROR GENERAL=" . $ex->getMessage();
+				$this->sesion->getFlashBag()->add("status", $status);
+			}
+		}
+
+		$params = ["unidadOrganizativa" => $UnidadOrganizativa, "accion" => "NUEVA", "form" => $form->createView()];
+		return $this->render("costes/unidad/edit.html.twig", $params);
+	}
+
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @param                                           $id
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
 	public function editAction(Request $request, $id)
 	{
 		$EM = $this->getDoctrine()->getManager();
@@ -83,6 +114,10 @@ class UnidadController extends Controller
 
 		if ($form->isSubmitted()) {
 			try {
+				if ($form->get("responsableCias")->getData() != null) {
+					$Plaza = $EM->getRepository("CostesBundle:Plaza")->findPlazaByCias($form->get("responsableCias")->getData());
+					$UnidadOrganizativa->setResponsable($Plaza);
+				}
 				$EM->persist($UnidadOrganizativa);
 				$EM->flush();
 				return $this->redirectToRoute("queryEstructura");
@@ -142,18 +177,21 @@ class UnidadController extends Controller
 		$data = [];
 
 		foreach ($UnidadOrganizativaAll as $row) {
-			$dependiente = $em->getRepository("CostesBundle:UnidadOrganizativa")->find($row["id"]);
+			$UnidadOrganizativa = $em->getRepository("CostesBundle:UnidadOrganizativa")->find($row["id"]);
+
 			$PlazaAll = $em->getRepository("CostesBundle:Plaza")->createQueryBuilder('u')
 				->where('u.unidadOrganizativa = :unidadOrganizativa ')
-				->setParameter('unidadOrganizativa', $dependiente)
+				->setParameter('unidadOrganizativa', $UnidadOrganizativa)
 				->getQuery()->getResult(Query::HYDRATE_ARRAY);
+
 			foreach ($PlazaAll as $Plaza) {
 				$sub_data["text"] = $Plaza["cias"];
 				$sub_data["tipo"] = "cias";
 				$sub_data["icon"] = "glyphicon glyphicon-user";
 				$data[] = $sub_data;
 			}
-			$sub_data["tipo"] = "";
+
+			$sub_data["tipo"] = "unidad";
 			$sub_data["unidad"] = $row["id"];
 			$sub_data["name"] = $row["codigo"];
 			$sub_data["text"] = $row["codigo"] . " " . $row["descripcion"];
@@ -174,39 +212,44 @@ class UnidadController extends Controller
 	public function verDependientes($id)
 	{
 		$em = $this->getDoctrine()->getManager();
-		$dependiente = $em->getRepository("CostesBundle:UnidadOrganizativa")->find($id);
+		$UnidadOrganizativa = $em->getRepository("CostesBundle:UnidadOrganizativa")->find($id);
 		$data = [];
-
-		if ($dependiente->getResponsable() != null ) {
-			$tabla = $this->consultaResposable($dependiente->getResponsable()->getCias(),"2019-01-01");
-			$sub_data["text"] = $dependiente->getResponsable()->getCias()." ".$tabla[0]["nombre"];
-			$sub_data["tipo"] = "cias";
-			$sub_data["cias"] = $dependiente->getResponsable()->getCias();
+		$fecha = '2019-01-01';
+		if ($UnidadOrganizativa->getResponsable() != null) {
+			$tabla = $this->consultaPersonaByCias($UnidadOrganizativa->getResponsable()->getCias(), $fecha);
+			$sub_data["text"] = $UnidadOrganizativa->getResponsable()->getCias() . " " . $tabla["nombre"];
+			$sub_data["tipo"] = "responsable";
+			$sub_data["cias"] = $UnidadOrganizativa->getResponsable()->getCias();
 			$sub_data["icon"] = "glyphicon glyphicon-registration-mark";
 			$sub_data["color"] = "#ff0000";
 			$data[] = $sub_data;
 		}
-		$UnidadOrganizativaAll = $em->getRepository("CostesBundle:UnidadOrganizativa")->createQueryBuilder('u')
-			->where('u.dependencia = :dependencia ')
-			->setParameter('dependencia', $dependiente)
-			->orderBy('u.codigo', 'asc')
-			->getQuery()->getResult(Query::HYDRATE_ARRAY);
+
 		$PlazaAll = $em->getRepository("CostesBundle:Plaza")->createQueryBuilder('u')
 			->where('u.unidadOrganizativa = :unidadOrganizativa ')
-			->setParameter('unidadOrganizativa', $dependiente)
+			->setParameter('unidadOrganizativa', $UnidadOrganizativa)
 			->getQuery()->getResult(Query::HYDRATE_ARRAY);
 		foreach ($PlazaAll as $Plaza) {
-			$sub_data["text"] = $Plaza["cias"];
-			$sub_data["cias"] = $Plaza["cias"];
-			$sub_data["tipo"] = "cias";
-			$sub_data["icon"] = "glyphicon glyphicon-user";
-			$sub_data["color"] = "#000000";
-			$data[] = $sub_data;
+			if ($Plaza["cias"] != $UnidadOrganizativa->getResponsable()->getCias()) {
+				$sub_data["text"] = $Plaza["cias"];
+				$sub_data["cias"] = $Plaza["cias"];
+				$sub_data["tipo"] = "cias";
+				$sub_data["icon"] = "glyphicon glyphicon-user";
+				$sub_data["color"] = "#000000";
+				$data[] = $sub_data;
+			}
 		}
+
+		$UnidadOrganizativaAll = $em->getRepository("CostesBundle:UnidadOrganizativa")->createQueryBuilder('u')
+			->where('u.dependencia = :dependencia ')
+			->setParameter('dependencia', $UnidadOrganizativa)
+			->orderBy('u.codigo', 'asc')
+			->getQuery()->getResult(Query::HYDRATE_ARRAY);
+
 
 		foreach ($UnidadOrganizativaAll as $row) {
 			$sub_data["unidad"] = $row["id"];
-			$sub_data["tipo"] = "";
+			$sub_data["tipo"] = "unidad";
 			$sub_data["cias"] = "";
 			$sub_data["name"] = $row["codigo"];
 			$sub_data["text"] = $row["codigo"] . " " . $row["descripcion"];
@@ -243,6 +286,47 @@ class UnidadController extends Controller
 	}
 
 	/**
+	 * @param $cias
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	public function ajaxVerDependenciaCiasAction($cias)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$Plaza = $em->getRepository("CostesBundle:Plaza")->findPlazaByCias($cias);
+		$UnidadOrganizativa = $Plaza->getUnidadOrganizativa();
+		$data = [];
+		$fecha = date('Y').'-'.date('m').'-'.date('d');
+
+		if ($UnidadOrganizativa) {
+			$sub_data["id"] = $UnidadOrganizativa->getId();
+			$sub_data["unidad"] = $UnidadOrganizativa->getDescripcion();
+			if ($UnidadOrganizativa->getResponsable()) {
+
+				$responsable = $this->consultaPersonaByCias($UnidadOrganizativa->getResponsable()->getCias(), $fecha);
+				$sub_data["responsableCias"] = $UnidadOrganizativa->getResponsable()->getCias();
+				$sub_data["responsableNombre"] = $responsable["nombre"];
+				$sub_data["responsableNIF"] = $responsable["dni"];
+				$sub_data["responsableCIP"] = $responsable["cip"];
+
+			} else {
+				$sub_data["responsableCias"] = "";
+				$sub_data["responsableNombre"] = "";
+				$sub_data["responsableNIF"] = "";
+				$sub_data["responsableCIP"] = "";
+			}
+			$sub_data["dependencia"] = $this->verDependencia($UnidadOrganizativa->getId());
+			if (count($sub_data["dependencia"]) == 0) unset ($sub_data["dependencia"]);
+			$data[] = $sub_data;
+		}
+
+		$response = new Response();
+		$response->setContent(json_encode($data));
+		$response->headers->set("Content-type", "application/json");
+		return $response;
+
+	}
+
+	/**
 	 * @param $id
 	 * @return array
 	 */
@@ -252,9 +336,22 @@ class UnidadController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		$UnidadOrganizativa = $em->getRepository("CostesBundle:UnidadOrganizativa")->find($id);
 		$data = [];
+		$fecha = date('Y').'-'.date('m').'-'.date('d');
 		if ($UnidadOrganizativa->getDependencia() !== null) {
 			$sub_data["id"] = $UnidadOrganizativa->getDependencia()->getId();
 			$sub_data["unidad"] = $UnidadOrganizativa->getDependencia()->getDescripcion();
+			if ($UnidadOrganizativa->getDependencia()->getResponsable()) {
+				$responsable = $this->consultaPersonaByCias($UnidadOrganizativa->getDependencia()->getResponsable()->getCias(), $fecha);
+				$sub_data["responsableCias"] = $UnidadOrganizativa->getDependencia()->getResponsable()->getCias();
+				$sub_data["responsableNombre"] = $responsable["nombre"];
+				$sub_data["responsableNIF"] = $responsable["dni"];
+				$sub_data["responsableCIP"] = $responsable["cip"];
+			} else {
+				$sub_data["responsableCias"] = "";
+				$sub_data["responsableNombre"] = "";
+				$sub_data["responsableNIF"] = "";
+				$sub_data["responsableCIP"] = "";
+			}
 			$sub_data["dependencia"] = $this->verDependencia($UnidadOrganizativa->getDependencia()->getId());
 			if (count($sub_data["dependencia"]) == 0) unset ($sub_data["dependencia"]);
 			$data[] = $sub_data;
@@ -270,7 +367,7 @@ class UnidadController extends Controller
 	 */
 	public function ajaxConsultaResposableAction($cias, $fecha)
 	{
-		$TempAltas = $this->consultaResposable($cias,$fecha);
+		$TempAltas = $this->consultaPersonaByCias($cias, $fecha);
 		$response = new Response();
 		$response->setContent(json_encode($TempAltas));
 		$response->headers->set("Content-type", "application/json");
@@ -282,19 +379,59 @@ class UnidadController extends Controller
 	 * @param string $fecha
 	 * @return array
 	 */
-	public function consultaResposable($cias, $fecha)
+	public function consultaPersonaByCias($cias, $fecha)
 	{
 		$root = $this->get('kernel')->getRootDir();
 		$modo = $this->getParameter('modo');
 		$php = $this->getParameter('php');
-		$php_script = $php . " " . $root . "/scripts/costes/consultaPersonaByCias.php " . $modo . " " . $cias. " ".$fecha;
+		$php_script = $php . " " . $root . "/scripts/costes/consultaPersonaByCias.php " . $modo . " " . $cias . " " . $fecha;
 		exec($php_script, $SALIDA, $resultado);
 
 		$TempAltas = $this->getDoctrine()->getManager()
 			->getRepository("CostesBundle:TempAltas")->createQueryBuilder('u')
 			->getQuery()->getResult(Query::HYDRATE_ARRAY);;
 
-		return $TempAltas;
+		return $TempAltas[0];
+
+	}
+
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @param  int                                      $id
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
+	public function agregarPlazaAction(Request $request, $id)
+	{
+		$EM = $this->getDoctrine()->getManager();
+		$UnidadOrganizativa = $EM->getRepository("CostesBundle:UnidadOrganizativa")->find($id);
+
+		$form = $this->createForm(AsignarPlazaType::class);
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted()) {
+			try {
+				$Plaza = $EM->getRepository("CostesBundle:Plaza")->findPlazaByCias($form->get("cias")->getData());
+				if ($Plaza) {
+					$Plaza->setUnidadOrganizativa($UnidadOrganizativa);
+					$EM->persist($Plaza);
+					$EM->flush();
+					return $this->redirectToRoute("queryEstructura");
+				} else {
+					$status = "ERROR NO EXISTE CIAS ";
+					$this->sesion->getFlashBag()->add("status", $status);
+				}
+			} catch (DBALException $ex) {
+				$status = "ERROR GENERAL=" . $ex->getMessage();
+				$this->sesion->getFlashBag()->add("status", $status);
+			}
+		}
+
+		$params = ["unidadOrganizativa" => $UnidadOrganizativa, "accion" => "NUEVA", "form" => $form->createView()];
+		return $this->render("costes/unidad/agregarPlaza.html.twig", $params);
+
+	}
+
+	public function imprimirEstructura($estructura) {
 
 	}
 }

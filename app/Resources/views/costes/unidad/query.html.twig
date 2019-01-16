@@ -1,17 +1,16 @@
 {% extends "layout.html.twig" %} 
 {% block titulo %} ** ESTRUCTURA ORGANIZATIVA **
-    <a href="{{ path("addUnidad") }}"
-       class="btn btn-success">
-        <span class="glyphicon glyphicon-new-window"></span> Nueva Unidad </a>
+
 {% endblock %}
 
 {% block contenido %}
     <script>
+
         function verPlaza() {
             let nodo, recurso, tipo, cias;
             nodo = $('#tree').treeview('getSelected');
             tipo = nodo["0"]["tipo"];
-            if (tipo === 'cias') {
+            if (tipo === 'cias' || tipo === 'responsable') {
                 cias = nodo["0"]["cias"];
                 recurso = Routing.generate("editPlazaByCias", {"cias": cias}, true);
                 // bootbox.alert(recurso);
@@ -19,6 +18,49 @@
             } else {
                 bootbox.alert('SOLO SE PUEDE EDITAR CIAS');
             }
+        }
+
+        function verOcupantes() {
+            let nodo, recurso, tipo, cias;
+            let fecha;
+            fecha = '2019-01-15';
+            nodo = $('#tree').treeview('getSelected');
+            tipo = nodo["0"]["tipo"];
+            if (tipo === 'cias') {
+                cias = nodo["0"]["cias"];
+                recurso = Routing.generate("consultarAltasActivas", {"cias": cias, "fecha": fecha}, true);
+                window.location = recurso;
+            } else {
+                bootbox.alert('SOLO SE PUEDE VER LOS OCUPANTES DE UNA PLAZA');
+            }
+        }
+
+        function agregarPlaza() {
+            let nodo, recurso, tipo, cias;
+            nodo = $('#tree').treeview('getSelected');
+            tipo = nodo["0"]["tipo"];
+            if (tipo === 'cias') {
+                bootbox.alert('SOLO SE PUEDE ASIGNAR PLAZAS A UNIDADES');
+            } else {
+                id = nodo["0"]["unidad"];
+                recurso = Routing.generate("agregarPlaza", {"id": id}, true);
+                // bootbox.alert(recurso);
+                window.location = recurso;
+            }
+        }
+
+        function agregarUnidad() {
+            let nodo, recurso, id;
+            nodo = $('#tree').treeview('getSelected');
+            id = nodo["0"]["unidad"];
+            recurso = Routing.generate("agregarUnidad", {"id": id}, true);
+            window.location = recurso;
+        }
+
+        function nuevaUnidad() {
+            let recurso;
+            recurso = Routing.generate("addUnidad", true);
+            window.location = recurso;
         }
 
         function editarUnidad() {
@@ -53,6 +95,7 @@
 
         $(document).ready(function () {
             let recurso;
+            $('body').scrollspy({target: "#tree"})
             recurso = Routing.generate("ajaxGetEstructura", true);
             $.ajax({
                 type: "POST",
@@ -62,7 +105,7 @@
                     $('.modal-backdrop').remove();
                     $("#procesando").hide();
                     $('#tree').treeview({data: data});
-                    $('#tree').treeview('expandAll', {levels: 5, silent: true});
+                    $('#tree').treeview('expandAll', {levels: 1, silent: true});
                     $('#tree').on('nodeSelected', function (event, data) {
                     })
                 },
@@ -72,12 +115,18 @@
             });
         });
     </script>
+    <body data-spy="scroll" data-target="#tree" data-offset="50">
 
     <script type="text/javascript" src="{{ asset('js/bootstrap-treeview.js') }}"></script>
-
-    <div id="tree" class="container"></div>
-
     <div class="container">
+        <button type="button"
+                class="btn btn-default btn-success btn-t"
+                onclick="nuevaUnidad()"
+                data-toggle="tooltip"
+                data-placement="bottom"
+                title="Crear nueva unidad"> Nueva Unidad
+        </button>
+
         <button type="button"
                 class="btn btn-default btn-success btn-t"
                 onclick="editarUnidad()"
@@ -93,12 +142,35 @@
                 title="Eliminar"> Eliminar Unidad
         </button>
         <button type="button"
-                id="btnAsignacion"
                 class="btn btn-default btn-info btn-t"
+                onclick="agregarUnidad()"
+                data-toggle="tooltip"
+                data-placement="bottom"
+                title="Agregar Unidad Dependiente">Agregar Unidad
+        </button>
+        <button type="button"
+                class="btn btn-default btn-warning btn-t"
+                onclick="agregarPlaza()"
+                data-toggle="tooltip"
+                data-placement="bottom"
+                title="Asignar Unidad a Plaza">Agregar Plaza
+        </button>
+        <button type="button"
+                class="btn btn-default btn-warning btn-t"
                 onclick="verPlaza()"
                 data-toggle="tooltip"
                 data-placement="bottom"
                 title="Editar la plaza">Editar Plaza
         </button>
+        <button type="button"
+                class="btn btn-default btn-warning btn-t"
+                onclick="verOcupantes()"
+                data-toggle="tooltip"
+                data-placement="bottom"
+                title="Consulta ocupantes de la plaza">Ocupantes
+        </button>
+        <br/><br/>
+        <div id="tree" class="container"></div>
     </div>
+    </body>
 {% endblock %}

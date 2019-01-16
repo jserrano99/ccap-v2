@@ -49,10 +49,11 @@ class UnidadOrganizativaType extends AbstractType
 				'required' => false,
 				'disabled' => false,
 				"attr" => ["class" => "corto form-control"]])
-			->add('responsable', TextType::class, [
+			->add('responsableCias', TextType::class, [
 				"label" => 'Responsable de Unidad (??) ',
 				'required' => false,
 				'disabled' => false,
+				'mapped' => false,
 				"attr" => ["class" => "form-control"]])
 			->add('responsableDs', TextType::class, [
 				"label" => '??',
