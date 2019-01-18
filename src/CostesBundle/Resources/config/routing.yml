@@ -381,4 +381,9 @@ ajaxConsultaResposable:
   defaults: { _controller: CostesBundle:Unidad:ajaxConsultaResposable}
   options:
     expose: true
+imprimirEstructura:
+  path: /unidad/estructura/imprimir
+  defaults: { _controller: CostesBundle:Unidad:imprimirEstructura}
+  options:
+    expose: true
 

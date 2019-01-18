@@ -295,7 +295,7 @@ class UnidadController extends Controller
 		$Plaza = $em->getRepository("CostesBundle:Plaza")->findPlazaByCias($cias);
 		$UnidadOrganizativa = $Plaza->getUnidadOrganizativa();
 		$data = [];
-		$fecha = date('Y').'-'.date('m').'-'.date('d');
+		$fecha = date('Y') . '-' . date('m') . '-' . date('d');
 
 		if ($UnidadOrganizativa) {
 			$sub_data["id"] = $UnidadOrganizativa->getId();
@@ -336,7 +336,7 @@ class UnidadController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		$UnidadOrganizativa = $em->getRepository("CostesBundle:UnidadOrganizativa")->find($id);
 		$data = [];
-		$fecha = date('Y').'-'.date('m').'-'.date('d');
+		$fecha = date('Y') . '-' . date('m') . '-' . date('d');
 		if ($UnidadOrganizativa->getDependencia() !== null) {
 			$sub_data["id"] = $UnidadOrganizativa->getDependencia()->getId();
 			$sub_data["unidad"] = $UnidadOrganizativa->getDependencia()->getDescripcion();
@@ -431,7 +431,12 @@ class UnidadController extends Controller
 
 	}
 
-	public function imprimirEstructura($estructura) {
+	public function imprimirEstructuraAction()
+	{
+		$format = 'pdf';
+		$params = [];
+		$reportUnit = '/reports/Estructur';
+		return $this->get('yoh.jasper.report')->generate($reportUnit,$params,$format);
 
 	}
 }

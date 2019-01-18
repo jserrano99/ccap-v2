@@ -1,6 +1,8 @@
 {% extends "layout.html.twig" %} 
 {% block titulo %} ** ESTRUCTURA ORGANIZATIVA **
-
+    <a href="{{path("imprimirEstructura")}}"
+       class="btn btn-success">
+        <span class="glyphicon glyphicon-printer"></span> Imprimir</a>
 {% endblock %}
 
 {% block contenido %}
