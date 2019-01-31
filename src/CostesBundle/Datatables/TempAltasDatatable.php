@@ -3,22 +3,10 @@
 namespace CostesBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\AbstractDatatable;
-use Sg\DatatablesBundle\Datatable\Style;
 use Sg\DatatablesBundle\Datatable\Column\Column;
-use Sg\DatatablesBundle\Datatable\Column\BooleanColumn;
-use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
-use Sg\DatatablesBundle\Datatable\Column\MultiselectColumn;
-use Sg\DatatablesBundle\Datatable\Column\VirtualColumn;
 use Sg\DatatablesBundle\Datatable\Column\DateTimeColumn;
-use Sg\DatatablesBundle\Datatable\Column\ImageColumn;
-use Sg\DatatablesBundle\Datatable\Filter\TextFilter;
-use Sg\DatatablesBundle\Datatable\Filter\NumberFilter;
-use Sg\DatatablesBundle\Datatable\Filter\SelectFilter;
 use Sg\DatatablesBundle\Datatable\Filter\DateRangeFilter;
-use Sg\DatatablesBundle\Datatable\Editable\CombodateEditable;
-use Sg\DatatablesBundle\Datatable\Editable\SelectEditable;
-use Sg\DatatablesBundle\Datatable\Editable\TextareaEditable;
-use Sg\DatatablesBundle\Datatable\Editable\TextEditable;
+use Sg\DatatablesBundle\Datatable\Style;
 
 /**
  * Class TempAltasDatatable
@@ -99,6 +87,28 @@ class TempAltasDatatable extends AbstractDatatable
 			])
 			->add('causaBaja', Column::class, [
 				'title' => 'Causa de Baja',
+			])
+			->add('ausencia.codigo', Column::class, [
+				'title' => 'Ausencia',
+				'default_content' => '',
+			])
+			->add('ausencia.descrip', Column::class, [
+				'title' => 'Ausencia Desc',
+				'default_content' => '',
+			])
+			->add('fini', DateTimeColumn::class, ['title' => 'F.Inicio',
+				'date_format' => 'DD/MM/YYYY',
+				'default_content' => '',
+				'filter' => [DateRangeFilter::class, [
+					'cancel_button' => false,
+				]],
+			])
+			->add('ffin', DateTimeColumn::class, ['title' => 'F.Fin',
+				'date_format' => 'DD/MM/YYYY',
+				'default_content' => '',
+				'filter' => [DateRangeFilter::class, [
+					'cancel_button' => false,
+				]],
 			]);
 
 	}

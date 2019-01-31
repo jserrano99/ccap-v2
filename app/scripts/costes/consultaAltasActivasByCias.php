@@ -4,7 +4,7 @@ include_once __DIR__ . '/../funcionesDAO.php';
 
 /**
  * @param $fecha
- * @return mixed
+ * @return array|null
  */
 function selectMovialtaByCias($fecha)
 {
@@ -24,7 +24,7 @@ function selectMovialtaByCias($fecha)
 		return $res;
 
 	} catch (PDOException $ex) {
-		exit(1);
+		return null;
 	}
 }
 
@@ -38,19 +38,28 @@ function main()
 	$MovialtaAll = selectMovialtaByCias($fecha);
 
 	try {
-		$sql = "delete from ccap_temp_altas";
+		$sql = "delete from ccap_temp_altas where 1";
 		$query = $JanoControl->prepare($sql);
 		$query->execute();
 	}catch (PDOException $ex) {
-		echo "error en delete \n";
+		echo "PDOERROR en delete ccap_temp_altas" .$ex->getMessage()." \n";
 		exit(1);
 	}
 
 	if ($MovialtaAll != null) {
 		foreach ($MovialtaAll as $Movialta) {
 			try {
-				$sql = 'insert into ccap_temp_altas (cip, dni,f_alta, f_baja, nombre, plaza_id, causa_alta, causa_baja) values '
-					. '(:cip, :dni, :f_alta, :f_baja, :nombre, :plaza_id, :causa_alta, :causa_baja ) ';
+				$ausencia= selectSitAdmByAlta($Movialta["CODIGO"]);
+				if (!$ausencia) {
+					$ausencia["id"] = null;
+					$ausencia["fini"] = null;
+					$ausencia["ffin"] = null;
+				}
+
+				$sql = 'insert into ccap_temp_altas (cip, dni,f_alta, f_baja, nombre, plaza_id, causa_alta, causa_baja,'
+					. ' ausencia_id, fini, ffin ) values '
+					. '(:cip, :dni, :f_alta, :f_baja, :nombre, :plaza_id, :causa_alta, :causa_baja, '
+					. ' :ausencia_id, :fini, :ffin) ';
 				$query = $JanoControl->prepare($sql);
 				$params = [':cip' => $Movialta["CIP"],
 					':dni' => $Movialta["DNI"],
@@ -59,7 +68,10 @@ function main()
 					':nombre' => trim($Movialta["APE12"]) . ', ' . trim($Movialta["NOMBRE"]),
 					":plaza_id" => $Plaza["id"],
 					":causa_alta" => $Movialta["CAUSA_ALTA"],
-					":causa_baja" => $Movialta["CAUSA_BAJA"]];
+					":causa_baja" => $Movialta["CAUSA_BAJA"],
+					":ausencia_id" => $ausencia["id"],
+					":fini" => $ausencia["fini"],
+					":ffin" => $ausencia["ffin"]];
 				$res = $query->execute($params);
 
 				if ($res == 0) {

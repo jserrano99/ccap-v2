@@ -159,7 +159,7 @@ sincroCecoCias:
   options:
     expose: true
 cambiarUnidadOrganizativa:
-  path:   /plaza/unidad/cambiar/{cias}/{unidadOrganizativa_id}
+  path:   /plaza/unidad/cambiar/{cias}/{unidadOrganizativa_id}/{fcCambio}
   defaults: { _controller: CostesBundle:Plaza:cambiarUnidadOrganizativa}
   options:
     expose: true
@@ -168,6 +168,7 @@ quitarUnidadOrganizativa:
   defaults: { _controller: CostesBundle:Plaza:quitarUnidadOrganizativa}
   options:
     expose: true
+
 
 #
 # CECO CENTROS DE COSTE
@@ -386,4 +387,35 @@ imprimirEstructura:
   defaults: { _controller: CostesBundle:Unidad:imprimirEstructura}
   options:
     expose: true
+cambioResponsable:
+  path:   /unidad/cambioResponsable/{unidadOrganizativa_id}/{ciasResponsable}/{fcCambio}
+  defaults: { _controller: CostesBundle:Unidad:cambioResponsable}
+  options:
+    expose: true
+agregarValidador:
+  path:   /unidad/validador/add/{unidadOrganizativa_id}/{ciasValidador}/{fcCambio}
+  defaults: { _controller: CostesBundle:Unidad:addValidador}
+  options:
+    expose: true
+cerrarValidador:
+  path:   /unidad/validador/cerrar/{id}
+  defaults: { _controller: CostesBundle:Unidad:cerrarValidador}
+  options:
+    expose: true
+deleteValidador:
+  path:   /unidad/validador/delete/{id}
+  defaults: { _controller: CostesBundle:Unidad:deleteValidador}
+  options:
+    expose: true
+sincroUnidad:
+  path:   /unidad/sincro/{id}/{actuacion}
+  defaults: { _controller: CostesBundle:Unidad:sincro}
+  options:
+    expose: true
+sincroAsignacion:
+  path:   /unidad/sincroAsginacion/{cias}
+  defaults: { _controller: CostesBundle:Unidad:sincroAsignacion}
+  options:
+    expose: true
+
 

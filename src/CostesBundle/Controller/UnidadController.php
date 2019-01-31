@@ -3,9 +3,14 @@
 namespace CostesBundle\Controller;
 
 
+use ComunBundle\Entity\SincroLog;
+use CostesBundle\Entity\ResponsableUnidad;
 use CostesBundle\Entity\UnidadOrganizativa;
+use CostesBundle\Entity\ValidadorUnidad;
 use CostesBundle\Form\AsignarPlazaType;
 use CostesBundle\Form\UnidadOrganizativaType;
+use DateInterval;
+use DateTime;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -58,14 +63,20 @@ class UnidadController extends Controller
 			try {
 				$EM->persist($UnidadOrganizativa);
 				$EM->flush();
-				return $this->redirectToRoute("queryEstructura");
+				$params = ["id" => $UnidadOrganizativa->getId(),
+					"actuacion" => "INSERT"];
+				return $this->redirectToRoute("sincroUnidad", $params);
 			} catch (DBALException $ex) {
 				$status = "ERROR GENERAL=" . $ex->getMessage();
 				$this->sesion->getFlashBag()->add("status", $status);
 			}
 		}
 
-		$params = ["unidadOrganizativa" => $UnidadOrganizativa, "accion" => "NUEVA", "form" => $form->createView()];
+		$params = ["unidadOrganizativa" => $UnidadOrganizativa,
+			"accion" => "NUEVA",
+			'responsableUnidadAll' => null,
+			'validadoresJanoAll' => null,
+			"form" => $form->createView()];
 		return $this->render("costes/unidad/edit.html.twig", $params);
 	}
 
@@ -80,7 +91,6 @@ class UnidadController extends Controller
 		$UnidadOrganizativaDep = $EM->getRepository("CostesBundle:UnidadOrganizativa")->find($id);
 		$UnidadOrganizativa = new UnidadOrganizativa();
 		$UnidadOrganizativa->setDependencia($UnidadOrganizativaDep);
-		$UnidadOrganizativa->setCodigo($UnidadOrganizativaDep->getCodigo());
 		$form = $this->createForm(UnidadOrganizativaType::class, $UnidadOrganizativa);
 		$form->handleRequest($request);
 
@@ -88,46 +98,66 @@ class UnidadController extends Controller
 			try {
 				$EM->persist($UnidadOrganizativa);
 				$EM->flush();
-				return $this->redirectToRoute("queryEstructura");
+				$params = ["id" => $UnidadOrganizativa->getId(),
+					"actuacion" => "INSERT"];
+				return $this->redirectToRoute("sincroUnidad", $params);
 			} catch (DBALException $ex) {
 				$status = "ERROR GENERAL=" . $ex->getMessage();
 				$this->sesion->getFlashBag()->add("status", $status);
 			}
 		}
+		$params = ["unidadOrganizativa" => $UnidadOrganizativa,
+			"accion" => "NUEVA",
+			'responsableUnidadAll' => null,
+			'validadoresJanoAll' => null,
+			"form" => $form->createView()];
 
-		$params = ["unidadOrganizativa" => $UnidadOrganizativa, "accion" => "NUEVA", "form" => $form->createView()];
 		return $this->render("costes/unidad/edit.html.twig", $params);
 	}
 
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $request
-	 * @param                                           $id
+	 * @param  int                                         $id
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
 	public function editAction(Request $request, $id)
 	{
-		$EM = $this->getDoctrine()->getManager();
-		$UnidadOrganizativa = $EM->getRepository("CostesBundle:UnidadOrganizativa")->find($id);
+		$entityManager = $this->getDoctrine()->getManager();
+		$UnidadOrganizativa = $entityManager->getRepository("CostesBundle:UnidadOrganizativa")->find($id);
 
 		$form = $this->createForm(UnidadOrganizativaType::class, $UnidadOrganizativa);
 		$form->handleRequest($request);
 
+		$ResponsableUnidadAll = $entityManager->getRepository("CostesBundle:ResponsableUnidad")->createQueryBuilder('u')
+			->where('u.unidadOrganizativa = :unidadOrganizativa')
+			->setParameter('unidadOrganizativa', $UnidadOrganizativa)
+			->getQuery()->getResult();;
+
+		$ValidadoresJanoAll = $entityManager->getRepository("CostesBundle:ValidadorUnidad")->createQueryBuilder('u')
+			->where('u.unidadOrganizativa = :unidadOrganizativa')
+			->setParameter('unidadOrganizativa', $UnidadOrganizativa)
+			->getQuery()->getResult();;
+
+
 		if ($form->isSubmitted()) {
 			try {
-				if ($form->get("responsableCias")->getData() != null) {
-					$Plaza = $EM->getRepository("CostesBundle:Plaza")->findPlazaByCias($form->get("responsableCias")->getData());
-					$UnidadOrganizativa->setResponsable($Plaza);
-				}
-				$EM->persist($UnidadOrganizativa);
-				$EM->flush();
-				return $this->redirectToRoute("queryEstructura");
+				$entityManager->persist($UnidadOrganizativa);
+				$entityManager->flush();
+				$params = ["id" => $UnidadOrganizativa->getId(),
+					"actuacion" => "UPDATE"];
+				return $this->redirectToRoute("sincroUnidad", $params);
+
 			} catch (DBALException $ex) {
 				$status = "ERROR GENERAL=" . $ex->getMessage();
 				$this->sesion->getFlashBag()->add("status", $status);
 			}
 		}
 
-		$params = ["unidadOrganizativa" => $UnidadOrganizativa, "accion" => "MODIFICACIÓN", "form" => $form->createView()];
+		$params = ["unidadOrganizativa" => $UnidadOrganizativa,
+			"accion" => "MODIFICACION",
+			'responsableUnidadAll' => $ResponsableUnidadAll,
+			'validadoresJanoAll' => $ValidadoresJanoAll,
+			"form" => $form->createView()];
 		return $this->render("costes/unidad/edit.html.twig", $params);
 	}
 
@@ -140,9 +170,11 @@ class UnidadController extends Controller
 		$EM = $this->getDoctrine()->getManager();
 		$UnidadOrganizativa = $EM->getRepository("CostesBundle:UnidadOrganizativa")->find($id);
 
-		$EM->remove($UnidadOrganizativa);
-		$EM->flush();
-		return $this->redirectToRoute("queryEstructura");
+		$params = ["id" => $UnidadOrganizativa->getId(),
+			"actuacion" => "DELETE"];
+
+		return $this->redirectToRoute("sincroUnidad", $params);
+
 	}
 
 	/**
@@ -172,7 +204,7 @@ class UnidadController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		$UnidadOrganizativaAll = $em->getRepository("CostesBundle:UnidadOrganizativa")->createQueryBuilder('u')
 			->where('u.dependencia is null ')
-			->orderBy('u.codigo', 'asc')
+			->orderBy('u.orden', 'asc')
 			->getQuery()->getResult(Query::HYDRATE_ARRAY);
 		$data = [];
 
@@ -202,7 +234,6 @@ class UnidadController extends Controller
 		$response->setContent(json_encode($data));
 		$response->headers->set("Content-type", "application/json");
 		return $response;
-
 	}
 
 	/**
@@ -214,23 +245,23 @@ class UnidadController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		$UnidadOrganizativa = $em->getRepository("CostesBundle:UnidadOrganizativa")->find($id);
 		$data = [];
-		$fecha = '2019-01-01';
-		if ($UnidadOrganizativa->getResponsable() != null) {
-			$tabla = $this->consultaPersonaByCias($UnidadOrganizativa->getResponsable()->getCias(), $fecha);
-			$sub_data["text"] = $UnidadOrganizativa->getResponsable()->getCias() . " " . $tabla["nombre"];
-			$sub_data["tipo"] = "responsable";
-			$sub_data["cias"] = $UnidadOrganizativa->getResponsable()->getCias();
-			$sub_data["icon"] = "glyphicon glyphicon-registration-mark";
-			$sub_data["color"] = "#ff0000";
-			$data[] = $sub_data;
-		}
 
 		$PlazaAll = $em->getRepository("CostesBundle:Plaza")->createQueryBuilder('u')
 			->where('u.unidadOrganizativa = :unidadOrganizativa ')
 			->setParameter('unidadOrganizativa', $UnidadOrganizativa)
 			->getQuery()->getResult(Query::HYDRATE_ARRAY);
+
 		foreach ($PlazaAll as $Plaza) {
-			if ($Plaza["cias"] != $UnidadOrganizativa->getResponsable()->getCias()) {
+			if ($UnidadOrganizativa->getResponsableActual()) {
+				if ($Plaza["cias"] != $UnidadOrganizativa->getResponsableActual()->getCias()) {
+					$sub_data["text"] = $Plaza["cias"];
+					$sub_data["cias"] = $Plaza["cias"];
+					$sub_data["tipo"] = "cias";
+					$sub_data["icon"] = "glyphicon glyphicon-user";
+					$sub_data["color"] = "#000000";
+					$data[] = $sub_data;
+				}
+			} else {
 				$sub_data["text"] = $Plaza["cias"];
 				$sub_data["cias"] = $Plaza["cias"];
 				$sub_data["tipo"] = "cias";
@@ -243,7 +274,7 @@ class UnidadController extends Controller
 		$UnidadOrganizativaAll = $em->getRepository("CostesBundle:UnidadOrganizativa")->createQueryBuilder('u')
 			->where('u.dependencia = :dependencia ')
 			->setParameter('dependencia', $UnidadOrganizativa)
-			->orderBy('u.codigo', 'asc')
+			->orderBy('u.orden', 'asc')
 			->getQuery()->getResult(Query::HYDRATE_ARRAY);
 
 
@@ -259,9 +290,7 @@ class UnidadController extends Controller
 			if (count($sub_data["nodes"]) == 0) unset($sub_data["nodes"]);
 			$data[] = $sub_data;
 		}
-
 		return $data;
-
 	}
 
 	/**
@@ -282,7 +311,6 @@ class UnidadController extends Controller
 		$response->setContent(json_encode($data));
 		$response->headers->set("Content-type", "application/json");
 		return $response;
-
 	}
 
 	/**
@@ -301,19 +329,18 @@ class UnidadController extends Controller
 			$sub_data["id"] = $UnidadOrganizativa->getId();
 			$sub_data["unidad"] = $UnidadOrganizativa->getDescripcion();
 			if ($UnidadOrganizativa->getResponsable()) {
-
 				$responsable = $this->consultaPersonaByCias($UnidadOrganizativa->getResponsable()->getCias(), $fecha);
 				$sub_data["responsableCias"] = $UnidadOrganizativa->getResponsable()->getCias();
 				$sub_data["responsableNombre"] = $responsable["nombre"];
 				$sub_data["responsableNIF"] = $responsable["dni"];
 				$sub_data["responsableCIP"] = $responsable["cip"];
-
 			} else {
 				$sub_data["responsableCias"] = "";
 				$sub_data["responsableNombre"] = "";
 				$sub_data["responsableNIF"] = "";
 				$sub_data["responsableCIP"] = "";
 			}
+			$sub_data["validadores"] = $this->verValidadores($UnidadOrganizativa->getId());
 			$sub_data["dependencia"] = $this->verDependencia($UnidadOrganizativa->getId());
 			if (count($sub_data["dependencia"]) == 0) unset ($sub_data["dependencia"]);
 			$data[] = $sub_data;
@@ -323,11 +350,10 @@ class UnidadController extends Controller
 		$response->setContent(json_encode($data));
 		$response->headers->set("Content-type", "application/json");
 		return $response;
-
 	}
 
 	/**
-	 * @param $id
+	 * @param int $id
 	 * @return array
 	 */
 
@@ -361,6 +387,31 @@ class UnidadController extends Controller
 	}
 
 	/**
+	 * @param $unidad_organizativa_id
+	 * @return array
+	 */
+
+	public function verValidadores($unidad_organizativa_id) {
+		$em = $this->getDoctrine()->getManager();
+		$UnidadOrganizativa = $em->getRepository("CostesBundle:UnidadOrganizativa")->find($unidad_organizativa_id);
+		$data = [];
+		$fecha = date('Y') . '-' . date('m') . '-' . date('d');
+
+		$ValidadoresALL = $em->getRepository("CostesBundle:ValidadorUnidad")->createQueryBuilder('u')
+				->where('u.unidadOrganizativa = :unidadOrganizativa')
+				->andWhere('u.fInicio <= :fecha ')
+				->andWhere('u.fFin is null or u.fFin >= :fecha')
+				->setParameter('unidadOrganizativa',$UnidadOrganizativa)
+				->setParameter('fecha',$fecha)
+				->getQuery()->getResult();
+		foreach ( $ValidadoresALL as $ValidadorUnidad) {
+			$sub_data["validadorCias"] = $ValidadorUnidad->getPlaza()->getCias();
+			$data[] = $sub_data;
+		}
+
+		return $data;
+	}
+	/**
 	 * @param  string $cias
 	 * @param         $fecha
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
@@ -385,13 +436,17 @@ class UnidadController extends Controller
 		$modo = $this->getParameter('modo');
 		$php = $this->getParameter('php');
 		$php_script = $php . " " . $root . "/scripts/costes/consultaPersonaByCias.php " . $modo . " " . $cias . " " . $fecha;
+
 		exec($php_script, $SALIDA, $resultado);
 
 		$TempAltas = $this->getDoctrine()->getManager()
 			->getRepository("CostesBundle:TempAltas")->createQueryBuilder('u')
-			->getQuery()->getResult(Query::HYDRATE_ARRAY);;
+			->getQuery()->getResult(Query::HYDRATE_ARRAY);
 
-		return $TempAltas[0];
+		if ($TempAltas)
+			return $TempAltas[0];
+		else
+			return null;
 
 	}
 
@@ -415,7 +470,8 @@ class UnidadController extends Controller
 					$Plaza->setUnidadOrganizativa($UnidadOrganizativa);
 					$EM->persist($Plaza);
 					$EM->flush();
-					return $this->redirectToRoute("queryEstructura");
+					$params = ["cias" => $Plaza->getCias()];
+					return $this->redirectToRoute("sincroAsignacion", $params);
 				} else {
 					$status = "ERROR NO EXISTE CIAS ";
 					$this->sesion->getFlashBag()->add("status", $status);
@@ -431,12 +487,237 @@ class UnidadController extends Controller
 
 	}
 
+	/**
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
 	public function imprimirEstructuraAction()
 	{
 		$format = 'pdf';
 		$params = [];
 		$reportUnit = '/reports/Estructur';
-		return $this->get('yoh.jasper.report')->generate($reportUnit,$params,$format);
+		return $this->get('yoh.jasper.report')->generate($reportUnit, $params, $format);
 
 	}
+
+	/**
+	 * @param $unidadOrganizativa_id
+	 * @param $ciasResponsable
+	 * @param $fcCambio
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @throws \Exception
+	 */
+	public function cambioResponsableAction($unidadOrganizativa_id, $ciasResponsable, $fcCambio)
+	{
+		$entityManager = $this->getDoctrine()->getManager();
+
+		$UnidadOrganizativa = $entityManager->getRepository('CostesBundle:UnidadOrganizativa')->find($unidadOrganizativa_id);
+		$ResponsableUnidadActual = $entityManager->getRepository('CostesBundle:ResponsableUnidad')->findResponsableActual($UnidadOrganizativa);
+		$Solapados = $entityManager->getRepository('CostesBundle:ResponsableUnidad')->findSolapados($UnidadOrganizativa, $fcCambio);
+
+
+		if ($Solapados) {
+			$status = "ERROR EXISTE SOLAPAMIENTO DE FECHAS PARA " . $fcCambio . " REVISELO";
+			$this->sesion->getFlashBag()->add("status", $status);
+			return $this->redirectToRoute('editUnidad', ['id' => $unidadOrganizativa_id]);
+		}
+
+		$PlazaNueva = $entityManager->getRepository('CostesBundle:Plaza')->findPlazaByCias($ciasResponsable);
+		if ($ResponsableUnidadActual) {
+
+			$fInicio = new DateTime($fcCambio);
+			$fFin = $fInicio->sub(new DateInterval('P1D'));
+			$ResponsableUnidadActual->setFFin($fFin);
+			$entityManager->persist($ResponsableUnidadActual);
+			$entityManager->flush();
+		}
+		$fInicio = new DateTime($fcCambio);
+		$ResponsableUnidad = new ResponsableUnidad();
+		$ResponsableUnidad->setUnidadOrganizativa($UnidadOrganizativa);
+		$ResponsableUnidad->setPlaza($PlazaNueva);
+		$ResponsableUnidad->setFInicio($fInicio);
+		$entityManager->persist($ResponsableUnidad);
+		$entityManager->flush();
+
+		$UnidadOrganizativa->setResponsableActual($PlazaNueva);
+		$entityManager->persist($UnidadOrganizativa);
+		$entityManager->flush();
+
+		return $this->redirectToRoute('editUnidad', ['id' => $unidadOrganizativa_id]);
+	}
+
+	/**
+	 * @param $unidadOrganizativa_id
+	 * @param $ciasValidador
+	 * @param $fcCambio
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @throws \Exception
+	 */
+	public function addValidadorAction($unidadOrganizativa_id, $ciasValidador, $fcCambio)
+	{
+
+		$entityManager = $this->getDoctrine()->getManager();
+		$UnidadOrganizativa = $entityManager->getRepository("CostesBundle:UnidadOrganizativa")->find($unidadOrganizativa_id);
+		$Plaza = $entityManager->getRepository("CostesBundle:Plaza")->findPlazaByCias($ciasValidador);
+		$fInicio = new DateTime($fcCambio);
+
+		$ValidadorUnidad = new ValidadorUnidad();
+		$ValidadorUnidad->setUnidadOrganizativa($UnidadOrganizativa);
+		$ValidadorUnidad->setPlaza($Plaza);
+		$ValidadorUnidad->setFInicio($fInicio);
+
+		$entityManager->persist($ValidadorUnidad);
+		$entityManager->flush();
+
+		return $this->redirectToRoute('editUnidad', ['id' => $unidadOrganizativa_id]);
+	}
+
+	/**
+	 * @param $id
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @throws \Exception
+	 */
+	public function cerrarValidadorAction($id)
+	{
+		$entityManager = $this->getDoctrine()->getManager();
+
+		$ValidadorUnidad = $entityManager->getRepository("CostesBundle:ValidadorUnidad")->find($id);
+		$fFin = new DateTime();
+
+		$ValidadorUnidad->setFFin($fFin);
+		$entityManager->persist($ValidadorUnidad);
+		$entityManager->flush();
+		return $this->redirectToRoute('editUnidad', ['id' => $ValidadorUnidad->getUnidadOrganizativa()->getId()]);
+
+	}
+
+	/**
+	 * @param $id
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+	public function deleteValidadorAction($id)
+	{
+		$entityManager = $this->getDoctrine()->getManager();
+		$ValidadorUnidad = $entityManager->getRepository("CostesBundle:ValidadorUnidad")->find($id);
+		$unidadOrganizativa_id = $ValidadorUnidad->getUnidadOrganizativa()->getId();
+		$entityManager->remove($ValidadorUnidad);
+		$entityManager->flush();
+		return $this->redirectToRoute('editUnidad', ['id' => $unidadOrganizativa_id]);
+	}
+
+	/**
+	 * @param $id
+	 * @param $actuacion
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @throws \Exception
+	 */
+	public function sincroAction($id, $actuacion)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$usuario_id = $this->sesion->get('usuario_id');
+		$Usuario = $em->getRepository("ComunBundle:Usuario")->find($usuario_id);
+		$Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(1);
+		$UnidadOrganizativa = $em->getRepository("CostesBundle:UnidadOrganizativa")->find($id);
+
+		$SincroLog = new SincroLog();
+		$fechaProceso = new DateTime();
+
+		$SincroLog->setUsuario($Usuario);
+		$SincroLog->setTabla("ccap_unidad");
+		$SincroLog->setIdElemento($id);
+		$SincroLog->setFechaProceso($fechaProceso);
+		$SincroLog->setEstado($Estado);
+		$em->persist($SincroLog);
+		$em->flush();
+		if ('DELETE' != $actuacion) {
+			$UnidadOrganizativa->setSincroLog($SincroLog);
+			$em->persist($UnidadOrganizativa);
+			$em->flush();
+		}
+
+
+		$root = $this->get('kernel')->getRootDir();
+		$modo = $this->getParameter('modo');
+		$php = $this->getParameter('php');
+
+		$php_script = $php . " " . $root . "/scripts/costes/actualizacionUnidadOrganizativa.php " . $modo . "  " . $id . " " . $actuacion;
+
+		exec($php_script, $SALIDA, $resultado);
+		if ($resultado == 0) {
+			$Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(2);
+		} else {
+			$Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(3);
+		}
+		$ficheroLog = 'sincroUnidadOrganizativa-' . $id . '.log';
+		$ServicioLog = $this->get('app.escribelog');
+		$ServicioLog->setLogger('ccap_unidad:' . $id);
+
+		foreach ($SALIDA as $linea) {
+			$ServicioLog->setMensaje($linea);
+			$ServicioLog->escribeLog($ficheroLog);
+		}
+		$SincroLog->setScript($php_script);
+		$SincroLog->setFicheroLog($ServicioLog->getFilename());
+		$SincroLog->setEstado($Estado);
+		$em->persist($SincroLog);
+		$em->flush();
+
+		return $this->redirectToRoute("queryEstructura");
+
+
+	}
+
+	/**
+	 * @param $cias
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @throws \Exception
+	 */
+	public function sincroAsignacionAction($cias)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$usuario_id = $this->sesion->get('usuario_id');
+		$Usuario = $em->getRepository("ComunBundle:Usuario")->find($usuario_id);
+		$Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(1);
+		$Plaza = $em->getRepository("CostesBundle:Plaza")->findPlazaByCias($cias);
+
+		$SincroLog = new SincroLog();
+		$fechaProceso = new DateTime();
+
+		$SincroLog->setUsuario($Usuario);
+		$SincroLog->setTabla("ccap_plaza");
+		$SincroLog->setIdElemento($Plaza->getId());
+		$SincroLog->setFechaProceso($fechaProceso);
+		$SincroLog->setEstado($Estado);
+		$em->persist($SincroLog);
+		$em->flush();
+
+		$root = $this->get('kernel')->getRootDir();
+		$modo = $this->getParameter('modo');
+		$php = $this->getParameter('php');
+
+		$php_script = $php . " " . $root . "/scripts/costes/asignacionUnidadaPlaza.php " . $modo . "  " . $Plaza->getId();
+
+		exec($php_script, $SALIDA, $resultado);
+		if ($resultado == 0) {
+			$Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(2);
+		} else {
+			$Estado = $em->getRepository("ComunBundle:EstadoCargaInicial")->find(3);
+		}
+		$ficheroLog = 'sincroPlaza-' . $Plaza->getCias() . '.log';
+		$ServicioLog = $this->get('app.escribelog');
+		$ServicioLog->setLogger('ccap_plaza: cias' . $Plaza->getCias());
+
+		foreach ($SALIDA as $linea) {
+			$ServicioLog->setMensaje($linea);
+			$ServicioLog->escribeLog($ficheroLog);
+		}
+		$SincroLog->setScript($php_script);
+		$SincroLog->setFicheroLog($ServicioLog->getFilename());
+		$SincroLog->setEstado($Estado);
+		$em->persist($SincroLog);
+		$em->flush();
+
+		return $this->redirectToRoute("queryEstructura");
+
+	}
+
 }

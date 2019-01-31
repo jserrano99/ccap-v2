@@ -54,9 +54,9 @@ class UnidadOrganizativa {
 	 * @var Plaza
 	 *
 	 * @ORM\ManyToOne(targetEntity="Plaza")
-	 *   @ORM\JoinColumn(name="responsable_id", referencedColumnName="id")
+	 *   @ORM\JoinColumn(name="responsable_actual_id", referencedColumnName="id")
 	 */
-	private $responsable;
+	private $responsableActual;
 
 	/**
 	 * @var \CostesBundle\Entity\TipoUnidad
@@ -74,6 +74,18 @@ class UnidadOrganizativa {
 	 *   @ORM\JoinColumn(name="dependencia_id", referencedColumnName="id")
 	 */
 	private $dependencia;
+
+	/**
+	 * @var \ComunBundle\Entity\SincroLog|null
+	 *
+	 * @ORM\ManyToOne(targetEntity="ComunBundle\Entity\SincroLog")
+	 * @ORM\JoinColumns({
+	 *   @ORM\JoinColumn(name="sincro_log_id", referencedColumnName="id")
+	 * })
+	 */
+	private $sincroLog;
+
+
 
 	/**
      * Get id.
@@ -233,5 +245,53 @@ class UnidadOrganizativa {
     public function __toString()
     {
 	 return $this->descripcion;
+    }
+
+    /**
+     * Set responsableActual.
+     *
+     * @param \CostesBundle\Entity\Plaza|null $responsableActual
+     *
+     * @return UnidadOrganizativa
+     */
+    public function setResponsableActual(\CostesBundle\Entity\Plaza $responsableActual = null)
+    {
+        $this->responsableActual = $responsableActual;
+
+        return $this;
+    }
+
+    /**
+     * Get responsableActual.
+     *
+     * @return \CostesBundle\Entity\Plaza|null
+     */
+    public function getResponsableActual()
+    {
+        return $this->responsableActual;
+    }
+
+    /**
+     * Set sincroLog.
+     *
+     * @param \ComunBundle\Entity\SincroLog|null $sincroLog
+     *
+     * @return UnidadOrganizativa
+     */
+    public function setSincroLog(\ComunBundle\Entity\SincroLog $sincroLog = null)
+    {
+        $this->sincroLog = $sincroLog;
+
+        return $this;
+    }
+
+    /**
+     * Get sincroLog.
+     *
+     * @return \ComunBundle\Entity\SincroLog|null
+     */
+    public function getSincroLog()
+    {
+        return $this->sincroLog;
     }
 }

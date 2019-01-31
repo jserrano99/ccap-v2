@@ -1,8 +1,8 @@
 {% extends "layout.html.twig" %} 
 {% block titulo %} ** ESTRUCTURA ORGANIZATIVA **
-    <a href="{{path("imprimirEstructura")}}"
-       class="btn btn-success">
-        <span class="glyphicon glyphicon-printer"></span> Imprimir</a>
+    {#<a href="{{path("imprimirEstructura")}}"  _target="blank"#}
+    {#class="btn btn-success">#}
+    {#<span class="glyphicon glyphicon-printer"></span> Imprimir</a>#}
 {% endblock %}
 
 {% block contenido %}
@@ -28,7 +28,7 @@
             fecha = '2019-01-15';
             nodo = $('#tree').treeview('getSelected');
             tipo = nodo["0"]["tipo"];
-            if (tipo === 'cias') {
+            if (tipo === 'cias' || tipo === 'responsable') {
                 cias = nodo["0"]["cias"];
                 recurso = Routing.generate("consultarAltasActivas", {"cias": cias, "fecha": fecha}, true);
                 window.location = recurso;
@@ -38,7 +38,7 @@
         }
 
         function agregarPlaza() {
-            let nodo, recurso, tipo, cias;
+            let nodo, recurso, tipo, id;
             nodo = $('#tree').treeview('getSelected');
             tipo = nodo["0"]["tipo"];
             if (tipo === 'cias') {
@@ -86,7 +86,7 @@
             if (tipo === 'cias') {
                 bootbox.alert('ERROR NO SE PUEDEN ELIMINAR PLAZAS');
             } else {
-                if (typeof msj === 'undefined') {
+                if (typeof msj === 'undefined' || msj === '') {
                     recurso = Routing.generate("deleteUnidad", {"id": id}, true);
                     window.location = recurso;
                 } else {
@@ -97,7 +97,7 @@
 
         $(document).ready(function () {
             let recurso;
-            $('body').scrollspy({target: "#tree"})
+            $('body').scrollspy({target: "#tree"});
             recurso = Routing.generate("ajaxGetEstructura", true);
             $.ajax({
                 type: "POST",
@@ -107,7 +107,7 @@
                     $('.modal-backdrop').remove();
                     $("#procesando").hide();
                     $('#tree').treeview({data: data});
-                    $('#tree').treeview('expandAll', {levels: 1, silent: true});
+                    $('#tree').treeview('expandAll', {levels: 2, silent: true});
                     $('#tree').on('nodeSelected', function (event, data) {
                     })
                 },
@@ -118,7 +118,6 @@
         });
     </script>
     <body data-spy="scroll" data-target="#tree" data-offset="50">
-
     <script type="text/javascript" src="{{ asset('js/bootstrap-treeview.js') }}"></script>
     <div class="container">
         <button type="button"
@@ -169,7 +168,7 @@
                 onclick="verOcupantes()"
                 data-toggle="tooltip"
                 data-placement="bottom"
-                title="Consulta ocupantes de la plaza">Ocupantes
+                title="Consulta ocupantes actuales de la plaza">Ocupantes
         </button>
         <br/><br/>
         <div id="tree" class="container"></div>

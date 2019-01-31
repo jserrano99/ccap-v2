@@ -1,5 +1,15 @@
 <script>
     $(document).ready(function () {
+
+
+        $('#ResponsableUnidadTable').DataTable({
+            "language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"},
+        });
+        $('#ValidadoresJanoTable').DataTable({
+            "language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"},
+        });
+
+
         $("#costesbundle_unidadorganizativa_dependencia").change(function () {
             let valor, recurso;
             let codigo;
@@ -13,13 +23,13 @@
                 type: "POST",
                 url: recurso,
                 dataType: 'json',
-                success: function ok (data) {
+                success: function ok(data) {
                     $('.modal-backdrop').remove();
                     $("#procesando").hide();
                     codigo = data.codigo + ".";
                     $("#costesbundle_unidadorganizativa_codigo").val(codigo);
                 },
-                error: function err () {
+                error: function err() {
                     return null;
                 }
             });
@@ -28,20 +38,190 @@
         $("#costesbundle_unidadorganizativa_responsable").change(function () {
         });
     });
+
+    function cambioResponsable() {
+        let unidadOrganizativa_id, ciasResponsable, fcCambio, recurso;
+        if ($("#costesbundle_unidadorganizativa_ciasResponsable").val() === '' ||
+            $("#costesbundle_unidadorganizativa_fcCambioResponsable").val() === '') {
+            bootbox.alert("OBLIGATORIO INFORMAR CIAS  Y FECHA DE CAMBIO",
+                function () {
+                });
+        } else {
+            unidadOrganizativa_id = $('#costesbundle_unidadorganizativa_id').val();
+            ciasResponsable = $("#costesbundle_unidadorganizativa_ciasResponsable").val();
+            fcCambio = $("#costesbundle_unidadorganizativa_fcCambioResponsable").val();
+            recurso = Routing.generate("cambioResponsable", {
+                "unidadOrganizativa_id": unidadOrganizativa_id,
+                "ciasResponsable": ciasResponsable,
+                "fcCambio": fcCambio,
+            }, true);
+            window.location = recurso;
+        }
+    }
+
+    function cerrarValidador(id) {
+        let recurso;
+        recurso = Routing.generate("cerrarValidador", {
+            "id": id,
+        }, true);
+        window.location = recurso;
+    }
+
+    function eliminarValidador(id) {
+        let recurso;
+        recurso = Routing.generate("deleteValidador", {
+            "id": id,
+        }, true);
+        window.location = recurso;
+    }
+
+    function addValidador() {
+        let unidadOrganizativa_id, ciasValidador, fcCambio, recurso;
+        if ($("#costesbundle_unidadorganizativa_ciasValidador").val() === '' ||
+            $("#costesbundle_unidadorganizativa_fcCambioValidador").val() === '') {
+            bootbox.alert("OBLIGATORIO INFORMAR CIAS  Y FECHA DE CAMBIO",
+                function () {
+                });
+        } else {
+            unidadOrganizativa_id = $('#costesbundle_unidadorganizativa_id').val();
+            ciasValidador = $("#costesbundle_unidadorganizativa_ciasValidador").val();
+            fcCambio = $("#costesbundle_unidadorganizativa_fcCambioValidador").val();
+            recurso = Routing.generate("agregarValidador", {
+                "unidadOrganizativa_id": unidadOrganizativa_id,
+                "ciasValidador": ciasValidador,
+                "fcCambio": fcCambio,
+            }, true);
+            window.location = recurso;
+        }
+
+    }
+
 </script>
 <div class="containe-fluid">
     {{ form_start(form) }}
-    <div class="form-row mismalinea">{{ form_row(form.id) }}</div>
-    <div class="form-row">{{ form_row(form.descripcion) }}</div>
-    <div class="clearfix"></div>
-    <div class="form-row">{{ form_row(form.dependencia) }}</div>
-    <div class="clearfix"></div>
-    <div class="form-row mismalinea">{{ form_row(form.codigo) }}</div>
-    <div class="form-row mismalinea">{{ form_row(form.orden) }}</div>
-    <div class="clearfix"></div>
-    <div class="form-row mismalinea">{{ form_row(form.responsableCias) }}</div>
-    {#<div class="form-row mismalinea">{{ form_row(form.responsableDs) }}</div>#}
-    <div class="clearfix"></div>
-    <div class="form-row mismalinea">{{ form_row(form.tipoUnidad) }}</div>
-    {{ form_end(form) }}
+    {{ form_errors(form) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Identificación</div>
+        <div class="panel-body">
+            <div class="form-row">{{ form_row(form.id) }}</div>
+            <div class="form-row">{{ form_row(form.descripcion) }}</div>
+            <div class="form-row">{{ form_row(form.tipoUnidad) }}</div>
+        </div>
+    </div>
+    <div id="tabs" class="pestana container">
+        <ul class="nav nav-tabs">
+            <li><a href="#dependencia">Dependencia</a></li>
+            {% if accion == 'MODIFICACION' %}
+                <li><a href="#historicoResponsables">Historico de Responsables</a></li>
+                <li><a href="#cambioResponsable">Cambio de Responsable</a></li>
+                <li><a href="#historicoValidadores">Historico Validadores (JANO) </a></li>
+                <li><a href="#cambioValidadores">Agregar Validadores (JANO) </a></li>
+            {% endif %}
+        </ul>
+
+        <div id="dependencia">
+            <div class="form-row">{{ form_row(form.dependencia) }}</div>
+            <br>
+            <div class="form-row mismalinea">{{ form_row(form.codigo) }}</div>
+            <div class="form-row mismalinea">{{ form_row(form.orden) }}</div>
+        </div>
+        {% if accion == 'MODIFICACION' %}
+            <div id="historicoResponsables">
+                <table id="ResponsableUnidadTable" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>F.Inicio</th>
+                        <th>F.Fin</th>
+                        <th>Cias Responsable</th>
+                        <th>Acción</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for responsableUnidad in responsableUnidadAll %}
+                        <tr>
+                            <td>{{ responsableUnidad.fInicio is empty ? "" :  responsableUnidad.fInicio|date('d-m-Y') }}</td>
+                            <td>{{ responsableUnidad.fFin is empty ? "":responsableUnidad.fFin|date('d-m-Y') }}</td>
+                            <td>{{ responsableUnidad.plaza.cias }}</td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="cambioResponsable">
+                <div class="form-row">{{ form_row(form.responsableActual) }}</div>
+
+                <div class="form-row mismalinea">{{ form_row(form.ciasResponsable) }}</div>
+                <div class="form-row mismalinea">{{ form_row(form.fcCambioResponsable) }}</div>
+                <button type="button"
+                        class="btn btn-default btn-success"
+                        onclick="cambioResponsable()"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="Aceptar Cambio Responsable">Aceptar
+                </button>
+
+            </div>
+
+            <div id="historicoValidadores">
+                <table id="ValidadoresJanoTable" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>F.Inicio</th>
+                        <th>F.Fin</th>
+                        <th>Cias Validador</th>
+                        <th>Acción</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for validadoresJano in validadoresJanoAll %}
+                        <tr>
+                            <td>{{ validadoresJano.fInicio is empty ? "" :  validadoresJano.fInicio|date('d-m-Y') }}</td>
+                            <td>{{ validadoresJano.fFin is empty ? "":validadoresJano.fFin|date('d-m-Y') }}</td>
+                            <td>{{ validadoresJano.plaza.cias }}</td>
+                            <td>
+                                <button type="button"
+                                        class="btn btn-default btn-success"
+                                        onclick="cerrarValidador('{{ validadoresJano.id }}')"
+                                        data-toggle="tooltip"
+                                        data-placement="bottom"
+                                        title="Cerrar Validador">Cerrar
+                                </button>
+
+                                <button type="button"
+                                        class="btn btn-default btn-danger"
+                                        onclick="eliminarValidador('{{ validadoresJano.id }}')"
+                                        data-toggle="tooltip"
+                                        data-placement="bottom"
+                                        title="Cerrar Validador">Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="cambioValidadores">
+
+                <div class="form-row mismalinea">{{ form_row(form.ciasValidador) }}</div>
+                <div class="form-row mismalinea">{{ form_row(form.fcCambioValidador) }}</div>
+                <button type="button"
+                        class="btn btn-default btn-success"
+                        onclick="addValidador()"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="Agregar Validador">Aceptar
+                </button>
+
+
+            </div>
+        {% endif %}
+
+    </div>
+
+    <div class="form-row mismalinea">{{ form_row(form.Guardar) }}</div>
+
 </div>

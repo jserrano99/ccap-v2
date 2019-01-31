@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 /**
  * Class UnidadOrganizativaType
@@ -28,17 +29,17 @@ class UnidadOrganizativaType extends AbstractType
 				'disabled' => true,
 				"attr" => ["class" => "form-control muycorto"]])
 			->add('descripcion', TextType::class, [
-				"label" => 'Descripción',
+				"label" => 'Descripción Unidad',
 				'required' => true,
 				'disabled' => false,
-				"attr" => ["class" => "form-control"]])
+				"attr" => ["class" => "form-control "]])
 			->add('dependencia', EntityType::class, [
 				"label" => 'Unidad de Dependencia',
 				'class' => 'CostesBundle\Entity\UnidadOrganizativa',
 				'placeholder' => 'Seleccione Unidad de Dependencia',
 				'required' => false,
 				'disabled' => false,
-				"attr" => ["class" => " form-control medio "]])
+				"attr" => ["class" => "form-control medio "]])
 			->add('codigo', TextType::class, [
 				"label" => 'Código',
 				'required' => true,
@@ -48,19 +49,7 @@ class UnidadOrganizativaType extends AbstractType
 				"label" => 'Orden',
 				'required' => false,
 				'disabled' => false,
-				"attr" => ["class" => "corto form-control"]])
-			->add('responsableCias', TextType::class, [
-				"label" => 'Responsable de Unidad (??) ',
-				'required' => false,
-				'disabled' => false,
-				'mapped' => false,
-				"attr" => ["class" => "form-control"]])
-			->add('responsableDs', TextType::class, [
-				"label" => '??',
-				"mapped" => false,
-				'required' => false,
-				'disabled' => true,
-				"attr" => ["class" => " form-control"]])
+				"attr" => ["class" => "form-control muycorto"]])
 			->add('tipoUnidad', EntityType::class, [
 				"label" => 'Tipo de Unidad ',
 				'class' => 'CostesBundle\Entity\TipoUnidad',
@@ -68,6 +57,46 @@ class UnidadOrganizativaType extends AbstractType
 				'required' => false,
 				'disabled' => false,
 				"attr" => ["class" => "form-control"]])
+			->add('ciasResponsable', TextType::class, [
+				"label" => 'Cias del Responsable',
+				'mapped' => false,
+				'required' => false,
+				'disabled' => false,
+				"attr" => ["class" => "form-control corto"]])
+			->add('responsableActual', EntityType::class, [
+				"label" => 'Responsable Actual' ,
+				'class' => 'CostesBundle\Entity\Plaza',
+				'placeholder' => 'Cias Responsable Actual',
+				'required' => false,
+				'disabled' => true,
+				"attr" => ["class" => "form-control corto"]])
+			->add('fcCambioResponsable', DateType::class, [
+				"label" => 'Fecha Cambio',
+				"required" => false,
+				"disabled" => false,
+				'mapped' => false,
+				'widget' => 'single_text',
+				'attr' => [
+					'class' => 'form-control corto',
+					'data-date-format' => 'dd-mm-yyyy',
+					'data-class' => 'string',]])
+			->add('ciasValidador', TextType::class, [
+				"label" => 'Cias Validador',
+				'mapped' => false,
+				'required' => false,
+				'disabled' => false,
+				"attr" => ["class" => "form-control corto"]])
+			->add('fcCambioValidador', DateType::class, [
+				"label" => 'Fecha Cambio',
+				"required" => false,
+				"disabled" => false,
+				'mapped' => false,
+				'widget' => 'single_text',
+				'attr' => [
+					'class' => 'form-control corto',
+					'data-date-format' => 'dd-mm-yyyy',
+					'data-class' => 'string',]])
+
 			->add('Guardar', SubmitType::class, [
 				"attr" => ["class" => "form-submit btn btn-t btn-success"
 				]]);

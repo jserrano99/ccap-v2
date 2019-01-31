@@ -2,21 +2,21 @@
 
 namespace CostesBundle\Form;
 
+use CostesBundle\Repository\PaRepository;
+use CostesBundle\Repository\UfRepository;
 use CostesBundle\Repository\UnidadOrganizativaRepository;
+use MaestrosBundle\Repository\CatFpRepository;
+use MaestrosBundle\Repository\CatGenRepository;
+use MaestrosBundle\Repository\ModalidadRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\TimeType;
-use MaestrosBundle\Repository\ModalidadRepository;
-use MaestrosBundle\Repository\CatGenRepository;
-use MaestrosBundle\Repository\CatFpRepository;
-use CostesBundle\Repository\UfRepository;
-use CostesBundle\Repository\PaRepository;
 
 class PlazaType extends AbstractType
 {
@@ -56,7 +56,16 @@ class PlazaType extends AbstractType
 				'required' => false,
 				'disabled' => true,
 				"attr" => ["class" => "form-control"]])
-
+			->add('fcCambio', DateType::class, [
+				"label" => 'Fecha Cambio',
+				"required" => false,
+				"disabled" => false,
+				'mapped' => false,
+				'widget' => 'single_text',
+				'attr' => [
+					'class' => 'form-control corto',
+					'data-date-format' => 'dd-mm-yyyy',
+					'data-class' => 'string',]])
 			->add('observaciones', TextType::class, [
 				"label" => 'Observaciones ',
 				'required' => false,
@@ -223,6 +232,7 @@ class PlazaType extends AbstractType
 				"attr" => ["class" => "corto form-control"]])
 			->add('Guardar', SubmitType::class, [
 				"attr" => ["class" => "form-submit btn btn-t btn-success"]])
+
 			->add('h1ini', TimeType::class, [
 				"label" => 'Horario 1 Inicio',
 				'required' => false,

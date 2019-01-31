@@ -10,6 +10,8 @@ namespace CostesBundle\Entity;
 
 use CostesBundle\Entity\Plaza;
 use Doctrine\ORM\Mapping as ORM;
+use MaestrosBundle\Entity\Ausencia;
+
 /**
  * Plaza
  *
@@ -70,6 +72,28 @@ class TempAltas
 	 * @ORM\Column(name="causa_baja", type="string", length=250, nullable=true)
 	 */
 	private $causaBaja;
+
+	/**
+	 * @var \MaestrosBundle\Entity\Ausencia
+	 *
+	 * @ORM\ManyToOne(targetEntity="MaestrosBundle\Entity\Ausencia")
+	 * @ORM\JoinColumn(name="ausencia_id", referencedColumnName="id")
+	 */
+	private $ausencia;
+
+	/**
+	 * @var \DateTime
+	 * @ORM\Column(name="fini", type="date", nullable=true)
+	 */
+	private $fini;
+
+	/**
+	 * @var \DateTime
+	 * @ORM\Column(name="ffin", type="date", nullable=true)
+	 */
+	private $ffin;
+
+
 
 	/**
      * Get id.
@@ -271,5 +295,77 @@ class TempAltas
     public function getCausaBaja()
     {
         return $this->causaBaja;
+    }
+
+    /**
+     * Set ausencia.
+     *
+     * @param \MaestrosBundle\Entity\Ausencia|null $ausencia
+     *
+     * @return TempAltas
+     */
+    public function setAusencia(Ausencia $ausencia = null)
+    {
+        $this->ausencia = $ausencia;
+
+        return $this;
+    }
+
+    /**
+     * Get ausencia.
+     *
+     * @return \MaestrosBundle\Entity\Ausencia|null
+     */
+    public function getAusencia()
+    {
+        return $this->ausencia;
+    }
+
+    /**
+     * Set fini.
+     *
+     * @param \DateTime $fini
+     *
+     * @return TempAltas
+     */
+    public function setFini($fini)
+    {
+        $this->fini = $fini;
+
+        return $this;
+    }
+
+    /**
+     * Get fini.
+     *
+     * @return \DateTime
+     */
+    public function getFini()
+    {
+        return $this->fini;
+    }
+
+    /**
+     * Set ffin.
+     *
+     * @param \DateTime $ffin
+     *
+     * @return TempAltas
+     */
+    public function setFfin($ffin)
+    {
+        $this->ffin = $ffin;
+
+        return $this;
+    }
+
+    /**
+     * Get ffin.
+     *
+     * @return \DateTime
+     */
+    public function getFfin()
+    {
+        return $this->ffin;
     }
 }
