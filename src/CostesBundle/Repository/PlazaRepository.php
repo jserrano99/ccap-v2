@@ -37,7 +37,7 @@ class PlazaRepository extends EntityRepository {
 
     /**
      * @param $cias
-     * @return null|array
+     * @return null|\CostesBundle\Entity\Plaza
      */
     public function findPlazaByCias($cias) {
         $PlazaAll = $this->createQueryBuilder('u')

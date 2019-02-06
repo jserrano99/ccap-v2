@@ -14,6 +14,7 @@
     {% endif %}
 
     {% if app.session.get('usuario_perfil') == 'ROLE_MAESTROS' %}
+        {% include 'menu.plantilla.html.twig' %}
         {% include 'menu.maestros.html.twig' %}
         {% include 'menu.catalogos.html.twig' %}
     {% endif %}

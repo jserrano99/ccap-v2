@@ -2,33 +2,36 @@
 
 namespace CostesBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\Query;
+use ComunBundle\Entity\CargaFichero;
+use ComunBundle\Entity\SincroLog;
+use CostesBundle\Datatables\AdscripcionPlazaDatatable;
+use CostesBundle\Datatables\CecoCiasDatatable;
+use CostesBundle\Datatables\PlazaDatatable;
+use CostesBundle\Datatables\TempAltasDatatable;
+use CostesBundle\Entity\AdscripcionPlaza;
 use CostesBundle\Entity\CecoCias;
 use CostesBundle\Entity\Plaza;
-use ComunBundle\Entity\CargaFichero;
-use CostesBundle\Datatables\PlazaDatatable;
-use CostesBundle\Datatables\CecoCiasDatatable;
-use CostesBundle\Datatables\TempAltasDatatable;
-use ComunBundle\Entity\SincroLog;
 use CostesBundle\Form\AmortizacionPlazaType;
 use CostesBundle\Form\ImportarType;
 use CostesBundle\Form\PlazaType;
-use DateTime;
 use DateInterval;
+use DateTime;
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\ORM\Query;
 use Exception;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Class PlazaController
+ *
  * @package CostesBundle\Controller
  */
 class PlazaController extends Controller
@@ -37,6 +40,7 @@ class PlazaController extends Controller
 	 * @var \Symfony\Component\HttpFoundation\Session\Session
 	 */
 	private $sesion;
+
 	/**
 	 * PlazaController constructor.
 	 */
@@ -44,6 +48,7 @@ class PlazaController extends Controller
 	{
 		$this->sesion = new Session();
 	}
+
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
@@ -69,7 +74,7 @@ class PlazaController extends Controller
 
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $request
-	 * @param $ceco_id
+	 * @param                                           $ceco_id
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
 	 * @throws \Exception
 	 */
@@ -136,8 +141,21 @@ class PlazaController extends Controller
 	}
 
 	/**
+	 * @param $cias
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+	public function editByCiasAction($cias)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$Plaza = $em->getRepository("CostesBundle:Plaza")->findPlazaByCias($cias);
+
+		$params = ['id' => $Plaza->getId()];
+		return $this->redirectToRoute("editPlaza", $params);
+	}
+
+	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $request
-	 * @param $id
+	 * @param                                           $id
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 * @throws \Exception
 	 */
@@ -146,19 +164,10 @@ class PlazaController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		$Plaza = $em->getRepository("CostesBundle:Plaza")->find($id);
 
-		$isAjax = $request->isXmlHttpRequest();
-		$datatable = $this->get('sg_datatables.factory')->create(CecoCiasDatatable::class);
-		$datatable->buildDatatable();
 
-		if ($isAjax) {
-			$responseService = $this->get('sg_datatables.response');
-			$responseService->setDatatable($datatable);
-			$datatableQueryBuilder = $responseService->getDatatableQueryBuilder();
-			$qb = $datatableQueryBuilder->getQb();
-			$qb->andWhere('plaza = :plaza');
-			$qb->setParameter('plaza', $Plaza);
-			return $responseService->getResponse();
-		}
+		$CecoCiasAll = $em->getRepository("CostesBundle:CecoCias")->selectCecosByPlaza($Plaza);
+		$AdscripcionPlazaAll = $em->getRepository("CostesBundle:AdscripcionPlaza")->selectAdscripcionByPlaza($Plaza);
+
 
 		$form = $this->createForm(PlazaType::class, $Plaza);
 		$form->handleRequest($request);
@@ -188,9 +197,11 @@ class PlazaController extends Controller
 		$params = ["form" => $form->createView(),
 			"plaza" => $Plaza,
 			"accion" => "MODIFICACIÓN",
-			"datatable" => $datatable];
+			"cecociasAll" => $CecoCiasAll,
+			"adscripcionplazaAll" => $AdscripcionPlazaAll];
 		return $this->render("costes/plaza/edit.html.twig", $params);
 	}
+
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
@@ -233,6 +244,7 @@ class PlazaController extends Controller
 			"datatable" => null];
 		return $this->render("costes/plaza/edit.html.twig", $params);
 	}
+
 	/**
 	 * @param $uf_id
 	 * @param $catgen_id
@@ -274,6 +286,7 @@ class PlazaController extends Controller
 		$response->headers->set("Content-type", "application/json");
 		return $response;
 	}
+
 	/**
 	 * @param $cias
 	 * @param $uf_id
@@ -299,7 +312,8 @@ class PlazaController extends Controller
 		$Ceco = $Ceco_repo->createQueryBuilder('u')
 			->where('u.codigo = :codigo')
 			->setParameter('codigo', $codigo)
-			->getQuery()->getResult(Query::HYDRATE_ARRAY);;
+			->getQuery()->getResult(Query::HYDRATE_ARRAY);
+
 		if ($Ceco) {
 			$Ceco = $Ceco[0];
 		} else {
@@ -344,7 +358,6 @@ class PlazaController extends Controller
 					$CargaFichero->setEstadoCargaInicial($Estado);
 					$em->persist($CargaFichero);
 					$em->flush();
-
 					return $this->asignarCeco($CargaFichero, $PHPExcel);
 				} catch (Exception $ex) {
 					$status = "***ERROR EN FORMATO FICHERO **: " . $file_name;
@@ -358,6 +371,7 @@ class PlazaController extends Controller
 		$params = ["form" => $ImportarForm->createView()];
 		return $this->render("costes/plaza/importar.html.twig", $params);
 	}
+
 	/**
 	 * @param $fichero
 	 * @return null|\PhpOffice\PhpSpreadsheet\Spreadsheet
@@ -411,8 +425,8 @@ class PlazaController extends Controller
 	}
 
 	/**
-	 * @param $CargaFichero
-	 * @param $PHPExcel
+	 * @param CargaFichero $CargaFichero
+	 * @param              $PHPExcel
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 * @throws \Exception
 	 */
@@ -600,7 +614,6 @@ class PlazaController extends Controller
 	}
 
 	/**
-	 * @param $datatable
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 * @throws \PhpOffice\PhpSpreadsheet\Exception
 	 */
@@ -657,7 +670,7 @@ class PlazaController extends Controller
 
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $request
-	 * @param $plaza_id
+	 * @param                                           $plaza_id
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
 	 * @throws \Exception
 	 */
@@ -682,6 +695,7 @@ class PlazaController extends Controller
 			'plaza' => $Plaza];
 		return $this->render('costes/cecocias/query.html.twig', $params);
 	}
+
 	/**
 	 * @param $cias
 	 * @param $nuevoCeco
@@ -749,7 +763,7 @@ class PlazaController extends Controller
 			->addWhere('u.fFin is null')
 			->setParameter('ceco', $Plaza->getCecoActual())
 			->setParameter('plaza', $Plaza)
-			->getQuery->getResult();
+			->getQuery()->getResult();
 		return ($CecoCeciasAll[0]);
 	}
 
@@ -776,7 +790,6 @@ class PlazaController extends Controller
 		$SincroLog->setFechaProceso($fechaProceso);
 		$SincroLog->setEstado($Estado);
 
-
 		$root = $this->get('kernel')->getRootDir();
 		$modo = $this->getParameter('modo');
 		$php = $this->getParameter('php');
@@ -801,7 +814,6 @@ class PlazaController extends Controller
 		$SincroLog->setScript($php_script);
 		$SincroLog->setFicheroLog($ServicioLog->getFilename());
 		$SincroLog->setEstado($Estado);
-
 		$em->persist($SincroLog);
 		$em->flush();
 
@@ -817,12 +829,12 @@ class PlazaController extends Controller
 		$response->headers->set('Content-Disposition', 'inline');
 		$response->headers->set('Content-Type', 'text/html');
 		$response->headers->set('target', '_blank');
-
 		return $response;
 	}
+
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $request
-	 * @param $id
+	 * @param                                           $id
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
 	public function amortizacionPlazaAction(Request $request, $id)
@@ -982,8 +994,8 @@ class PlazaController extends Controller
 	}
 
 	/**
-	 * @param $CargaFichero
-	 * @param $PHPExcel
+	 * @param             $CargaFichero
+	 * @param Spreadsheet $PHPExcel
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
 	public function amortizaPlazaFichero($CargaFichero, $PHPExcel)
@@ -1316,6 +1328,12 @@ class PlazaController extends Controller
 		return $this->render("costes/plaza/cambio.adscripcion.html.twig", $params);
 	}
 
+	/**
+	 * @param $fichero
+	 * @return \PhpOffice\PhpSpreadsheet\Spreadsheet
+	 * @throws \PhpOffice\PhpSpreadsheet\Exception
+	 * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+	 */
 	public function validarFicheroCambioAds($fichero)
 	{
 		$Cabecera = ["A" => "CIAS",
@@ -1337,6 +1355,11 @@ class PlazaController extends Controller
 		return $PHPExcel;
 	}
 
+	/**
+	 * @param $CargaFichero
+	 * @param $PHPExcel
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
 	public function cambiaAdscripcionPlaza($CargaFichero, $PHPExcel)
 	{
 		$em = $this->getDoctrine()->getManager();
@@ -1446,6 +1469,12 @@ class PlazaController extends Controller
 		return $this->render("finCarga.html.twig", $params);
 	}
 
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @param                                           $cias
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
+	 * @throws \Exception
+	 */
 	public function consultaAltasAction(Request $request, $cias)
 	{
 		$root = $this->get('kernel')->getRootDir();
@@ -1475,4 +1504,106 @@ class PlazaController extends Controller
 		return $this->render("costes/plaza/consultaAltas.html.twig", $params);
 	}
 
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @param                                           $cias
+	 * @param                                           $fecha
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
+	 * @throws \Exception
+	 */
+	public function consultaAltasActivasAction(Request $request, $cias, $fecha)
+	{
+		$root = $this->get('kernel')->getRootDir();
+		$modo = $this->getParameter('modo');
+		$php = $this->getParameter('php');
+		$php_script = $php . " " . $root . "/scripts/costes/consultaAltasActivasByCias.php " . $modo . " " . $cias . " " . $fecha;
+
+		exec($php_script, $SALIDA, $resultado);
+
+		$Plaza = $this->getDoctrine()->getManager()->getRepository("CostesBundle:Plaza")->findPlazaByCias($cias);
+
+		$isAjax = $request->isXmlHttpRequest();
+		$datatableAltas = $this->get('sg_datatables.factory')->create(TempAltasDatatable::class);
+		$datatableAltas->buildDatatable();
+
+		if ($isAjax) {
+			$responseService = $this->get('sg_datatables.response');
+			$responseService->setDatatable($datatableAltas);
+			$datatableQueryBuilder = $responseService->getDatatableQueryBuilder();
+			$datatableQueryBuilder->buildQuery();
+
+			return $responseService->getResponse();
+		}
+
+		$params = ["plaza" => $Plaza,
+			"datatable" => $datatableAltas];
+		return $this->render("costes/plaza/consultaAltas.html.twig", $params);
+	}
+
+	/**
+	 * @param $cias
+	 * @param $unidadOrganizativa_id
+	 * @param DateTime $fcCambio
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+	public function cambiarUnidadOrganizativaAction($cias, $unidadOrganizativa_id, $fcCambio)
+	{
+		$fecha = new \DateTime($fcCambio);
+		$fFin = $fecha->sub(new \DateInterval('P1D'));
+		$fcInicio = new  DateTime($fcCambio);
+		/** restamos un día */
+		$entityManager = $this->getDoctrine()->getManager();
+		$Plaza = $entityManager->getRepository("CostesBundle:Plaza")->findPlazaByCias($cias);
+
+		if ($Plaza->getUnidadOrganizativa() != '') {
+			$AdscripcionPlaza = $entityManager->getRepository("CostesBundle:AdscripcionPlaza")->createQueryBuilder('u')
+				->where("u.plaza = :plaza")
+				->andWhere("u.unidadOrganizativa = :unidadOrganizativa")
+				->setParameter('plaza', $Plaza)
+				->setParameter('unidadOrganizativa',$Plaza->getUnidadOrganizativa())
+				->getQuery()->getResult();
+
+			if ($AdscripcionPlaza) {
+
+				$AdscripcionPlaza[0]->setFFin($fFin);
+				$entityManager->persist($AdscripcionPlaza[0]);
+				$entityManager->flush();
+			}
+		}
+
+		$UnidadOrganizativa = $entityManager->getRepository("CostesBundle:UnidadOrganizativa")->find($unidadOrganizativa_id);
+		$Plaza->setUnidadOrganizativa($UnidadOrganizativa);
+		$entityManager->persist($Plaza);
+		$entityManager->flush();
+
+		$AdscripcionPlaza = new AdscripcionPlaza();
+		$AdscripcionPlaza->setPlaza($Plaza);
+		$AdscripcionPlaza->setUnidadOrganizativa($UnidadOrganizativa);
+		$AdscripcionPlaza->setFInicio($fcInicio);
+		$entityManager->persist($AdscripcionPlaza);
+		$entityManager->flush();
+
+
+		$params = ['id' => $Plaza->getId()];
+		return $this->redirectToRoute("editPlaza", $params);
+	}
+
+
+
+	/**
+	 * @param $cias
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+	public function quitarUnidadOrganizativaAction($cias)
+	{
+		$entityManager = $this->getDoctrine()->getManager();
+
+		$Plaza = $entityManager->getRepository("CostesBundle:Plaza")->findPlazaByCias($cias);
+		$Plaza->setUnidadOrganizativa(null);
+		$entityManager->persist($Plaza);
+		$entityManager->flush();
+
+		$params = ['id' => $Plaza->getId()];
+		return $this->redirectToRoute("editPlaza", $params);
+	}
 }

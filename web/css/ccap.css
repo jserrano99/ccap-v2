@@ -43,7 +43,10 @@
     width: 50px;
 }
 .medio {
-    width: 350px;
+    width: 400px;
+}
+.largo {
+    width: 550px;
 }
 .centrado {
     align-content: center;

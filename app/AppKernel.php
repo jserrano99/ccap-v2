@@ -21,6 +21,8 @@ class AppKernel extends Kernel {
             new ComunBundle\ComunBundle(),
             new CostesBundle\CostesBundle(),
             new MaestrosBundle\MaestrosBundle(),
+	        new Yoh\JasperReportBundle\YohJasperReportBundle(),
+	        new Hboie\JasperReportBundle\HboieJasperReportBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

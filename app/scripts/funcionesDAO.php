@@ -1,6 +1,66 @@
 <?php
 
 include_once __DIR__ . '/../../vendor/autoload.php';
+
+/**
+ * @param $id
+ * @return array|null
+ */
+function selectUnidadOrganizativaById($id) {
+	global $JanoControl;
+	try {
+		$sentencia = "select t1.id, t1.codigo, t1.descripcion, t1.tipo_unidad_id "
+			." , t2.descripcion as tipo_unidad, t1.dependencia_id, t3.descripcion as dependencia"
+			." from ccap_unidad_organizativa as t1 "
+			." left join ccap_tipo_unidad as t2 on t2.id = t1.tipo_unidad_id"
+			." left join ccap_unidad_organizativa as t3 on t3.id = t1.dependencia_id"
+			." where t1.id = :id";
+		$query = $JanoControl->prepare($sentencia);
+		$params = [":id" => $id];
+		$query->execute($params);
+		$res = $query->fetch(PDO::FETCH_ASSOC);
+
+		return $res;
+
+	} catch (PDOException $ex) {
+		return null;
+	}
+}
+/**
+ * @param $alta
+ * @return array|null
+ */
+function selectSitAdmByAlta($alta) {
+	global $JanoUnif,$JanoControl;
+	try {
+		$sentencia = " select t1.tipo, t1.fini, t1.ffin from moviausen as t1  "
+			." inner join ausencias as t2  on t1.tipo = t2.codigo "
+			." where t1.alta = :alta "
+			. "  and t2.csituadm = 'S'" ;
+		$query = $JanoUnif->prepare($sentencia);
+		$params =  [":alta" => $alta ];
+		$query->execute($params);
+		$ausencias = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		$sentencia = " select id from gums_ausencias where codigo = :codigo";
+		$query = $JanoControl->prepare($sentencia);
+		$params = [":codigo" => $ausencias[0]["TIPO"]];
+		$query->execute($params);
+		$res = $query->fetch(PDO::FETCH_ASSOC);
+		if ($res) {
+			$return["id"] = $res["id"];
+			$return["fini"] = $ausencias[0]['FINI'];
+			$return["ffin"] = $ausencias[0]['FFIN'];
+		} else {
+			return null;
+		}
+		return  $return;
+
+	} catch (PDOException $ex){
+		return null;
+	}
+}
+
 /**
  * @return array|null
  */
@@ -1071,7 +1131,7 @@ function selectPlazaById($id)
 			. " t6.codigo as catfp, t1.cupequi, t1.plantilla, t1.f_amortiza, t1.colaboradora, t1.f_creacion, t7.codigo as edificio, t1.observaciones,t1.horNormal "
 			. " ,t8.codigo as ceco, t2.edificio_id,t1.catgen_id, t1.catfp_id"
 			. " ,t1.h1ini, t1.h1fin, t1.h2ini, t1.h2fin"
-			. " ,t1.turno_id , t9.codigo as turno"
+			. " ,t1.turno_id , t9.codigo as turno, t1.unidad_organizativa_id"
 			. " from ccap_plazas as t1 "
 			. " left join ccap_uf as t2 on t2.id = t1.uf_id "
 			. " left join ccap_pa as t3 on t3.id = t1.pa_id "

@@ -84,7 +84,7 @@ function amortizaPlazaUnif($Plaza)
 function selectCecoCias($conexion, $cias)
 {
 	try {
-		$sentencia = "select * from cecocias where cias =  :cias";
+		$sentencia = "select * from cecocias where cias = :cias";
 		$query = $conexion->prepare($sentencia);
 		$params = [":cias" => $cias];
 		$query->execute($params);
@@ -268,10 +268,10 @@ function insertPlazaUnif($Plaza)
 
 		$sentencia = "insert into plazas ( cias, uf, modalidad, p_asist, catgen"
 			. "  ,ficticia, refuerzo, catfp, cupequi, plantilla, f_amortiza, colaboradora, observaciones,turno"
-			. "  ,fcreacion, hor_normal, h1ini, h1fin, h2ini, h2fin ) values ( "
+			. "  ,fcreacion, hor_normal, h1ini, h1fin, h2ini, h2fin, unidad_organizativa_id ) values ( "
 			. "  :cias, :uf, :modalidad, :p_asist, :catgen"
-			. "  ,:ficticia, :refuerzo, :catfp, :cupequi, :plantilla, :f_amortiza, :colaboradora,:observaciones,:turno "
-			. "  ,:f_creacion, :hor_normal, :h1ini, :h1fin, :h2ini, :h2fin )";
+			. "  ,:ficticia, :refuerzo, :catfp, :cupequi, :plantilla, :f_amortiza, :colaboradora,:observaciones,:turno"
+			. "  ,:f_creacion, :hor_normal, :h1ini, :h1fin, :h2ini, :h2fin, :unidad_organizativa_id )";
 
 		$query = $JanoUnif->prepare($sentencia);
 		$params = [":cias" => $Plaza["cias"],
@@ -293,7 +293,9 @@ function insertPlazaUnif($Plaza)
 			":h1ini" => $Plaza["h1ini"],
 			":h1fin" => $Plaza["h1fin"],
 			":h2ini" => $Plaza["h2ini"],
-			":h2fin" => $Plaza["h2fin"]
+			":h2fin" => $Plaza["h2fin"],
+			":unidad_organizativa_id" => $Plaza["unidad_organizativa_id"]
+
 		];
 
 		$ins = $query->execute($params);
@@ -350,10 +352,10 @@ function insertPlazaArea($Plaza)
 
 		$sentencia = "insert into plazas ( cias, uf, modalidad, p_asist, catgen"
 			. "  ,ficticia, refuerzo, catfp, cupequi, plantilla, f_amortiza, colaboradora, observaciones, turno"
-			. "  ,fcreacion, hor_normal, tarj1, tarj2, tarj3, tarj4, tarj5, h1ini, h1fin, h2ini, h2fin ) values ( "
+			. "  ,fcreacion, hor_normal, tarj1, tarj2, tarj3, tarj4, tarj5, h1ini, h1fin, h2ini, h2fin, unidad_organizativa_id ) values ( "
 			. "  :cias, :uf, :modalidad, :p_asist, :catgen"
 			. "  ,:ficticia, :refuerzo, :catfp, :cupequi, :plantilla, :f_amortiza, :colaboradora,:observaciones,:turno "
-			. "  ,:f_creacion, :hor_normal, :tarj1, :tarj2, :tarj3, :tarj4, :tarj5, :h1ini, :h1fin, :h2ini, :h2fin )";
+			. "  ,:f_creacion, :hor_normal, :tarj1, :tarj2, :tarj3, :tarj4, :tarj5, :h1ini, :h1fin, :h2ini, :h2fin, :unidad_organizativa_id)";
 
 		$query = $conexionArea->prepare($sentencia);
 //        var_dump($query);
@@ -382,7 +384,8 @@ function insertPlazaArea($Plaza)
 			":h1ini" => $Plaza["h1ini"],
 			":h1fin" => $Plaza["h1fin"],
 			":h2ini" => $Plaza["h2ini"],
-			":h2fin" => $Plaza["h2fin"]
+			":h2fin" => $Plaza["h2fin"],
+			":unidad_organizativa_id" => $Plaza["unidad_organizativa_id"]
 		];
 //        var_dump($params);
 
@@ -466,6 +469,7 @@ function updatePlazaUnif($Plaza)
 			. ", h1fin = :h1fin"
 			. ", h2ini = :h2ini"
 			. ", h2fin = :h2fin"
+			. ", unidad_organizativa_id = :unidad_organizativa_id"
 			. " where cias = :cias ";
 		$query = $JanoUnif->prepare($sentencia);
 		$params = [":cias" => $Plaza["cias"],
@@ -487,7 +491,8 @@ function updatePlazaUnif($Plaza)
 			":h1ini" => $Plaza["h1ini"],
 			":h1fin" => $Plaza["h1fin"],
 			":h2ini" => $Plaza["h2ini"],
-			":h2fin" => $Plaza["h2fin"]
+			":h2fin" => $Plaza["h2fin"],
+			":unidad_organizativa_id" => $Plaza["unidad_organizativa_id"]
 		];
 
 
@@ -541,6 +546,7 @@ function updatePlazaArea($Plaza)
 			. ", h1fin = :h1fin"
 			. ", h2ini = :h2ini"
 			. ", h2fin = :h2fin"
+			. ", unidad_organizativa_id = :unidad_organizativa_id"
 			. " where cias = :cias ";
 		$query = $conexionArea->prepare($sentencia);
 		$Equi = equivalenciasPlaza($Plaza);
@@ -564,7 +570,8 @@ function updatePlazaArea($Plaza)
 			":h1ini" => $Plaza["h1ini"],
 			":h1fin" => $Plaza["h1fin"],
 			":h2ini" => $Plaza["h2ini"],
-			":h2fin" => $Plaza["h2fin"]
+			":h2fin" => $Plaza["h2fin"],
+			":unidad_organizativa_id" => $Plaza["unidad_organizativa_id"]
 		];
 
 		$ins = $query->execute($params);

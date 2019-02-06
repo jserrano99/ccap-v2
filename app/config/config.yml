@@ -75,3 +75,16 @@ swiftmailer:
     username: '%mailer_user%'
     password: '%mailer_password%'
     spool: { type: memory }
+
+yoh_jasper_report:
+    jrs_host:      "%jrs_host%"
+    jrs_port:      "%jrs_port%"
+    jrs_base:      "%jrs_base%"
+    jrs_username:  "%jrs_username%"
+    jrs_password:  "%jrs_password%"
+    jrs_org_id:    "%jrs_org_id%"
+hboie_jasper_report:
+    host:      "%jasper_host%"
+    username:  "%jasper_user%"
+    password:  "%jasper_password%"
+    org_id:    "%jasper_org_id%"

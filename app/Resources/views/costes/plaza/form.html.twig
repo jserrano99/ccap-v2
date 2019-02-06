@@ -1,6 +1,37 @@
+<script type="text/javascript" src="{{ asset('js/bootstrap-treeview.js') }}"></script>
+
 <script>
+
     $(document).ready(function () {
-        $("#costesbundle_plaza_codigoUf").change(function () {
+
+        $('#CecoCiasTable').DataTable({
+            "language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"},
+        });
+        $('#AdscripcionPlazaTable').DataTable({
+            "language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"},
+        });
+
+
+        let recurso;
+        recurso = Routing.generate("ajaxGetEstructura", true);
+        $.ajax({
+            type: "POST",
+            url: recurso,
+            dataType: 'json',
+            success: function ok(data) {
+                $('.modal-backdrop').remove();
+                $("#procesando").hide();
+                $('#tree').treeview({data: data});
+                $('#tree').treeview('expandAll', {levels: 1, silent: true});
+                $('#tree').on('nodeSelected', function (event, data) {
+                })
+            },
+            error: function err() {
+                return null;
+            }
+        });
+
+        $("#costesbundle_plaza_codigoUf").change(function chg() {
             let valor, recurso;
             $("#procesando").show();
             valor = $("#costesbundle_plaza_codigoUf").val();
@@ -9,19 +40,19 @@
                 type: "POST",
                 url: recurso,
                 dataType: 'json',
-                success: function (data, status, xhr) {
+                success: function ok(data) {
                     $('.modal-backdrop').remove();
                     $("#procesando").hide();
                     $("#costesbundle_plaza_descripcionUf").val(data.descripcion);
                     $("#costesbundle_plaza_uf").val(data.id);
-
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function err() {
                     return null;
                 }
             });
         });
-        $("#costesbundle_plaza_codigoPa").change(function () {
+
+        $("#costesbundle_plaza_codigoPa").change(function chg() {
             let valor, recurso;
             $("#procesando").show();
             valor = $("#costesbundle_plaza_codigoPa").val();
@@ -30,13 +61,13 @@
                 type: "POST",
                 url: recurso,
                 dataType: 'json',
-                success: function (data, status, xhr) {
+                success: function ok(data) {
                     $('.modal-backdrop').remove();
                     $("#procesando").hide();
                     $("#costesbundle_plaza_descripcionPa").val(data.descripcion);
                     $("#costesbundle_plaza_pa").val(data.id);
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function err() {
                     return null;
                 }
             });
@@ -51,18 +82,19 @@
                 type: "POST",
                 url: recurso,
                 dataType: 'json',
-                success: function (data, status, xhr) {
+                success: function ok(data) {
                     $('.modal-backdrop').remove();
                     $("#procesando").hide();
                     $("#costesbundle_plaza_codigoUf").val(data.oficial);
                     $("#costesbundle_plaza_descripcionUf").val(data.descripcion);
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function err() {
                     return null;
                 }
             });
         });
-        $("#costesbundle_plaza_pa").change(function () {
+
+        $("#costesbundle_plaza_pa").change(function chg() {
             let valor, recurso;
             //$("#procesando").modal('show');
             $("#procesando").show();
@@ -72,19 +104,19 @@
                 type: "POST",
                 url: recurso,
                 dataType: 'json',
-                success: function (data, status, xhr) {
+                success: function ok(data) {
                     $('.modal-backdrop').remove();
                     $("#procesando").hide();
                     $("#costesbundle_plaza_codigoPa").val(data.oficial);
                     $("#costesbundle_plaza_descripcionPa").val(data.descripcion);
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function err() {
                     return null;
                 }
             });
         });
 
-        $("#costesbundle_plaza_nuevoCeco").change(function () {
+        $("#costesbundle_plaza_nuevoCeco").change(function chg() {
             let valor, recurso;
             $("#procesando").show();
             valor = $("#costesbundle_plaza_nuevoCeco").val();
@@ -93,7 +125,7 @@
                 type: "POST",
                 url: recurso,
                 dataType: 'json',
-                success: function (data, status, xhr) {
+                success: function ok(data) {
                     $('.modal-backdrop').remove();
                     $("#procesando").hide();
                     $("#costesbundle_plaza_nuevoCecoCodigo").val(data.codigo);
@@ -101,24 +133,24 @@
                     $("#btnAsignacion").show();
 
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function err() {
                     return null;
                 }
             });
         });
 
-        $("#costesbundle_plaza_turnof").change(function () {
-            let valor, recurso, dia, diaf,str, str1;
-            let zero = "0"; /* String de cero */
+        $("#costesbundle_plaza_turnof").change(function chg() {
+            let valor, recurso;
 
-                $("#procesando").show();
+
+            $("#procesando").show();
             valor = $("#costesbundle_plaza_turnof").val();
             recurso = Routing.generate("ajaxVerTurno", {"id": valor}, true);
             $.ajax({
                 type: "POST",
                 url: recurso,
                 dataType: 'json',
-                success: function (data, status, xhr) {
+                success: function ok(data) {
                     $('.modal-backdrop').remove();
                     $("#procesando").hide();
                     $("#costesbundle_plaza_h1ini").val('00:00');
@@ -134,19 +166,60 @@
                     $("#costesbundle_plaza_h2ini").val("00:00");
                     $("#costesbundle_plaza_h2fin").val("00:00");
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function err() {
                     return null;
                 }
             });
         });
 
-
     });
+
+    function quitarUnidadOrganizativa() {
+        let recurso;
+        let cias = $("#costesbundle_plaza_cias").val();
+        recurso = Routing.generate("quitarUnidadOrganizativa", {"cias": cias}, true);
+        window.location = recurso;
+    }
+
+    function cambiarUnidadOrganizativa() {
+        let fcCambio;
+        fcCambio = $("#costesbundle_plaza_fcCambio").val();
+        if (fcCambio === '') {
+            bootbox.alert('Fecha de Cambio obligatoria');
+        } else {
+            $("#estructura").show();
+        }
+    }
+
+    function cerrarEstructura() {
+        $("#estructura").hide();
+    }
+
+    function asignarUnidad() {
+        let unidadOrganizativaId;
+        let recurso;
+        let nodo;
+        let cias = $("#costesbundle_plaza_cias").val();
+        let fcCambio = $("#costesbundle_plaza_fcCambio").val();
+        $("#procesando").show();
+        nodo = $('#tree').treeview('getSelected');
+        console.log(nodo["0"]);
+        console.log(nodo["0"]["unidad"]);
+        console.log(nodo["0"]["nodes"]);
+        unidadOrganizativaId = nodo["0"]["unidad"];
+        recurso = Routing.generate("cambiarUnidadOrganizativa", {
+            "cias": cias,
+            "unidadOrganizativa_id": unidadOrganizativaId,
+            "fcCambio": fcCambio
+        }, true);
+        // bootbox.alert(recurso)
+        window.location = recurso;
+    }
 
     function cambiarAsignacion() {
         let cias, cecoAnterior, nuevoCeco, fInicio, recurso;
-        if ($("#costesbundle_plaza_nuevoCecoInf").val() == '' ||
-            $("#costesbundle_plaza_fInicio").val() == '') {
+        if ($("#costesbundle_plaza_nuevoCecoInf").val() === '' ||
+            $("#costesbundle_plaza_fInicio").val() === '') {
             bootbox.alert("OBLIGATORIO INFORMAR NUEVO CECO  Y FECHA DE INICIO",
                 function () {
                 });
@@ -172,7 +245,7 @@
         let uf = $("#costesbundle_plaza_uf").val();
         let catgen = $("#costesbundle_plaza_catGen").val();
         let recurso;
-        if (uf == '' || catgen == '') {
+        if (uf === '' || catgen === '') {
             bootbox.alert("Unidad Funcional, Punto Asistencia y Categoría Obligatorios");
         } else {
             $("#procesando").show();
@@ -181,13 +254,13 @@
                 type: "POST",
                 url: recurso,
                 dataType: 'json',
-                success: function (data, status, xhr) {
+                success: function ok(data) {
                     $('.modal-backdrop').remove();
                     $("#procesando").hide();
                     $("#costesbundle_plaza_cias").val(data.cias);
                     $("#costesbundle_plaza_orden").val(data.orden);
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function err() {
                     return null;
                 }
             });
@@ -205,19 +278,16 @@
     function calcularLetra() {
         let cadena, letra, resto;
         let cias = $("#costesbundle_plaza_cias").val();
-        if (cias != '') {
+        if (cias === '') {
+            bootbox.alert(' ERROR NO EXISTE CIAS');
+        } else {
             cadena = 'TRWAGMYFPDXBNJZSQVHLCKE';
             resto = cias % 23;
             letra = cadena.substr(resto, 1);
             $("#costesbundle_plaza_cias").val(cias + letra);
-        } else {
-            bootbox.alert(' ERROR NO EXISTE CIAS');
         }
     }
 
-    /**
-     *
-     */
     function desAmortizar() {
         let recurso;
         let cias = $("#costesbundle_plaza_cias").val();
@@ -235,16 +305,12 @@
         window.location = recurso;
     }
 
-    function cerrarConsulta() {
-        $("#consultaAltas").hide();
-    }
-
     function calcularCeco() {
         let recurso;
         let uf = $("#costesbundle_plaza_uf").val();
         let pa = $("#costesbundle_plaza_pa").val();
         let cias = $("#costesbundle_plaza_cias").val();
-        if (uf == '' || pa == '' || cias == '') {
+        if (uf === '' || pa === '' || cias === '') {
             bootbox.alert("Unidad Funcional, Punto Asistencial y Cias Obligatorios");
         } else {
             $("#procesando").show();
@@ -253,7 +319,7 @@
                 type: "POST",
                 url: recurso,
                 dataType: 'json',
-                success: function (data, status, xhr) {
+                success: function ok(data) {
                     $('.modal-backdrop').remove();
                     $("#procesando").hide();
                     $("#costesbundle_plaza_nuevoCecoCodigo").val(data.codigo);
@@ -265,7 +331,7 @@
                     }
 
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function err() {
                     return null;
                 }
             });
@@ -321,6 +387,7 @@
         </div>
     </div>
 </div>
+
 <div id="ayudaPa" class="modal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -344,6 +411,30 @@
     </div>
 </div>
 
+<div id="estructura" class="modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content container-fluid">
+            <div class="modal-title"><h2>ESTRUCTURA ORGANIZATIVA</h2></div>
+            <div class="modal-body" text-align="center">
+                <div id="tree"></div>
+                <button type="button"
+                        class="btn btn-default btn-info"
+                        onclick="asignarUnidad()"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="Volver a Editar Plaza">Asignar
+                </button>
+                <button type="button"
+                        class="btn btn-default btn-warning"
+                        onclick="cerrarEstructura()"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="Cerrar Ventana">Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container-fluid">
     {{ form_start(form) }}
@@ -358,7 +449,7 @@
                     data-toggle="tooltip"
                     data-placement="bottom"
                     title="Introducir Código Unidad Funcional ">
-                <span class="glyphicon glyphicon-question-sign"></span></a>
+                <span class="glyphicon glyphicon-question-sign"></span>
             </button>
             <div class="clearfix"></div>
             <div class="form-row  mismalinea">{{ form_row(form.pa) }}</div>
@@ -368,12 +459,12 @@
                     data-toggle="tooltip"
                     data-placement="bottom"
                     title="Introducir Código Punto Asistencial">
-                <span class="glyphicon glyphicon-question-sign"></span></a>
+                <span class="glyphicon glyphicon-question-sign"></span>
             </button>
             <div class="clearfix"></div>
             <div class="form-row mismalinea">{{ form_row(form.catGen) }}</div>
-            <div class="form-row  mismalinea">{{ form_row(form.cias) }}</div>
-            <div class="form-row  mismalinea">{{ form_row(form.orden) }}</div>
+            <div class="form-row mismalinea">{{ form_row(form.cias) }}</div>
+            <div class="form-row mismalinea">{{ form_row(form.orden) }}</div>
             {% if accion == 'NUEVA' %}
                 <div class="form-row  mismalinea">
                     <button type="button"
@@ -421,7 +512,9 @@
             <li><a id="tdatosGen" href="#datosGen">Datos Generales</a></li>
             {% if accion == 'MODIFICACIÓN' %}
                 <li><a id="tdatosGen" href="#consulta">Histórico Centros de Coste</a></li>
-                <li><a id="tcostes" href="#costes">Cambio de Asignación</a></li>
+                <li><a id="tcostes" href="#costes">Cambio de Asignación Ceco</a></li>
+                <li><a id="tadscripcion" href="#adscripcionPlaza">Historico Adscripciones</a></li>
+                <li><a id="tunidad" href="#unidadOrganizativa">Cambio Unidad Organizativa</a></li>
             {% endif %}
         </ul>
         <div id="datosGen">
@@ -461,9 +554,26 @@
         </div>
         {% if accion == 'MODIFICACIÓN' %}
             <div id="consulta">
-                {% if (datatable != '' ) %}
-                    {{ sg_datatables_render(datatable) }}
-                {% endif %}
+                <table id="CecoCiasTable" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>F.Inicio</th>
+                        <th>F.Fin</th>
+                        <th>Ceco</th>
+                        <th>Descripción</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for cecocias in cecociasAll %}
+                        <tr>
+                            <td>{{ cecocias.fInicio is empty ? "" :  cecocias.fInicio|date('d-m-Y') }}</td>
+                            <td>{{ cecocias.fFin is empty ? "":cecocias.fFin|date('d-m-Y') }}</td>
+                            <td>{{ cecocias.ceco.codigo }}</td>
+                            <td>{{ cecocias.ceco.descripcion }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
             <div id="costes">
                 <div class="form-row mismalinea">{{ form_row(form.cecoActual) }}</div>
@@ -491,6 +601,58 @@
                             title="Cambiar Asginación de Centro de Coste"> Cambiar Asignación
                     </button>
                 </div>
+            </div>
+
+            <div id="adscripcionPlaza">
+                <table id="AdscripcionPlazaTable" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>F.Inicio</th>
+                        <th>F.Fin</th>
+                        <th>Unidad</th>
+                        <th>Descripción</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for adscripcionplaza in adscripcionplazaAll %}
+                        <tr>
+                            <td>{{ adscripcionplaza.fInicio is empty ? "" :  adscripcionplaza.fInicio|date('d-m-Y') }}</td>
+                            <td>{{ adscripcionplaza.fFin is empty ? "":adscripcionplaza.fFin|date('d-m-Y') }}</td>
+                            <td>{{ adscripcionplaza.unidadOrganizativa.codigo }}</td>
+                            <td>{{ adscripcionplaza.unidadOrganizativa.descripcion }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div id="unidadOrganizativa">
+                <div class="form-row ">{{ form_row(form.unidadOrganizativa) }}</div>
+                <div class="form-row ">{{ form_row(form.fcCambio) }}</div>
+
+                <div class="form-row mismalinea">
+                    <button type="button"
+                            id="btnAsignacion"
+                            class="btn btn-default btn-warning btn-t"
+                            onclick="cambiarUnidadOrganizativa()"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            title="Cambiar Unidad"> Cambiar
+                    </button>
+                </div>
+
+                <div class="form-row mismalinea">
+                    <button type="button"
+                            id="btnAsignacion"
+                            class="btn btn-default btn-warning btn-t"
+                            onclick="quitarUnidadOrganizativa()"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            title="Eliminar"> Quitar
+                    </button>
+                </div>
+
             </div>
         {% endif %}
     </div>

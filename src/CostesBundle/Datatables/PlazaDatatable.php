@@ -3,22 +3,11 @@
 namespace CostesBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\AbstractDatatable;
-use Sg\DatatablesBundle\Datatable\Style;
-use Sg\DatatablesBundle\Datatable\Column\Column;
-use Sg\DatatablesBundle\Datatable\Column\BooleanColumn;
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
-use Sg\DatatablesBundle\Datatable\Column\MultiselectColumn;
-use Sg\DatatablesBundle\Datatable\Column\VirtualColumn;
-use Sg\DatatablesBundle\Datatable\Column\DateTimeColumn;
-use Sg\DatatablesBundle\Datatable\Column\ImageColumn;
-use Sg\DatatablesBundle\Datatable\Filter\TextFilter;
-use Sg\DatatablesBundle\Datatable\Filter\NumberFilter;
+use Sg\DatatablesBundle\Datatable\Column\Column;
 use Sg\DatatablesBundle\Datatable\Filter\SelectFilter;
-use Sg\DatatablesBundle\Datatable\Filter\DateRangeFilter;
-use Sg\DatatablesBundle\Datatable\Editable\CombodateEditable;
-use Sg\DatatablesBundle\Datatable\Editable\SelectEditable;
-use Sg\DatatablesBundle\Datatable\Editable\TextareaEditable;
-use Sg\DatatablesBundle\Datatable\Editable\TextEditable;
+use Sg\DatatablesBundle\Datatable\Filter\TextFilter;
+use Sg\DatatablesBundle\Datatable\Style;
 
 /**
  * Class CatGenDatatable
@@ -42,9 +31,9 @@ class PlazaDatatable extends AbstractDatatable
 
 		$this->events->set([
 			'xhr' => ['template' => 'fin.js.twig'],
-			'pre_xhr'=> ['template' => 'inicio.js.twig'],
-			'search'=> ['template' => 'search.js.twig'],
-			'state_loaded'=> ['template' => 'loaded.js.twig'],
+			'pre_xhr' => ['template' => 'inicio.js.twig'],
+			'search' => ['template' => 'search.js.twig'],
+			'state_loaded' => ['template' => 'loaded.js.twig'],
 
 		]);
 
@@ -109,6 +98,9 @@ class PlazaDatatable extends AbstractDatatable
 			->orderBy('u.descripcion', 'ASC')
 			->where("u.enuso = 'S'")
 			->getQuery()->getResult();
+		$UnidadOrganizativaAll = $this->getEntityManager()->getRepository('CostesBundle:UnidadOrganizativa')->createQueryBuilder('u')
+			->orderBy('u.descripcion', 'ASC')
+			->getQuery()->getResult();
 
 		$this->columnBuilder
 			->add('id', Column::class, [
@@ -116,39 +108,38 @@ class PlazaDatatable extends AbstractDatatable
 				'width' => '25px'])
 			->add('cias', Column::class, [
 				'title' => 'CIAS',
-				'width' => '95px',
+				'width' => '35px',
 				'filter' => [TextFilter::class, [
 					'cancel_button' => false
 				]]])
 			->add('uf.oficial', Column::class, [
-				'title' => 'Código',
-				'width' => '65px'])
-			->add('uf.descripcion', Column::class, [
 				'title' => 'Unidad Funcional',
-				'width' => '220px',
-				'filter' => [SelectFilter::class,
-					[
-						'multiple' => false,
-						'select_options' => ['' => 'Todo'] + $this->getOptionsArrayFromEntities($UfAll, 'descripcion', 'descripcion'),
-						'search_type' => 'eq']]])
+				'width' => '35px',
+			])
+//			->add('uf.descripcion', Column::class, [
+//				'title' => 'Unidad Funcional',
+//				'filter' => [SelectFilter::class,
+//					[
+//						'multiple' => false,
+//						'select_options' => ['' => 'Todo'] + $this->getOptionsArrayFromEntities($UfAll, 'descripcion', 'descripcion'),
+//						'search_type' => 'eq']]])
 			->add('pa.oficial', Column::class, [
-				'title' => 'Código',
-				'width' => '65px'])
-			->add('pa.descripcion', Column::class, [
 				'title' => 'Punto Asistencial',
-				'width' => '220px',
-				'filter' => [SelectFilter::class,
-					[
-						'multiple' => false,
-						'select_options' => ['' => 'Todo'] + $this->getOptionsArrayFromEntities($PaAll, 'descripcion', 'descripcion'),
-						'search_type' => 'eq']]])
+				'width' => '35px'
+			])
+//			->add('pa.descripcion', Column::class, [
+//				'title' => 'Punto Asistencial',
+//				'filter' => [SelectFilter::class,
+//					[
+//						'multiple' => false,
+//						'select_options' => ['' => 'Todo'] + $this->getOptionsArrayFromEntities($PaAll, 'descripcion', 'descripcion'),
+//						'search_type' => 'eq']]])
 			->add('cecoActual.codigo', Column::class, [
 				'title' => 'Ceco Actual',
-				'width' => '65px',
+				'width' => '30px',
 				'default_content' => ''])
 			->add('catGen.descripcion', Column::class, [
 				'title' => 'Cat. General',
-				'width' => '220px',
 				'filter' => [SelectFilter::class,
 					[
 						'multiple' => false,
@@ -156,7 +147,7 @@ class PlazaDatatable extends AbstractDatatable
 						'search_type' => 'eq']]])
 			->add('amortizada', Column::class, [
 				'title' => 'Amortizada',
-				'width' => '45px',
+				'width' => '25px',
 				'filter' => [SelectFilter::class,
 					[
 						'search_type' => 'eq',
@@ -171,16 +162,23 @@ class PlazaDatatable extends AbstractDatatable
 					],
 				],
 			])
-			->add('fAmortiza', DateTimeColumn::class, ['title' => 'Fecha Amortización', 'width' => '150px',
-				'date_format' => 'DD/MM/YYYY',
-				'default_content' => '',
-				'filter' => [DateRangeFilter::class, [
-					'cancel_button' => false,
-				]],
-			])
+//			->add('fAmortiza', DateTimeColumn::class, ['title' => 'Fecha Amortización', 'width' => '150px',
+//				'date_format' => 'DD/MM/YYYY',
+//				'default_content' => '',
+//				'filter' => [DateRangeFilter::class, [
+//					'cancel_button' => false,
+//				]],
+//			])
+//			->add('unidadOrganizativa.descripcion', Column::class, [
+//				'title' => 'Unidad Organizativa',
+//				'default_content' => '',
+//				'filter' => [SelectFilter::class,
+//					[
+//						'multiple' => false,
+//						'select_options' => ['' => 'Todo'] + $this->getOptionsArrayFromEntities($UnidadOrganizativaAll, 'descripcion', 'descripcion'),
+//						'search_type' => 'eq']]])
 			->add('sincroLog.estado.descripcion', Column::class, [
 				'title' => 'Estado Sincronización',
-				'width' => '220px',
 				'default_content' => ''])
 			->add(null, ActionColumn::class, [
 				'title' => 'Acciones',

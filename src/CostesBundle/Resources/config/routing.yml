@@ -34,6 +34,11 @@ addPlaza:
 editPlaza:
   path:   /plaza/edit/{id}
   defaults: { _controller: CostesBundle:Plaza:edit}
+editPlazaByCias:
+  path:   /plaza/editbycias/{cias}
+  defaults: { _controller: CostesBundle:Plaza:editByCias}
+  options:
+    expose: true
 queryPlaza:
   path:   /plaza/query
   defaults: { _controller: CostesBundle:Plaza:query}
@@ -107,6 +112,12 @@ consultarAltas:
   defaults: { _controller: CostesBundle:Plaza:consultaAltas}
   options:
     expose: true
+consultarAltasActivas:
+  path:   /plaza/consultarAltasActivas/{cias}/{fecha}
+  defaults: { _controller: CostesBundle:Plaza:consultaAltasActivas}
+  options:
+    expose: true
+
 deletePlaza:
   path:   /plaza/delete/{cias}
   defaults: { _controller: CostesBundle:Plaza:delete}
@@ -147,6 +158,18 @@ sincroCecoCias:
   defaults: { _controller: CostesBundle:Plaza:sincroCecoCias}
   options:
     expose: true
+cambiarUnidadOrganizativa:
+  path:   /plaza/unidad/cambiar/{cias}/{unidadOrganizativa_id}/{fcCambio}
+  defaults: { _controller: CostesBundle:Plaza:cambiarUnidadOrganizativa}
+  options:
+    expose: true
+quitarUnidadOrganizativa:
+  path:   /plaza/unidad/quitar/{cias}
+  defaults: { _controller: CostesBundle:Plaza:quitarUnidadOrganizativa}
+  options:
+    expose: true
+
+
 #
 # CECO CENTROS DE COSTE
 #
@@ -216,7 +239,7 @@ deleteUf:
   options:
     expose: true
 sincroUf:
-  path:   /uf/sincro/{id}/{actuacion}
+  path:   /uf/sincro/{id}/{actuacion}/{equf_id}
   defaults: { _controller: CostesBundle:Uf:sincro}
   options:
     expose: true
@@ -303,4 +326,96 @@ ajaxCalculaCodigoPa:
   defaults: { _controller: CostesBundle:Pa:ajaxCalculaCodigo}
   options:
     expose: true
+
+queryEstructura:
+  path: /unidad/query
+  defaults: { _controller: CostesBundle:Unidad:queryEstructura}
+  options:
+    expose: true
+ajaxGetEstructura:
+  path: /unidad/estructura
+  defaults: { _controller: CostesBundle:Unidad:ajaxGetEstructura}
+  options:
+    expose: true
+addUnidad:
+  path: /unidad/add
+  defaults: { _controller: CostesBundle:Unidad:add}
+  options:
+    expose: true
+editUnidad:
+  path: /unidad/edit/{id}
+  defaults: { _controller: CostesBundle:Unidad:edit}
+  options:
+    expose: true
+agregarUnidad:
+  path: /unidad/agregar/{id}
+  defaults: { _controller: CostesBundle:Unidad:agregar}
+  options:
+    expose: true
+agregarPlaza:
+  path: /unidad/agregarplaza/{id}
+  defaults: { _controller: CostesBundle:Unidad:agregarPlaza}
+  options:
+    expose: true
+deleteUnidad:
+  path: /unidad/delete/{id}
+  defaults: { _controller: CostesBundle:Unidad:delete}
+  options:
+    expose: true
+ajaxGetUnidad:
+  path: /unidad/getunidad/{id}
+  defaults: { _controller: CostesBundle:Unidad:ajaxGetUnidad}
+  options:
+    expose: true
+ajaxVerDependencia:
+  path: /unidad/dependencia/{id}
+  defaults: { _controller: CostesBundle:Unidad:ajaxVerDependencia}
+  options:
+    expose: true
+ajaxVerDependenciaCias:
+  path: /unidad/dependenciacias/{cias}
+  defaults: { _controller: CostesBundle:Unidad:ajaxVerDependenciaCias}
+  options:
+    expose: true
+ajaxConsultaResposable:
+  path: /unidad/responsable/{cias}/{fecha}
+  defaults: { _controller: CostesBundle:Unidad:ajaxConsultaResposable}
+  options:
+    expose: true
+imprimirEstructura:
+  path: /unidad/estructura/imprimir
+  defaults: { _controller: CostesBundle:Unidad:imprimirEstructura}
+  options:
+    expose: true
+cambioResponsable:
+  path:   /unidad/cambioResponsable/{unidadOrganizativa_id}/{ciasResponsable}/{fcCambio}
+  defaults: { _controller: CostesBundle:Unidad:cambioResponsable}
+  options:
+    expose: true
+agregarValidador:
+  path:   /unidad/validador/add/{unidadOrganizativa_id}/{ciasValidador}/{fcCambio}
+  defaults: { _controller: CostesBundle:Unidad:addValidador}
+  options:
+    expose: true
+cerrarValidador:
+  path:   /unidad/validador/cerrar/{id}
+  defaults: { _controller: CostesBundle:Unidad:cerrarValidador}
+  options:
+    expose: true
+deleteValidador:
+  path:   /unidad/validador/delete/{id}
+  defaults: { _controller: CostesBundle:Unidad:deleteValidador}
+  options:
+    expose: true
+sincroUnidad:
+  path:   /unidad/sincro/{id}/{actuacion}
+  defaults: { _controller: CostesBundle:Unidad:sincro}
+  options:
+    expose: true
+sincroAsignacion:
+  path:   /unidad/sincroAsginacion/{cias}
+  defaults: { _controller: CostesBundle:Unidad:sincroAsignacion}
+  options:
+    expose: true
+
 

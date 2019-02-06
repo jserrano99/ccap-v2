@@ -22,3 +22,15 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret: ThisTokenIsNotSoSecretChangeIt
+
+    jrs_host:      127.0.0.1
+    jrs_port:      8080
+    jrs_base:      jasperserver
+    jrs_username:  jasperadmin
+    jrs_password:  jasperadmin
+    jrs_org_id:    null
+
+    jasper_host: http://localhost:8080/jasperserver
+    jasper_user: jasperadmin
+    jasper_password: jasperadmin
+    jasper_org_id: null
